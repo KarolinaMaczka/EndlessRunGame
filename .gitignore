@@ -2,3 +2,5 @@
 /delete/
 /models_compressed/
 /venv/
+/.vs/
+*.pyc
