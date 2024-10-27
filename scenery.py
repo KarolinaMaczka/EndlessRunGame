@@ -1,14 +1,15 @@
 from ursina import Entity, color
 
+from config.constants import ROAD_HEIGHT
+
 
 class Scenery:
     def __init__(self):
-        self.road = Entity(model='plane', texture='grass', scale=(50, 10, 1000000), color=color.dark_gray)
-
-        self.median_right = Entity(model='cube', texture='grass', collider='box', position=(25, 2, 0),
-                                   scale=(5, 10, 1000000),
+        self.road = Entity(model='plane', texture='grass', scale=(60, ROAD_HEIGHT, 1000000), color=color.dark_gray)
+        self.right_grass = Entity(model='cube', texture='grass', collider='box', position=(60//2+500, 0, 0),
+                                   scale=(1001, 2, 1000000),
                                    color=color.white)
 
-        self.median_left = Entity(model='cube', texture='grass', collider='box', position=(-25, 2, 0),
-                                  scale=(5, 10, 1000000),
+        self.left_grass = Entity(model='cube', texture='grass', collider='box', position=(-60//2-500, 0, 0),
+                                  scale=(1001, 2, 1000000),
                                   color=color.white)

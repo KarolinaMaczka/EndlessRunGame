@@ -14,6 +14,9 @@ class GameOver(GameState):
     def update(self):
         pass
 
+    def on_exit(self):
+        pass
+
     def start(self):
         destroy(self.context.window_panel)
         self.context.window_panel = None

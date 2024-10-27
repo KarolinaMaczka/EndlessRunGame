@@ -4,3 +4,5 @@
 /venv/
 /.vs/
 *.pyc
+
+/assets/

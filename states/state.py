@@ -3,7 +3,6 @@ from abc import ABC, abstractmethod
 
 class GameState(ABC):
 
-
     @abstractmethod
     def handle_input(self):
         pass
@@ -14,4 +13,8 @@ class GameState(ABC):
 
     @abstractmethod
     def update(self):
+        pass
+
+    @abstractmethod
+    def on_exit(self):
         pass
