@@ -6,6 +6,9 @@ from entities.player import Player
 from scenery import Scenery
 import atexit
 
+import threading
+from camera_reading.read_camera import read_camera
+
 
 if __name__ == '__main__':
 
@@ -31,5 +34,8 @@ if __name__ == '__main__':
     atexit.register(game_manager.on_exit)
 
     sky = Sky()
+
+    # Add multithreading so that we can read camera in the background
+    threading.Thread(target=read_camera, daemon=True).start()
 
     app.run()
