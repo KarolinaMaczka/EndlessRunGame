@@ -65,7 +65,7 @@ class RunningState(GameState):
         self.obstacle_process.join()
 
     def handle_input(self):
-        self.context.player.scale = 5
+        self.context.player.reset()
         if held_keys['d']:
             self.context.player.go_right()
         if held_keys['a']:
@@ -73,7 +73,8 @@ class RunningState(GameState):
         # if held_keys['w']:
         #     self.context.player.run_faster()
         if held_keys['s']:
-            self.context.player.scale = 3.5
+            self.context.player.crouch()
+            # self.context.player.scale = 3.5
             self.context.camera.camera.y = self.context.camera.camera.y - 0.3
         if held_keys['l']:
             self.set_difficulty(1)
@@ -98,12 +99,12 @@ class RunningState(GameState):
 
         self.context.player.run()
         # self.__generate_obstacle()
-        self.player_z.value = self.context.player.z
-        self.__render_obstacles_from_queue()
         self.handle_input()
         self.context.physics_engine.apply_gravity(self.active_obstacles)
         if self.context.physics_engine.handle_player_collisions():
             self.context.transition_to("game_over_state")
+        self.player_z.value = self.context.player.z
+        self.__render_obstacles_from_queue()
         self.__cleanup_obstacles()
 
     def set_difficulty(self, level, **kwargs):
@@ -137,7 +138,6 @@ class RunningState(GameState):
                 break
 
             obstacle_type = self.obstacle_queue.get()
-            # print(f'rendering at {obstacle_type.position_z}')
             # obstacle = obstacle_type.obstacle(obstacle_type.position_z, obstacle_type.difficulty, obstacle_type.lane)
             obstacle = self.obstacle_pool.acquire(
                 obstacle_type.obstacle,

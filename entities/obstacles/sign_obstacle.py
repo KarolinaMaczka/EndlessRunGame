@@ -1,12 +1,16 @@
+import random
+
 from ursina import invoke
 
+from config.constants import CollisionType, CollisionSide
 from entities.obstacles.obstacle import Obstacle
 
 
 class ObstacleSign(Obstacle):
     def __init__(self, position_z: float, difficulty: int, lane: int = 0, height: float = 0,
                  width: float = 0, depth: float = 0):
-        super().__init__(position_z=position_z, difficulty=difficulty, lane=lane, height=height, width=width, depth=depth)
+        super().__init__(position_z=position_z, difficulty=difficulty, lane=lane, height=height, width=width,
+                         depth=depth)
         self.lane = lane
 
     @staticmethod
@@ -17,3 +21,17 @@ class ObstacleSign(Obstacle):
         self.lane = lane
         for child in self.children:
             invoke(self.set_fixed_lane, child, self.lane)
+
+    def check_collision_type(self, *args, **kwargs) -> CollisionType:
+        return CollisionType.LIGHT
+
+    def check_collision_side(self, *args, **kwargs) -> CollisionSide:
+        '''
+        we randomly apply a side were we are going to bounce
+        '''
+        if random.random() < 0.5:
+            collision_side = CollisionSide.LEFT
+        else:
+            collision_side = CollisionSide.RIGHT
+
+        return collision_side

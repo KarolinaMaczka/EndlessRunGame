@@ -7,6 +7,7 @@ from entities.obstacles.impl.board_obstacle import ObstacleBoard
 from entities.obstacles.impl.cube_obstacle import ObstacleCube
 from entities.obstacles.impl.fence_obstacle import ObstacleFence
 from entities.obstacles.impl.gate_obstacle import ObstacleGate
+from entities.obstacles.impl.horizontal_pole_obstacle import ObstaclePoleGate
 from entities.obstacles.impl.long_cube import ObstacleLongCube
 from entities.obstacles.impl.train_obstacle import ObstacleTrain
 from entities.obstacles.impl.wooden_sign_obstacle import ObstacleWoodenSign
@@ -24,7 +25,8 @@ class FirstObstacleMap(ObstacleMap):
     _small_obstacles: ObstacleFactory = field(default_factory=lambda: ObstacleFactory([
         {"obstacle": ObstacleFence, 'difficulty': 1, 'probability': 0.1},
         {"obstacle": ObstacleBoard, 'difficulty': 1, 'probability': 0.05},
-        {"obstacle": ObstacleCube, 'difficulty': 1, 'probability': 0.05}],
+        {"obstacle": ObstacleCube, 'difficulty': 1, 'probability': 0.05},
+        {"obstacle": ObstaclePoleGate, 'difficulty': 1, 'probability': 0.05}],
         4))
 
     _signs: ObstacleFactory = field(default_factory=lambda: ObstacleFactory([
@@ -48,13 +50,13 @@ class FirstObstacleMap(ObstacleMap):
         self.obstacles = []
         while last_obstacle_z <= end:
             if random.random() < self.lane_change_const:
-                if obstacle_generation_distance <=150:
+                if obstacle_generation_distance <= 150:
                     last_obstacle_z += obstacle_generation_distance
 
                 start_x = int(not start_x)
 
             self.__create_signs(z_position=last_obstacle_z-obstacle_generation_distance/2)
-            if random.random() < 0.1:
+            if random.random() < 0.3:
                 self.__generate_gate(last_obstacle_z)
             else:
                 self.__create_trains(start_x, last_obstacle_z)
