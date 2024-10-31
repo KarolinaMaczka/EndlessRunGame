@@ -3,8 +3,9 @@ import os
 from ursina import Entity, color, destroy
 
 from config.config import config
-from config.constants import ROAD_WIDTH, ROAD_HEIGHT
+from config.constants import ROAD_WIDTH, ROAD_HEIGHT, LANE_WIDTH, CollisionType, CollisionSide
 from entities.obstacles.obstacle import Obstacle
+from entities.obstacles.utils import right_outer_border_lane, left_outer_border_lane
 
 
 class ObstacleGate(Obstacle):
@@ -64,18 +65,6 @@ class ObstacleGate(Obstacle):
         self.set_height(height + top_beam_height)
         self.set_depth(depth)
 
-
-    # def delete(self):
-    #     destroy(self.top_beam)
-    #     destroy(self.right_pillar)
-    #     destroy(self.left_pillar)
-
-    # def set_z_position(self, position_z):
-    #     self.position_z = position_z
-    #     self.top_beam.z = position_z
-    #     self.right_pillar.z = position_z
-    #     self.left_pillar.z = position_z
-
     def set_lane(self, *args):
         pass
 
@@ -87,4 +76,11 @@ class ObstacleGate(Obstacle):
 
     def set_depth(self, depth):
         self.depth = depth
+
+    def check_collision_type(self, player_x, child, *args, **kwargs) -> CollisionType:
+        if child is self.top_beam:
+            return CollisionType.FULL
+        collision_type = left_outer_border_lane(2) < player_x < right_outer_border_lane(2)
+        collision_type = CollisionType.LIGHT if collision_type else CollisionType.FULL
+        return collision_type
 

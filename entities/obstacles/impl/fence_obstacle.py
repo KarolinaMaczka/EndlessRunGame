@@ -1,16 +1,19 @@
 import os
 
-from ursina import color, Entity, invoke, destroy
+from ursina import color, Entity, invoke
 
 from config.config import config
-from config.constants import LANE_WIDTH, CollisionType, CollisionSide
+from config.constants import LANE_WIDTH, CollisionType, CollisionSide, ROAD_WIDTH, ROAD_HEIGHT
 from entities.obstacles.lane_obstacle import LaneObstacle
 from entities.obstacles.obstacle import Obstacle
+from entities.obstacles.utils import left_inner_border_lane, right_inner_border_lane
 
 
 class ObstacleFence(LaneObstacle):
-    def __init__(self, position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.brown, height: float = 4.5, width: float = LANE_WIDTH - 2, depth: float = 4):
-        super().__init__(position_z=position_z, difficulty=difficulty, lane=lane, height=height,width=width, depth=depth)
+    def __init__(self, position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.brown, height: float = 4.5,
+                 width: float = LANE_WIDTH - 2, depth: float = 4):
+        super().__init__(position_z=position_z, difficulty=difficulty, lane=lane, height=height, width=width,
+                         depth=depth)
 
         folder = config['fence']['fence.folder']
         self.body = Entity(
@@ -34,10 +37,6 @@ class ObstacleFence(LaneObstacle):
         self.set_height(height)
         self.set_width(width)
 
-
-    # def delete(self):
-    #     destroy(self.body)
-
     def set_width(self, width):
         self.width = width
         invoke(Obstacle.set_fixed_depth, self.body, width)
@@ -56,32 +55,20 @@ class ObstacleFence(LaneObstacle):
         self.depth = depth
         invoke(Obstacle.set_fixed_width, self.body, depth)
 
-    # def set_z_position(self, position_z):
-    #     self.position_z = position_z
-    #     self.body.z = position_z
+    def check_collision_type(self, player_x, player_y, player_z, child, *args, **kwargs) -> CollisionType:
+        # collision_type = CollisionType.FULL if abs(player_x - child.x) < LANE_WIDTH / 2 - 1 else CollisionType.LIGHT
+        collision_type = left_inner_border_lane(self.lane) < player_x < right_inner_border_lane(self.lane)
+        collision_type = CollisionType.FULL if collision_type else CollisionType.LIGHT
 
-    def check_collision(self, player):
-        lanes = {0: (-25, -15), 1: (-15, -5), 2: (-5,5), 3: (5,15), 4: (15,25)}
-        if self.body.intersects():
-            if player.y > self.body.bounds.end.y:
-                return None, None
-                collision_side = CollisionSide.UP
-            elif lanes[self.lane][0] <= player.x and lanes[self.lane][1] >= player.x:
-                middle = (lanes[self.lane][0] + lanes[self.lane][1]) / 2
-                if player.x < middle:
-                    collision_side = CollisionSide.LEFT
-                elif player.x > middle:
-                    collision_side = CollisionSide.RIGHT
-            # elif player.y < self.body.bounds.start.y:
-            #     collision_side = CollisionSide.DOWN
-            # elif player.y > self.body.bounds.end.y:
-            #     collision_side = CollisionSide.UP
-            else:
-                collision_side = CollisionSide.UP if player.z < self.body.bounds.start.z else CollisionSide.DOWN
+        return collision_type
 
-            # Determine collision type based on relative speed or proximity (simplified here)
-            collision_type = CollisionType.FULL if abs(player.x - self.body.x) < LANE_WIDTH / 2 - 1 else CollisionType.LIGHT
-            print(f"collision side {collision_side}")
-            return collision_type, collision_side
+    def check_collision_side(self, player_x, player_y, child, *args, **kwargs) -> CollisionSide:
+        if player_y >= self.height + ROAD_HEIGHT / 2 - 1:
+            collision_side = CollisionSide.UP
+        elif child.bounds.start.y >= player_y:
+            collision_side = CollisionSide.DOWN
+        else:
+            collision_side = CollisionSide.RIGHT if -ROAD_WIDTH / 2 + LANE_WIDTH * (
+                self.lane) <= player_x else CollisionSide.LEFT
 
-        return None, None
+        return collision_side

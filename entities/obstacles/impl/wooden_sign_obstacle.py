@@ -21,7 +21,7 @@ class ObstacleWoodenSign(ObstacleSign):
             z=position_z,
             collider='box',
             double_sided=True,
-            jump=True,
+            jump=False,
             climb=False,
             sign=True,
             parentt=self
@@ -37,10 +37,6 @@ class ObstacleWoodenSign(ObstacleSign):
         invoke(Obstacle.set_fixed_height, self.body, height)
         invoke(Obstacle.set_y_position, self.body)
 
-    # def set_lane(self, lane):
-    #     self.lane = lane
-    #     invoke(ObstacleSign.set_fixed_lane, self.body, self.lane)
-
     def set_width(self, width):
         self.width = width
         invoke(Obstacle.set_fixed_width, self.body, width)
@@ -48,10 +44,3 @@ class ObstacleWoodenSign(ObstacleSign):
     def set_depth(self, depth):
         self.depth = depth
         invoke(Obstacle.set_fixed_depth, self.body, depth)
-
-    # def set_z_position(self, position_z):
-    #     self.position_z = position_z
-    #     self.body.z = position_z
-
-    # def delete(self):
-    #     destroy(self.body)

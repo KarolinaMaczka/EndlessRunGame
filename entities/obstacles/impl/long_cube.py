@@ -4,15 +4,17 @@ import random
 from ursina import Entity, color, invoke, destroy
 
 from config.config import config
-from config.constants import LANE_WIDTH
+from config.constants import LANE_WIDTH, CollisionSide, ROAD_HEIGHT
 from entities.obstacles.lane_obstacle import LaneObstacle
 from entities.obstacles.obstacle import Obstacle
 
 
 class ObstacleLongCube(LaneObstacle):
-    def __init__(self, position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.orange, has_ladder: float = 0.2, height: float = 10,
+    def __init__(self, position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.orange,
+                 has_ladder: float = 0.2, height: float = 10,
                  width: float = LANE_WIDTH - 1, depth: float = 100):
-        super().__init__(position_z=position_z, difficulty=difficulty, lane=lane, height=height,width=width, depth=depth)
+        super().__init__(position_z=position_z, difficulty=difficulty, lane=lane, height=height, width=width,
+                         depth=depth)
 
         texture_folder = config['long_cube']['long_cube.folder']
         ladder_folder = config['long_cube']['long_cube.ladder.folder']
@@ -38,7 +40,7 @@ class ObstacleLongCube(LaneObstacle):
                 scale=(3, 1.5, 5),
                 rotation=(0, 0, 0),
                 color=color.blue,
-                z=position_z - depth / 2 - 1,
+                z=position_z - depth / 2 - 2.5,
                 collider='box',
                 double_sided=True,
                 jump=True,
@@ -47,7 +49,6 @@ class ObstacleLongCube(LaneObstacle):
                 parentt=self
             )
             self.children = [self.body, self.ladder]
-
 
         self.set_depth(depth)
         self.set_lane(lane)
@@ -69,23 +70,6 @@ class ObstacleLongCube(LaneObstacle):
             invoke(Obstacle.set_fixed_height, self.ladder, height + 0.5)
             invoke(Obstacle.set_y_position, self.ladder)
 
-    # def set_lane(self, lane):
-    #     self.lane = lane
-    #     if self.ladder:
-    #         invoke(LaneObstacle.set_fixed_lane, self.ladder, self.lane)
-    #     invoke(LaneObstacle.set_fixed_lane, self.body, self.lane)
-
     def set_depth(self, depth):
         self.depth = depth
         invoke(Obstacle.set_fixed_depth, self.body, depth)
-
-    # def set_z_position(self, position_z):
-    #     self.position_z = position_z
-    #     self.body.z = position_z
-    #     if self.ladder:
-    #         self.ladder.z = position_z
-
-    # def delete(self):
-    #     destroy(self.body)
-    #     if self.ladder:
-    #         destroy(self.ladder)
