@@ -2,16 +2,18 @@ import random
 from dataclasses import dataclass
 from difficulty.maps.map import ObstacleMap
 
+
 @dataclass
-class SecondObstacleMap(ObstacleMap):
+class ThirdObstacleMap(ObstacleMap):
     """
-    signs: no
+    signs: yes
     trains: yes,
     small obstacles: yes
     gates: yes
-    small obstacles and trains are always at the same z position
-    small obstacles cannot be next to each other
+    small obstacles and trains are never at the same z position
+    small obstacles are not next to each other
     """
+    change_obstacle_type_cons: float = 0.5
 
     def generate_obstacles(self, obstacle_generation_distance, start, length):
         last_obstacle_z = start + obstacle_generation_distance
@@ -26,14 +28,16 @@ class SecondObstacleMap(ObstacleMap):
 
                 start_x = int(not start_x)
 
+            self._create_signs(z_position=last_obstacle_z - obstacle_generation_distance / 2)
             if random.random() < self.gate_generation_const:
                 if obstacle_generation_distance <= 150:
                     last_obstacle_z += obstacle_generation_distance
                 self._generate_gate(last_obstacle_z)
                 if obstacle_generation_distance <= 150:
                     last_obstacle_z += obstacle_generation_distance
-            else:
+            elif random.random() < self.change_obstacle_type_cons:
                 self._create_trains(start_x, last_obstacle_z)
+            else:
                 self._create_small_obstacles(int(not start_x), last_obstacle_z, self.small_obstacle_const)
             last_obstacle_z += obstacle_generation_distance
         return last_obstacle_z
