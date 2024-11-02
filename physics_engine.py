@@ -14,7 +14,7 @@ class PhysicsEngine:
     def __init__(self, player: Player, camera: PlayerCamera):
         self.player = player
         self.camera = camera
-        self.gravity = -1
+        # self.gravity = -2
         self.stop_jump = False
         # self.prev_speed = 0
 
@@ -31,7 +31,7 @@ class PhysicsEngine:
                 self.player.stop_climb()
         else:
             ground_y = self.get_ground_height(obstacles)
-            self.player.fall_down(self.gravity)
+            self.player.fall_down()
 
             if self.player.y <= ground_y:
                 self.player.land(ground_y)
