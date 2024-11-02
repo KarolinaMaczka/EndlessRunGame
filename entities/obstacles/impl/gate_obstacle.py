@@ -9,7 +9,7 @@ from entities.obstacles.utils import right_outer_border_lane, left_outer_border_
 
 
 class ObstacleGate(Obstacle):
-    def __init__(self, position_z: float, difficulty: int = 1, lane=None, height: float = 10, depth: float = 100, width: float = ROAD_WIDTH):
+    def __init__(self, position_z: float, difficulty: int = 1, lane=None, height: float = 10, depth: float = 100, width: float = ROAD_WIDTH, colorr=color.brown):
         top_beam_height = 4
         super().__init__(position_z=position_z, difficulty=difficulty, lane=lane, height=height + top_beam_height,width=width, depth=depth)
 
@@ -22,7 +22,7 @@ class ObstacleGate(Obstacle):
         self.left_pillar = Entity(
             model='cube',
             scale=(pillar_width, height, depth),
-            color=color.brown,
+            color=colorr,
             texture='brick',
             position=(position_x - gap_between_pillars / 2 - pillar_width / 2,
                       position_y + height / 2, position_z),
@@ -36,7 +36,7 @@ class ObstacleGate(Obstacle):
         self.right_pillar = Entity(
             model='cube',
             scale=(pillar_width, height, depth),
-            color=color.brown,
+            color=colorr,
             texture='brick',
             position=(position_x + gap_between_pillars / 2 + pillar_width / 2,
                       position_y + height / 2, position_z),

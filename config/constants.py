@@ -30,6 +30,22 @@ class CollisionSide(Enum):
 
 class Color(Enum):
     BEIGE = "#fff5d8"
+    LIGHT_GREEN = "#93c47d"
+    GREEN = "#335802"
+    DARK_GREEN = "#0c343d"
+    BROWN = "#5b3610"
+    DARK_BROWN = "#482b0d"
+    GRAY = "#bcbcbc"
+    DARK_GRAY = "#444444"
+    RED = "#cc0000"
+    DARK_RED = "#482b0d"
+    YELLOW = "#f1c232"
+    DARK_YELLOW = "#bf9000"
+    BLUE = "#3d85c6"
+    DARK_BLUE = "#16537e"
+    PINK = "#c90076"
+    PURPLE = "#674ea7"
+    ORANGE = "#e69138"
 
     def get_color(self):
         return color.hex(self.value)

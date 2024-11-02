@@ -13,6 +13,15 @@ class ObstacleFactory:
         for obstacle_type in init_lane_obstacles:
             self._obstacles.append(ObstacleMetaData(**obstacle_type))
 
+    def get_obstacles(self):
+        return self._obstacles
+
+    def apply_color_palette(self, palette):
+        for obstacle in self._obstacles:
+            if str(obstacle.obstacle.__name__) in palette.keys():
+                print(obstacle.obstacle.__name__)
+                obstacle.entity_metadata['colorr'] = palette[str(obstacle.obstacle.__name__)]
+
     def get_random(self):
         total_weight = sum(item.probability[0] for item in self._obstacles)
         rand = random.uniform(0, total_weight)
