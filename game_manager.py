@@ -3,12 +3,12 @@ from physics_engine import PhysicsEngine
 from entities.player import Player
 from states.impl.game_over_state import GameOver
 from states.impl.running_state import RunningState
-
+from camera_reading.read_camera import CameraReader
 
 class GameManager:
     _state = None
 
-    def __init__(self, player: Player, camera: PlayerCamera):
+    def __init__(self, player: Player, camera: PlayerCamera, camera_reading: CameraReader):
         self.player = player
         self.camera = camera
 
