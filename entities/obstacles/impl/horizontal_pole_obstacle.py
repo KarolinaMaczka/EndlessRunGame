@@ -100,3 +100,7 @@ class ObstaclePoleGate(LaneObstacle):
             collision_type = CollisionType.FULL
 
         return collision_type
+
+    def set_colorr(self, colorr):
+        self.right_pole.color = colorr
+        self.left_pole.color = colorr

@@ -15,12 +15,12 @@ class ObstaclePool:
                 obstacle = obstacle_class(position_z=-1000, difficulty=1)
                 self.reusable_obstacles[obstacle_class].append(obstacle)
 
-    def acquire(self, obstacle_class, position_z, difficulty, lane) -> Obstacle:
+    def acquire(self, obstacle_class, position_z, difficulty, lane, metadata, *args, **kwargs) -> Obstacle:
         if self.reusable_obstacles[obstacle_class]:
             obstacle = self.reusable_obstacles[obstacle_class].pop()
-            self.__set_obstacle_attr(obstacle, position_z, lane)
+            self.__set_obstacle_attr(obstacle, position_z=position_z, lane=lane, **metadata)
         else:
-            obstacle = obstacle_class(position_z, difficulty, lane)
+            obstacle = obstacle_class(position_z=position_z, difficulty=difficulty, lane=lane, **metadata)
         return obstacle
 
     def release(self, obstacle: Obstacle):
@@ -31,9 +31,9 @@ class ObstaclePool:
         else:
             del obstacle
 
-    def __set_obstacle_attr(self, obstacle: Obstacle, position_z=0, lane=0, *args, **kwargs):
-        obstacle.set_z_position(position_z)
-        obstacle.set_lane(lane)
-        obstacle.position_z = position_z
-        print(f'obstacle z {obstacle.lane}')
+    def __set_obstacle_attr(self, obstacle: Obstacle, **kwargs):
+        for key, value in kwargs.items():
+            setter_name = f"set_{key}"
+            if hasattr(obstacle, setter_name):
+                getattr(obstacle, setter_name)(value)
 

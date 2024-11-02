@@ -3,13 +3,14 @@ import random
 from config.constants import INITIAL_FIRST_OBSTACLE_Z_POS, INITIAL_LAST_OBSTACLE_Z_POS
 from difficulty.difficulty.difficulty_level import Difficulty
 from difficulty.maps.impl.map1 import FirstObstacleMap
+from difficulty.maps.impl.map2 import SecondObstacleMap
 
 
 class Difficulty2(Difficulty):
     def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS,
                  **kwargs):
         super().__init__(first_obstacle, last_obstacle_z, 100, **kwargs)
-        self.maps = [FirstObstacleMap(lane_change_const=0.1, small_obstacle_const=0.5)]
+        self.maps = [SecondObstacleMap(lane_change_const=0.1, small_obstacle_const=0.5)]
 
     def generate_obstacle(self, player_z):
         if player_z > self.first_obstacle + self.obstacle_generation_distance:
