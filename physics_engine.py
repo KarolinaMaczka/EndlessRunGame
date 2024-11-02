@@ -3,7 +3,8 @@ import random
 from ursina import time
 
 from entities.camera import PlayerCamera
-from config.constants import CollisionType, CollisionSide
+from config.constants import CollisionType, CollisionSide, ROAD_WIDTH
+from entities.obstacles.impl.gate_obstacle import ObstacleGate
 
 from entities.obstacles.utils import right_border_lane, left_border_lane
 from entities.player import Player
@@ -40,20 +41,22 @@ class PhysicsEngine:
         ground_y = 1
 
         for obstacle in obstacles:
-            # for child in obstacle.children:
-            #     if not child.jump:
-            #         return ground_y
             is_colliding_z = obstacle.position_z - obstacle.depth <= self.player.z <= obstacle.position_z + obstacle.depth
+            if is_colliding_z:
+                if obstacle.lane is not None:
+                    is_colliding_x = left_border_lane(obstacle.lane) <= self.player.x <= right_border_lane(obstacle.lane)
+                else:
+                    is_colliding_x = True
 
-            if obstacle.lane is not None:
-                is_colliding_x = left_border_lane(obstacle.lane) <= self.player.x <= right_border_lane(obstacle.lane)
-            else:
-                is_colliding_x = True
+                if is_colliding_x:
+                    for child in obstacle.children:
+                        if not child.jump:
+                            return ground_y
 
-            if is_colliding_x and is_colliding_z:
-                obstacle_top_y = obstacle.height + 2
-                if ground_y < obstacle_top_y <= self.player.y:
-                    ground_y = obstacle_top_y + 1
+                    obstacle_top_y = obstacle.height + 2
+
+                    if ground_y < obstacle_top_y <= self.player.y:
+                        ground_y = obstacle_top_y + 1
 
         return ground_y + 1
 
@@ -100,11 +103,11 @@ class PhysicsEngine:
         return False
 
     def check_road_collision(self) -> Tuple[Optional[CollisionType], Optional[CollisionSide]]:
-        if self.player.x >= 25:
-            self.player.x = 25
+        if self.player.x >= ROAD_WIDTH / 2:
+            self.player.x = ROAD_WIDTH / 2
             return CollisionType.LIGHT, CollisionSide.LEFT
-        if self.player.x <= -25:
-            self.player.x = -25
+        if self.player.x <= -ROAD_WIDTH / 2:
+            self.player.x = -ROAD_WIDTH / 2
             return CollisionType.LIGHT, CollisionSide.RIGHT
         return None, None
 

@@ -78,3 +78,7 @@ class Obstacle(Entity):
                 collision_side = CollisionSide.RIGHT
 
         return collision_side
+
+    def set_always_on_top(self):
+        for child in self.children:
+            child.always_on_top = 0

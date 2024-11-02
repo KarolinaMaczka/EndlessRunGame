@@ -26,7 +26,7 @@ from states.workers import obstacle_generator_worker
 class RunningState(GameState):
     def __init__(self, context):
         self.is_game_over = False
-        self.difficulty_level = Difficulty2()
+        self.difficulty_level = Difficulty1()
         self.active_obstacles = deque()
         self.obstacles_to_render = deque()
         self.obstacles_per_frame = 1
