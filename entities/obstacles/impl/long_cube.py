@@ -73,3 +73,27 @@ class ObstacleLongCube(LaneObstacle):
     def set_depth(self, depth):
         self.depth = depth
         invoke(Obstacle.set_fixed_depth, self.body, depth)
+
+    def set_colorr(self, colorr):
+        self.body.color = colorr
+
+    def set_has_ladder(self, has_ladder):
+        ladder_folder = config['long_cube']['long_cube.ladder.folder']
+        if random.random() < has_ladder:
+            self.ladder = Entity(
+                model=os.path.join(self.base_folder, ladder_folder, config['long_cube']['long_cube.ladder.object']),
+                scale=(3, 1.5, 5),
+                rotation=(0, 0, 0),
+                color=color.blue,
+                z=self.position_z - self.depth / 2 - 2.5,
+                collider='box',
+                double_sided=True,
+                jump=True,
+                climb=True,
+                sign=False,
+                parentt=self
+            )
+            self.children = [self.body, self.ladder]
+        else:
+            self.children = [self.body]
+

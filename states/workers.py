@@ -7,7 +7,7 @@ from difficulty.difficulty_manager import DifficultyManager
 
 def obstacle_generator_worker(obstacle_queue, player_z, go, difficulty_level, **kwargs):
     prev = difficulty_level.value
-    difficulty_level_obj = Difficulty1()
+    difficulty_level_obj = Difficulty2()
     difficulty_manager = DifficultyManager()
     while go.value:
         obstacles = difficulty_level_obj.generate_obstacle(player_z.value)

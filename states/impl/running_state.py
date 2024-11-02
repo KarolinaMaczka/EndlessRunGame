@@ -26,7 +26,7 @@ from states.workers import obstacle_generator_worker
 class RunningState(GameState):
     def __init__(self, context):
         self.is_game_over = False
-        self.difficulty_level = Difficulty1()
+        self.difficulty_level = Difficulty2()
         self.active_obstacles = deque()
         self.obstacles_to_render = deque()
         self.obstacles_per_frame = 1
@@ -62,7 +62,9 @@ class RunningState(GameState):
         self.active_obstacles.clear()
         print('exiting state')
         self.go.value = False
+        self.obstacle_process.terminate()
         self.obstacle_process.join()
+        del self.obstacle_process
 
     def handle_input(self):
         self.context.player.reset()
@@ -115,7 +117,7 @@ class RunningState(GameState):
         obstacles = self.difficulty_level.initialize_obstacles()
         for obstacle_type in obstacles:
             obstacle = self.obstacle_pool.acquire(obstacle_type.obstacle, position_z=obstacle_type.position_z,
-                                                  difficulty=obstacle_type.difficulty, lane=obstacle_type.lane)
+                                                  difficulty=obstacle_type.difficulty, lane=obstacle_type.lane, metadata=obstacle_type.entity_metadata)
 
             # obstacle = obstacle_type.obstacle(obstacle_type.position_z, obstacle_type.difficulty, obstacle_type.lane)
             self.active_obstacles.append(obstacle)
@@ -143,6 +145,7 @@ class RunningState(GameState):
                 obstacle_type.obstacle,
                 position_z=obstacle_type.position_z,
                 difficulty=obstacle_type.difficulty,
-                lane=obstacle_type.lane
+                lane=obstacle_type.lane,
+                metadata = obstacle_type.entity_metadata
             )
             self.active_obstacles.append(obstacle)

@@ -84,3 +84,6 @@ class ObstacleGate(Obstacle):
         collision_type = CollisionType.LIGHT if collision_type else CollisionType.FULL
         return collision_type
 
+    def set_colorr(self, colorr):
+        self.right_pillar.color = colorr
+        self.left_pillar.color = colorr
