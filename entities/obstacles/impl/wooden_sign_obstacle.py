@@ -31,6 +31,7 @@ class ObstacleWoodenSign(ObstacleSign):
         self.set_lane(lane)
         self.set_width(width)
         self.set_depth(depth)
+        self.set_always_on_top()
 
     def set_height(self, height):
         self.height = height

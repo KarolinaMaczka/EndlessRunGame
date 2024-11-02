@@ -1,6 +1,6 @@
 from ursina import invoke
 
-from config.constants import LANE_WIDTH
+from config.constants import LANE_WIDTH, ROAD_WIDTH
 from entities.obstacles.obstacle import Obstacle
 
 
@@ -12,7 +12,7 @@ class LaneObstacle(Obstacle):
 
     @staticmethod
     def set_fixed_lane(obj, lane):
-        obj.x = -20 + lane * 10
+        obj.x = -ROAD_WIDTH / 2 + LANE_WIDTH / 2 + lane * LANE_WIDTH
 
     def set_lane(self, lane):
         self.lane = lane

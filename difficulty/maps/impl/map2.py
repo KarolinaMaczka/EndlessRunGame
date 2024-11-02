@@ -4,6 +4,7 @@ from typing import List
 
 from ursina import color
 
+from config.constants import LANE_COUNT
 from difficulty.maps.map import ObstacleMap
 from entities.obstacles.impl.board_obstacle import ObstacleBoard
 from entities.obstacles.impl.cube_obstacle import ObstacleCube
@@ -66,16 +67,16 @@ class SecondObstacleMap(ObstacleMap):
         return last_obstacle_z
 
     def __create_trains(self, start_x: int, z_position: float):
-        for lane in range(start_x, 5, 2):
+        for lane in range(start_x, LANE_COUNT, 2):
             self.obstacles.append(self._big_obstacles.create_obstacle(z_position, lane))
 
     # def __create_signs(self, z_position: float):
-    #     self.obstacles.append(self._signs.create_obstacle(z_position, random.randint(0,4)))
+    #     self.obstacles.append(self._signs.create_obstacle(z_position, random.randint(0,LANE_COUNT)))
     #
     # def __generate_gate(self, z_position: float):
     #     self.obstacles.append(self._gates.create_obstacle(z_position, 0))
 
     def __create_small_obstacles(self, start_x: int, z_position: float, small_obstacle_const):
-        for lane in range(start_x, 5, 2):
+        for lane in range(start_x, LANE_COUNT, 2):
             if random.random() < small_obstacle_const:
                 self.obstacles.append(self._small_obstacles.create_obstacle(z_position, lane))
