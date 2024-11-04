@@ -1,12 +1,12 @@
 import os
 
-from ursina import Entity, color, invoke, destroy
+from ursina import Entity, color, invoke
 
 from config.config import config
-from config.constants import ROAD_WIDTH, LANE_WIDTH
+from config.constants import LANE_WIDTH, CollisionType
 from entities.obstacles.lane_obstacle import LaneObstacle
 from entities.obstacles.obstacle import Obstacle
-
+from entities.obstacles.utils import left_outer_border_lane, left_inner_border_lane, right_inner_border_lane, right_outer_border_lane
 
 class ObstaclePoleGate(LaneObstacle):
     def __init__(self, position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.dark_gray, height: float = 2.5,
@@ -49,15 +49,10 @@ class ObstaclePoleGate(LaneObstacle):
         )
         self.children = [self.left_pole, self.right_pole, self.top_pole]
 
+        self.set_height(height)
         self.set_depth(depth)
         self.set_lane(lane)
-        self.set_height(height)
         self.set_width(width)
-
-    # def delete(self):
-        # destroy(self.top_pole)
-        # destroy(self.right_pole)
-        # destroy(self.left_pole)
 
     def set_height(self, height):
         self.height = height
@@ -67,7 +62,7 @@ class ObstaclePoleGate(LaneObstacle):
         invoke(Obstacle.set_fixed_height, self.right_pole, height)
         invoke(Obstacle.set_y_position, self.right_pole)
 
-        self.top_pole.y = self.right_pole.y + (height + self.top_pole.bounds.size[2]) / 2
+        self.top_pole.y = self.right_pole.y + (self.height + self.top_pole.bounds.size[2]) / 2
 
     def set_width(self, width):
         self.width = width
@@ -76,24 +71,32 @@ class ObstaclePoleGate(LaneObstacle):
         self.left_pole.x = self.left_pole.x - offset
         invoke(Obstacle.set_fixed_width, self.top_pole, width)
 
-    # def set_lane(self, lane):
-    #     self.lane = lane
-    #     invoke(LaneObstacle.set_fixed_lane, self.right_pole, self.lane)
-    #     invoke(LaneObstacle.set_fixed_lane, self.left_pole, self.lane)
-    #     invoke(LaneObstacle.set_fixed_lane, self.top_pole, self.lane)
-
     def set_depth(self, depth):
         self.depth = depth
         self.top_pole.y += (depth - self.top_pole.bounds.size[2]) / 2
-        invoke(Obstacle.set_fixed_depth, self.right_pole, depth * 5)
-        invoke(Obstacle.set_fixed_depth, self.left_pole, depth * 5)
-        invoke(Obstacle.set_fixed_depth, self.top_pole, depth * 5)
+        invoke(Obstacle.set_fixed_depth, self.right_pole, depth * 15)
+        invoke(Obstacle.set_fixed_depth, self.left_pole, depth * 15)
+        invoke(Obstacle.set_fixed_depth, self.top_pole, depth * 15)
         invoke(Obstacle.set_fixed_width, self.right_pole, depth)
         invoke(Obstacle.set_fixed_width, self.left_pole, depth)
         invoke(Obstacle.set_fixed_height, self.top_pole, depth)
 
-    # def set_z_position(self, position_z):
-    #     self.position_z = position_z
-    #     self.left_pole.z = position_z
-    #     self.right_pole.z = position_z
-    #     self.top_pole.z = position_z
+    def check_collision_type(self, player_x, is_crouching, is_jumping, *args, **kwargs) -> CollisionType:
+        """
+        when the player is crouching the collision type is none if we are in the middle otherwise full or light
+        depending on how close the player is to the ends
+        """
+        collision_type_full = (right_outer_border_lane(self.lane) <= player_x <= right_inner_border_lane(self.lane)) or (
+                                left_outer_border_lane(self.lane) <= player_x <= left_inner_border_lane(self.lane))
+        if collision_type_full:
+            collision_type = CollisionType.FULL
+        elif is_crouching and not is_jumping:
+            collision_type_none = left_inner_border_lane(self.lane) < player_x < right_inner_border_lane(self.lane)
+            if collision_type_none:
+                collision_type = None
+            else:
+                collision_type = CollisionType.LIGHT
+        else:
+            collision_type = CollisionType.FULL
+
+        return collision_type

@@ -42,18 +42,6 @@ class ObstacleTrain(LaneObstacle):
         invoke(Obstacle.set_fixed_height, self.body, height)
         invoke(Obstacle.set_y_position, self.body)
 
-    # def set_lane(self, lane):
-    #     self.lane = lane
-    #     invoke(LaneObstacle.set_fixed_lane, self.body, self.lane)
-
     def set_depth(self, depth):
         self.depth = depth
         invoke(Obstacle.set_fixed_depth, self.body, depth)
-
-    # def set_z_position(self, position_z):
-    #     self.position_z = position_z
-    #     self.body.z = position_z
-
-    # def delete(self):
-    #     destroy(self.body)
-

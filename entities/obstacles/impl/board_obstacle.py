@@ -1,8 +1,10 @@
 from ursina import Entity, color, invoke
 
-from config.constants import LANE_WIDTH, STANDARD_OBSTACLE_HEIGHT
+from config.constants import LANE_WIDTH, STANDARD_OBSTACLE_HEIGHT, CollisionType, ROAD_WIDTH
 from entities.obstacles.impl.horizontal_pole_obstacle import ObstaclePoleGate
 from entities.obstacles.obstacle import Obstacle
+from entities.obstacles.utils import left_inner_border_lane, left_outer_border_lane, right_outer_border_lane, \
+    right_inner_border_lane
 
 
 class ObstacleBoard(ObstaclePoleGate):
@@ -25,4 +27,20 @@ class ObstacleBoard(ObstaclePoleGate):
 
         self.top_pole.y = self.right_pole.y + (height + board_height) / 2
         invoke(Obstacle.set_fixed_height, self.top_pole, board_height)
+
+    def check_collision_type(self, player_x, is_crouching, *args, **kwargs) -> CollisionType:
+        collision_type_full = (right_inner_border_lane(self.lane) <= player_x <= right_outer_border_lane(
+            self.lane)) or (left_outer_border_lane(self.lane) <= player_x <= left_inner_border_lane(self.lane))
+        if collision_type_full:
+            collision_type = CollisionType.FULL
+        elif is_crouching:
+            collision_type_none = left_inner_border_lane(self.lane) < player_x < right_inner_border_lane(self.lane)
+            if collision_type_none:
+                collision_type = None
+            else:
+                collision_type = CollisionType.LIGHT
+        else:
+            collision_type = CollisionType.FULL
+
+        return collision_type
 

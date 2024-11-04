@@ -1,6 +1,5 @@
-from ursina import FrameAnimation3d, time, color
-from config.config import config
-from config.constants import SLIGHT_BOUNCE_DIST, CollisionSide, CollisionType
+from ursina import FrameAnimation3d, time
+from config.constants import CollisionSide, CollisionType
 
 
 class Player(FrameAnimation3d):
@@ -9,28 +8,62 @@ class Player(FrameAnimation3d):
         super().__init__(
             # config['player']['player.object'],
             #  texture=config['player']['player.texture'],
+            # model='cube',
             name='player',
-             double_sided=True, position=(0, 1, 0), collider='box',
-             scale=5, rotation=(0,10,0), fps=5)
-        self.speed = 250
+             double_sided=True, position=(0, 2, 0), collider='box',
+             scale=3, rotation=(0,0,0), fps=5),
 
+        self.speed = 250
         self.velocity_y = 0
         self.is_jumping = False
-        self.jump_height = 0.5
+        self.jump_height = 0.55
         self.is_climbing = False
         self.climb_height = 0
         self.is_falling = False
         self.ground = 1
-        self.climb_speed = 10
+        self.climb_speed = 20
         self.velocity_x = 30
+        self.prev_speed = self.speed
+        self.is_crouching = False
+        self.bouncing_dist = 3
 
     def set_jump(self):
         self.velocity_y += self.jump_height
         self.is_jumping = True
 
     def set_climb(self, climb_height):
-        self.velocity_y = climb_height
         self.is_climbing = True
+        self.prev_speed = self.speed if self.speed else self.prev_speed
+        self.speed = 0
+        self.climb_height = climb_height
+
+    def stop_climb(self):
+        self.y = self.climb_height + 1
+        self.velocity_y = 0
+        self.speed = self.prev_speed
+        self.is_climbing = False
+        self.is_falling = True
+        self.ground = self.climb_height + 1
+
+    def land(self, ground_y):
+        self.y = ground_y
+        self.velocity_y = 0
+        self.is_jumping = False
+        self.is_falling = False
+
+    def crouch(self):
+        self.is_crouching = True
+
+    def reset(self):
+        # self.context.player.scale = 5
+        self.is_crouching = False
+
+    def fall_down(self, gravity):
+        if self.is_crouching:
+            gravity *= 2
+
+        self.velocity_y += gravity * time.dt
+        self.y += self.velocity_y
 
     def run(self):
         self.z += time.dt * self.speed
@@ -44,15 +77,15 @@ class Player(FrameAnimation3d):
     def go_right(self):
         self.x += time.dt * self.velocity_x
 
-    def bounce(self, dist=SLIGHT_BOUNCE_DIST, side: CollisionSide = CollisionSide.LEFT,
+    def bounce(self, side: CollisionSide = CollisionSide.LEFT,
                collision_type: CollisionType = CollisionType.LIGHT):
         self.visible = False if collision_type == CollisionType.FULL else True
 
         if side == CollisionSide.LEFT:
-            self.x -= dist
+            self.x -= self.bouncing_dist
         elif side == CollisionSide.RIGHT:
-            self.x += dist
+            self.x += self.bouncing_dist
         elif side == CollisionSide.UP:
-            self.z += dist
+            self.z += self.bouncing_dist
         elif side == CollisionSide.DOWN:
-            self.z -= dist
+            self.z -= self.bouncing_dist

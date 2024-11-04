@@ -48,10 +48,6 @@ class Obstacle(Entity):
     def set_lane(self, lane):
         self.lane = lane
 
-    @abstractmethod
-    def delete(self):
-        pass
-
     def delete(self):
         for child in self.children:
             destroy(child)
@@ -62,18 +58,19 @@ class Obstacle(Entity):
         for child in self.children:
             child.z = position_z
 
-    def check_collision(self, player_x, player_y, player_z, child) -> Tuple[Optional[CollisionType], Optional[CollisionSide]]:
+    def check_collision_type(self, player_x, player_y, player_z, child, *args, **kwargs) -> CollisionType:
         collision_type = CollisionType.FULL if abs(player_x - child.x) < LANE_WIDTH / 2 - 1 else CollisionType.LIGHT
+        return collision_type
 
-        if self.player.y >= self.height + ROAD_HEIGHT / 2 - 1:
+    def check_collision_side(self, player_x, player_y, child, *args, **kwargs) -> CollisionSide:
+        if player_y >= self.height + ROAD_HEIGHT / 2 - 1:
             collision_side = CollisionSide.UP
-        elif child.bounds.start.y >= self.player.y:
+        elif child.bounds.start.y >= player_y:
             collision_side = CollisionSide.DOWN
-            collision_type = CollisionType.FULL
         else:
-            if self.player.x < child.x:
+            if player_x < child.x:
                 collision_side = CollisionSide.LEFT
             else:
                 collision_side = CollisionSide.RIGHT
 
-        return collision_type, collision_side
+        return collision_side
