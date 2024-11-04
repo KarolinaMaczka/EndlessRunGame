@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
     scenery = Scenery()
 
-    game_manager = GameManager(player, camera, camera_reading)
+    game_manager = GameManager(player, camera, camera_reading.emotion_holder)
 
     def update():
         game_manager.update()

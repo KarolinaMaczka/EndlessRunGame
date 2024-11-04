@@ -2,12 +2,17 @@ import cv2 as cv
 import time
 from deepface import DeepFace
 
+
+class EmotionHolder:
+    def __init__(self):
+        self.dominant_emotion = None
+        self.second_dominant_emotion = None
+
 class CameraReader:
     def __init__(self):
         self.last_analysis_time = time.time()
         self.analysis_interval = 5
-        self.dominant_emotion = None
-        self.second_dominant_emotion = None
+        self.emotion_holder = EmotionHolder()
 
     def run(self):
         cap = cv.VideoCapture(0)
@@ -19,8 +24,8 @@ class CameraReader:
                 try:
                     print('Analizuję...')
                     result = DeepFace.analyze(frame, actions=['emotion'], enforce_detection=False, detector_backend='ssd')[0]
-                    self.dominant_emotion = max(result['emotion'], key=result['emotion'].get)
-                    self.second_dominant_emotion = sorted(result['emotion'], key=result['emotion'].get)[-2]
+                    self.emotion_holder.dominant_emotion = max(result['emotion'], key=result['emotion'].get)
+                    self.emotion_holder.second_dominant_emotion = sorted(result['emotion'], key=result['emotion'].get)[-2]
                     print(f'Dominujące emocje: {self.dominant_emotion} i {self.second_dominant_emotion}')
                     print(result)
                 except Exception as e:
