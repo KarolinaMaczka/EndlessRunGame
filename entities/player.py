@@ -26,7 +26,6 @@ class Player(FrameAnimation3d):
         self.prev_speed = self.speed
         self.is_crouching = False
         self.bouncing_dist = 3
-        self.gravity = -1
 
     def set_jump(self):
         self.velocity_y += self.jump_height
@@ -59,8 +58,7 @@ class Player(FrameAnimation3d):
         # self.context.player.scale = 5
         self.is_crouching = False
 
-    def fall_down(self):
-        gravity = self.gravity
+    def fall_down(self, gravity):
         if self.is_crouching:
             gravity *= 2
 

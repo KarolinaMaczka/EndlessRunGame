@@ -2,7 +2,7 @@ import random
 
 from ursina import invoke
 
-from config.constants import CollisionType, CollisionSide, ROAD_WIDTH, LANE_WIDTH
+from config.constants import CollisionType, CollisionSide
 from entities.obstacles.obstacle import Obstacle
 
 
@@ -15,7 +15,7 @@ class ObstacleSign(Obstacle):
 
     @staticmethod
     def set_fixed_lane(obj, lane):
-        obj.x = -ROAD_WIDTH / 2 + lane * LANE_WIDTH
+        obj.x = -25 + lane * 10
 
     def set_lane(self, lane):
         self.lane = lane

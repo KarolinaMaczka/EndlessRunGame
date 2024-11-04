@@ -53,14 +53,10 @@ class Obstacle(Entity):
             destroy(child)
         destroy(self)
 
-    def set_position_z(self, position_z):
+    def set_z_position(self, position_z):
         self.position_z = position_z
         for child in self.children:
             child.z = position_z
-
-    def set_colorr(self, colorr):
-        for child in self.children:
-            child.color = colorr
 
     def check_collision_type(self, player_x, player_y, player_z, child, *args, **kwargs) -> CollisionType:
         collision_type = CollisionType.FULL if abs(player_x - child.x) < LANE_WIDTH / 2 - 1 else CollisionType.LIGHT
@@ -78,7 +74,3 @@ class Obstacle(Entity):
                 collision_side = CollisionSide.RIGHT
 
         return collision_side
-
-    def set_always_on_top(self):
-        for child in self.children:
-            child.always_on_top = 0
