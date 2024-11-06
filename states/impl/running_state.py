@@ -45,7 +45,7 @@ class RunningState(GameState):
             ObstacleWoodenSign,
             ObstacleTrain
         ], max_size_per_type=50)
-        self.difficulty_manager = DifficultyManager(emotion_holder)
+        self.difficulty_manager = DifficultyManager()
         self.start()
         self.difficulty_level = multiprocessing.Value('i', 1)
         self.go = multiprocessing.Value('b', True)

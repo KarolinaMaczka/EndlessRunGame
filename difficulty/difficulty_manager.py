@@ -4,7 +4,7 @@ from difficulty.difficulty.impl.difficulty_level2 import Difficulty2
 from camera_reading.read_camera import EmotionHolder
 
 class DifficultyManager:
-    def __init__(self, emotion_holder: EmotionHolder):
+    def __init__(self):
         self.player_settings = {
             1: {"speed": 100, "jump_height": 0.3, "gravity": 10},
             2: {"speed": 200, "jump_height": 0.5, "gravity": 7},

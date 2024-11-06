@@ -7,13 +7,14 @@ from camera_reading.read_camera import EmotionHolder
 
 class GameManager:
     _state = None
-
+    emotion_holder = None
     def __init__(self, player: Player, camera: PlayerCamera, emotion_holder: EmotionHolder):
         self.player = player
         self.camera = camera
+        self.emotion_holder = emotion_holder
 
         self.physics_engine = PhysicsEngine(player, camera)
-        self._state = RunningState(self)
+        self._state = RunningState(self, emotion_holder)
 
     def transition_to(self, state: str):
         self._state.on_exit()
