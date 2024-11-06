@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
     scenery = Scenery()
 
-    game_manager = GameManager(player, camera, camera_reading.emotion_holder)
+    game_manager = GameManager(player, camera, camera_reading)
 
     def update():
         game_manager.update()
@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
     sky = Sky()
 
-    # Add multithreading so that we can read camera in the background
+    #TODO Change to new process instead of thread
     threading.Thread(target=camera_reading.run, daemon=True).start()
 
     app.run()

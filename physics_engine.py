@@ -68,7 +68,7 @@ class PhysicsEngine:
         return False
 
     def handle_obstacle_collision(self):
-        print(self.player.y)
+        # print(self.player.y)
         if hit_info := self.player.intersects():
             obstacle = hit_info.entity
 
