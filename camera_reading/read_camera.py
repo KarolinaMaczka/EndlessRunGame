@@ -18,7 +18,7 @@ class CameraReader:
         cap = cv.VideoCapture(0)
         while True:
             ret, frame = cap.read()
-            cv.imshow('Kamera', frame)
+            # cv.imshow('Kamera', frame)
 
             if time.time() - self.last_analysis_time > self.analysis_interval:
                 try:
