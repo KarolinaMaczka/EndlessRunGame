@@ -12,6 +12,7 @@ from camera_reading.read_camera import CameraReader
 
 if __name__ == '__main__':
 
+
     app = Ursina()
 
     window.fps_counter.enabled = True
@@ -28,6 +29,8 @@ if __name__ == '__main__':
 
     game_manager = GameManager(player, camera, camera_reading)
 
+    threading.Thread(target=camera_reading.run, daemon=True).start()
+
     def update():
         game_manager.update()
 
@@ -36,6 +39,5 @@ if __name__ == '__main__':
     sky = Sky()
 
     #TODO Change to new process instead of thread
-    threading.Thread(target=camera_reading.run, daemon=True).start()
 
     app.run()
