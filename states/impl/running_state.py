@@ -4,6 +4,7 @@ from difficulty.difficulty.difficulty_level import Difficulty
 from difficulty.difficulty.impl.difficulty_level1 import Difficulty1
 from difficulty.difficulty.impl.difficulty_level2 import Difficulty2
 from difficulty.difficulty_manager import DifficultyManager
+from datetime import datetime
 
 from entities.obstacles.obstacle_pool import ObstaclePool
 from states.state import GameState
@@ -144,6 +145,7 @@ class RunningState(GameState):
     def __initialize_obstacles(self):
         obstacles = self.difficulty_class_level.initialize_obstacles()
         for obstacle_type in obstacles:
+            self.context.data_manager.obstacle_data.append((str(obstacle_type.obstacle), obstacle_type.position_z, obstacle_type.lane))
             obstacle = self.obstacle_pool.acquire(obstacle_type.obstacle, position_z=obstacle_type.position_z,
                                                   difficulty=obstacle_type.difficulty, lane=obstacle_type.lane, metadata=obstacle_type.entity_metadata)
 
@@ -162,9 +164,9 @@ class RunningState(GameState):
             print(self.active_obstacles)
             self.active_obstacles.remove(obstacle)
             print(f'after removing {self.active_obstacles}')
-            # obstacle.delete()
-            # destroy(obstacle)
-            self.obstacle_pool.release(obstacle)
+            obstacle.delete()
+            destroy(obstacle)
+            # self.obstacle_pool.release(obstacle)
         obstacles_to_remove.clear()
 
     def __render_obstacles_from_queue(self):
@@ -182,4 +184,5 @@ class RunningState(GameState):
                 metadata=obstacle_type.entity_metadata
             )
             self.active_obstacles.append(obstacle)
+            self.context.data_manager.obstacle_data.append((str(obstacle_type.obstacle), obstacle_type.position_z, obstacle_type.lane))
             print(f'after adding {self.active_obstacles}')

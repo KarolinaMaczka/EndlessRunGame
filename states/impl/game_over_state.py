@@ -5,6 +5,7 @@ from states.state import GameState
 
 class GameOver(GameState):
     def __init__(self, context):
+        self.rating = -1
         self.context = context
         self.create_window()
 
@@ -15,6 +16,7 @@ class GameOver(GameState):
         pass
 
     def on_exit(self):
+        self.context.data_manager.save()
         destroy(self.context.window_panel)
         self.context.window_panel = None
 
@@ -63,6 +65,7 @@ class GameOver(GameState):
 
     def set_rating(self, rating):
         self.rating = rating
+        self.context.data_manager.player_satisfaction = rating
         for i, star in enumerate(self.stars):
             star.text_entity.color = color.yellow if i < rating else color.gray
 

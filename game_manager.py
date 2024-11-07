@@ -1,3 +1,4 @@
+from data_manager import DataManager
 from entities.camera import PlayerCamera
 from physics_engine import PhysicsEngine
 from entities.player import Player
@@ -12,8 +13,9 @@ class GameManager:
     def __init__(self, player: Player, camera: PlayerCamera):
         self.player = player
         self.camera = camera
+        self.data_manager = DataManager()
 
-        self.physics_engine = PhysicsEngine(player, camera)
+        self.physics_engine = PhysicsEngine(player, camera, self.data_manager)
         self._state = MainMenu(self)
         RunningState(self).on_exit()
 
