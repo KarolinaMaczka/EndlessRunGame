@@ -7,3 +7,5 @@
 /assets/
 origin/game
 /.vscode/
+*.json
+/player_data/
