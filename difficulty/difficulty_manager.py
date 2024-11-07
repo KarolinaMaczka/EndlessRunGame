@@ -1,7 +1,7 @@
 from difficulty.difficulty.difficulty_level import Difficulty
 from difficulty.difficulty.impl.difficulty_level1 import Difficulty1
 from difficulty.difficulty.impl.difficulty_level2 import Difficulty2
-
+from camera_reading.read_camera import EmotionHolder
 
 class DifficultyManager:
     def __init__(self):
