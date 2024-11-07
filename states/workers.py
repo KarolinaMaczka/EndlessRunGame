@@ -19,4 +19,4 @@ def obstacle_generator_worker(obstacle_queue, player_z, go, difficulty_level, **
 
             for obstacle in obstacles:
                 obstacle_queue.put(obstacle)
-                time.sleep(0.06)
+                time.sleep(0.1)
