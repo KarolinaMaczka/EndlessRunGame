@@ -3,7 +3,7 @@ import os
 from ursina import Entity, color, invoke
 
 from config.config import config
-from config.constants import LANE_WIDTH, CollisionType
+from config.constants import LANE_WIDTH, CollisionType, ROAD_WIDTH
 from entities.obstacles.lane_obstacle import LaneObstacle
 from entities.obstacles.obstacle import Obstacle
 from entities.obstacles.utils import left_outer_border_lane, left_inner_border_lane, right_inner_border_lane, right_outer_border_lane

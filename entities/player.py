@@ -1,4 +1,6 @@
-from ursina import FrameAnimation3d, time
+from ursina import FrameAnimation3d, time, color
+
+from config.config import config
 from config.constants import CollisionSide, CollisionType
 
 
@@ -6,12 +8,14 @@ class Player(FrameAnimation3d):
 
     def __init__(self):
         super().__init__(
-            # config['player']['player.object'],
-            #  texture=config['player']['player.texture'],
+            # model="assets/player/Wolf_obj",
+            # texture="assets/player/textures/Wolf_Body",
             # model='cube',
             name='player',
+            # color=color.white,
+            # always_on_top=0,
              double_sided=True, position=(0, 2, 0), collider='box',
-             scale=3, rotation=(0,0,0), fps=5),
+             scale=5, rotation=(0,0,0), fps=5),
 
         self.speed = 250
         self.velocity_y = 0
