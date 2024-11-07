@@ -2,17 +2,20 @@ import cv2 as cv
 import time
 from deepface import DeepFace
 
+from data_manager import DataManager
+
 class EmotionHolder():
     def __init__(self):
         self.dominant_emotion = None
         self.second_dominant_emotion = None
 
 class CameraReader:
-    def __init__(self):
+    def __init__(self, data_manager: DataManager):
         self.last_analysis_time = time.time()
-        self.analysis_interval = 5
+        self.analysis_interval = 1
         self.emotion_holder = EmotionHolder()
         self.game_is_running = False
+        self.data_manager = data_manager
     def run(self):
         cap = cv.VideoCapture(0)
         while True:
@@ -25,6 +28,8 @@ class CameraReader:
                     result = DeepFace.analyze(frame, actions=['emotion'], enforce_detection=False, detector_backend='mtcnn')[0]
                     self.emotion_holder.dominant_emotion = max(result['emotion'], key=result['emotion'].get)
                     self.emotion_holder.second_dominant_emotion = sorted(result['emotion'], key=result['emotion'].get)[-2]
+
+                    self.data_manager.add_emotion(self.emotion_holder.dominant_emotion, self.emotion_holder.second_dominant_emotion)
                     print(f'Dominujące emocje: {self.emotion_holder.dominant_emotion} i {self.emotion_holder.second_dominant_emotion}')
                     print(result)
                 except Exception as e:
@@ -37,5 +42,5 @@ class CameraReader:
         cv.destroyAllWindows()
 
 if __name__ == '__main__':
-    camera_reading = CameraReader()
+    camera_reading = CameraReader(DataManager())
     camera_reading.run()

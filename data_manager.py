@@ -30,3 +30,6 @@ class DataManager:
             json.dump(data, f)
 
         print(f"saved  data {file_path}")
+
+    def add_emotion(self, dominant_emotion, second_dominant_emotion):
+        self.player_emotions.append((dominant_emotion, second_dominant_emotion))

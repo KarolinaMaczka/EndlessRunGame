@@ -8,7 +8,7 @@ import atexit
 
 import threading
 from camera_reading.read_camera import CameraReader
-
+from data_manager import DataManager
 
 if __name__ == '__main__':
 
@@ -23,11 +23,13 @@ if __name__ == '__main__':
 
     camera = PlayerCamera(player)
 
-    camera_reading = CameraReader()
+    data_manager = DataManager()
+
+    camera_reading = CameraReader(data_manager)
 
     scenery = Scenery()
 
-    game_manager = GameManager(player, camera, camera_reading)
+    game_manager = GameManager(player, camera, camera_reading, data_manager)
 
     threading.Thread(target=camera_reading.run, daemon=True).start()
 

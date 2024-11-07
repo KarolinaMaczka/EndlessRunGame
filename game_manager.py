@@ -10,11 +10,11 @@ from camera_reading.read_camera import CameraReader
 class GameManager:
     _state = None
     emotion_holder = None
-    def __init__(self, player: Player, camera: PlayerCamera, camera_reader: CameraReader):
+    def __init__(self, player: Player, camera: PlayerCamera, camera_reader: CameraReader, data_manager: DataManager):
         self.player = player
         self.camera = camera
        
-        self.data_manager = DataManager()
+        self.data_manager = data_manager
         self.camera_reader = camera_reader
         self.physics_engine = PhysicsEngine(player, camera, self.data_manager)
         self._state = MainMenu(self)

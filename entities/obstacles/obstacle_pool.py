@@ -47,7 +47,7 @@ class ObstaclePool:
             for child in obstacle.children:
                 child.enabled = False
             self.reusable_obstacles[obstacle_class].append(obstacle)
-            print(f'release obstacle {self.reusable_obstacles}')
+            # print(f'release obstacle {self.reusable_obstacles}')
         else:
             print("delete")
             destroy(obstacle)
@@ -58,5 +58,5 @@ class ObstaclePool:
         for key, value in kwargs.items():
             setter_name = f"set_{key}"
             if hasattr(obstacle, setter_name):
-                print(f'set {setter_name}, {value}')
+                # print(f'set {setter_name}, {value}')
                 getattr(obstacle, setter_name)(value)
