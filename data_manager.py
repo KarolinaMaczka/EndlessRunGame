@@ -27,6 +27,6 @@ class DataManager:
         }
 
         with open(file_path, 'w') as f:
-            json.dump(data, f)
+            json.dump(data, f, indent=1)
 
         print(f"saved  data {file_path}")
