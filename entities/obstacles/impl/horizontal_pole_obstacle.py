@@ -22,7 +22,8 @@ class ObstaclePoleGate(LaneObstacle):
             jump=True,
             climb=False,
             sign=False,
-            parentt=self
+            parentt=self,
+            render_queue=3,
         )
 
         self.right_pole = Entity(
@@ -33,7 +34,8 @@ class ObstaclePoleGate(LaneObstacle):
             jump=True,
             climb=False,
             sign=False,
-            parentt=self
+            parentt=self,
+            always_on_top=True
         )
 
         self.top_pole = Entity(
@@ -53,6 +55,7 @@ class ObstaclePoleGate(LaneObstacle):
         self.set_depth(depth)
         self.set_lane(lane)
         self.set_width(width)
+        self.set_always_on_top()
 
     def set_height(self, height):
         self.height = height
@@ -100,3 +103,7 @@ class ObstaclePoleGate(LaneObstacle):
             collision_type = CollisionType.FULL
 
         return collision_type
+
+    def set_colorr(self, colorr):
+        self.right_pole.color = colorr
+        self.left_pole.color = colorr

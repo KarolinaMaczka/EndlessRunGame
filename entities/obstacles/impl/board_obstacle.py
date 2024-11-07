@@ -12,6 +12,7 @@ class ObstacleBoard(ObstaclePoleGate):
                  width: float = LANE_WIDTH, depth: float = 1, board_height: float = STANDARD_OBSTACLE_HEIGHT):
         super().__init__(position_z=position_z, difficulty=difficulty, lane=lane, height=height,width=width, depth=depth)
         self.set_height(height, board_height)
+        self.set_always_on_top()
 
     def set_height(self, height, board_height=STANDARD_OBSTACLE_HEIGHT):
         """

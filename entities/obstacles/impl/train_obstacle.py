@@ -32,6 +32,7 @@ class ObstacleTrain(LaneObstacle):
         self.set_lane(lane)
         self.set_height(height)
         self.set_width(width)
+        self.set_always_on_top()
 
     def set_width(self, width):
         self.width = width

@@ -21,7 +21,7 @@ class ObstacleFence(LaneObstacle):
             scale=(0.4, 0.05, 0.05),
             texture=os.path.join(self.base_folder, folder, config['fence']['fence.texture']),
             rotation=(0, 90, 0),
-            color=color.brown,
+            color=colorr,
             z=position_z,
             collider='box',
             double_sided=True,
@@ -36,6 +36,7 @@ class ObstacleFence(LaneObstacle):
         self.set_lane(lane)
         self.set_height(height)
         self.set_width(width)
+        self.set_always_on_top()
 
     def set_width(self, width):
         self.width = width
