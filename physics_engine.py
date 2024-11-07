@@ -2,6 +2,7 @@ import random
 
 from ursina import time
 
+from data_manager import DataManager
 from entities.camera import PlayerCamera
 from config.constants import CollisionType, CollisionSide, ROAD_WIDTH
 from entities.obstacles.impl.gate_obstacle import ObstacleGate
@@ -12,12 +13,11 @@ from typing import Optional, Tuple
 
 
 class PhysicsEngine:
-    def __init__(self, player: Player, camera: PlayerCamera):
+    def __init__(self, player: Player, camera: PlayerCamera, data_manager: DataManager):
         self.player = player
         self.camera = camera
-        # self.gravity = -2
+        self.data_manager = data_manager
         self.stop_jump = False
-        # self.prev_speed = 0
 
     def apply_gravity(self, obstacles):
         '''
@@ -71,7 +71,6 @@ class PhysicsEngine:
         return False
 
     def handle_obstacle_collision(self):
-        # print(self.player.y)
         if hit_info := self.player.intersects():
             obstacle = hit_info.entity
 
@@ -87,18 +86,24 @@ class PhysicsEngine:
                     if not obstacle.jump:
                         print(f"UP collision with obstacle:  {obstacle.position}, {self.player.position}")
                         self.__handle_full_collision(side, collision_type)
+                        self.__save_collision(side, CollisionType.FULL, obstacle)
                         return True
                     return False
                 elif side == CollisionSide.DOWN:
                     print(f"DOWN collision with obstacle {type(obstacle.parentt).__name__}:  {obstacle.position}, {self.player.position}")
+                    self.__save_collision(side, CollisionType.LIGHT, obstacle)
+
                     return False
                 elif obstacle.sign or collision_type == CollisionType.LIGHT:
                     print(f"LIGHT {side} collision with obstacle {type(obstacle.parentt).__name__}: {obstacle.position}, {self.player.position}")
                     self.__handle_light_collision(side, collision_type)
+                    self.__save_collision(side, collision_type, obstacle)
+
                     return False
                 elif collision_type == CollisionType.FULL:
                     print(f"FULL {side} collision with obstacle {type(obstacle.parentt).__name__}: {obstacle.position}, {self.player.position}")
                     self.__handle_full_collision(side, collision_type)
+                    self.__save_collision(side, collision_type, obstacle)
                     return True
         return False
 
@@ -110,6 +115,13 @@ class PhysicsEngine:
             self.player.x = -ROAD_WIDTH / 2
             return CollisionType.LIGHT, CollisionSide.RIGHT
         return None, None
+
+    def __save_collision(self, side, collision_type, obstacle):
+        self.data_manager.hit_obstacles.append(
+            (str(type(obstacle.parentt).__name__), str(side.value), str(collision_type.value),
+             obstacle.parentt.position_z, obstacle.parentt.lane,
+             self.player.position.z, self.player.position.x,
+             self.player.position.y))
 
     def check_collision(self, obstacle) -> Tuple[Optional[CollisionType], Optional[CollisionSide]]:
         collision_type = obstacle.parentt.check_collision_type(player_x=self.player.x, player_y=self.player.y,
