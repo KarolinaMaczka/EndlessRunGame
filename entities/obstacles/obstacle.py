@@ -54,6 +54,7 @@ class Obstacle(Entity):
         destroy(self)
 
     def set_position_z(self, position_z):
+        self.z = position_z
         self.position_z = position_z
         for child in self.children:
             child.z = position_z

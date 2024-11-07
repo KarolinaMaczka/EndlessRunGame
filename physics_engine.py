@@ -15,9 +15,7 @@ class PhysicsEngine:
     def __init__(self, player: Player, camera: PlayerCamera):
         self.player = player
         self.camera = camera
-        # self.gravity = -2
         self.stop_jump = False
-        # self.prev_speed = 0
 
     def apply_gravity(self, obstacles):
         '''
@@ -71,7 +69,6 @@ class PhysicsEngine:
         return False
 
     def handle_obstacle_collision(self):
-        print(self.player.y)
         if hit_info := self.player.intersects():
             obstacle = hit_info.entity
 

@@ -96,11 +96,13 @@ class ObstacleLongCube(LaneObstacle):
             )
             self.children = [self.body, self.ladder]
         else:
+            self.ladder = None
             self.children = [self.body]
 
     def set_position_z(self, position_z):
+        self.z = position_z
         self.position_z = position_z
         self.body.position_z = position_z
-        if self.ladder:
+        if self.ladder is not None:
             self.ladder.position_z = self.position_z - self.depth / 2 - 2.5
 
