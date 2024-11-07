@@ -7,4 +7,4 @@ class ObstacleMetaData:
         self.probability = probability,
         self.difficulty = difficulty
         self.obstacle = obstacle
-        print(f"Created an obstacle flyweight with attributes: {kwargs}")
+        # print(f"Created an obstacle flyweight with attributes: {kwargs}")

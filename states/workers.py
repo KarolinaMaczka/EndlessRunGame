@@ -12,7 +12,7 @@ def obstacle_generator_worker(obstacle_queue, player_z, go, difficulty_level, **
     while go.value:
         obstacles = difficulty_level_obj.generate_obstacle(player_z.value)
         if obstacles:
-            print(f"addded obs {obstacles[0].position_z}, {obstacles[len(obstacles) - 1].position_z}")
+            # print(f"addded obs {obstacles[0].position_z}, {obstacles[len(obstacles) - 1].position_z}")
             if prev != difficulty_level.value:
                 difficulty_level_obj = difficulty_manager.change_level_class(difficulty_level.value, difficulty_level_obj)
                 prev=difficulty_level.value

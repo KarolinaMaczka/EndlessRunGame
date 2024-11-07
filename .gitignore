@@ -2,6 +2,7 @@
 /delete/
 /models_compressed/
 /.venv/
+/venv/
 /.vs/
 *.pyc
 /assets/
@@ -9,3 +10,4 @@ origin/game
 /.vscode/
 *.json
 /player_data/
+.venv/*

@@ -145,7 +145,7 @@ class RunningState(GameState):
     def __initialize_obstacles(self):
         obstacles = self.difficulty_class_level.initialize_obstacles()
         for obstacle_type in obstacles:
-            self.context.data_manager.obstacle_data.append((str(obstacle_type.obstacle.__name__), obstacle_type.position_z, obstacle_type.lane))
+            self.context.data_manager.obstacle_data.append((str(obstacle_type.obstacle), obstacle_type.position_z, obstacle_type.lane))
             obstacle = self.obstacle_pool.acquire(obstacle_type.obstacle, position_z=obstacle_type.position_z,
                                                   difficulty=obstacle_type.difficulty, lane=obstacle_type.lane, metadata=obstacle_type.entity_metadata)
 
@@ -157,13 +157,13 @@ class RunningState(GameState):
         obstacles_to_remove = []
         for obstacle in list(self.active_obstacles):
             if obstacle.z < player_z - self.cleanup_threshold:
-                print(f'remove obst {obstacle.z}, player {player_z}')
+                # print(f'remove obst {obstacle.z}, player {player_z}')
                 obstacles_to_remove.append(obstacle)
 
         for obstacle in obstacles_to_remove:
-            print(self.active_obstacles)
+            # print(self.active_obstacles)
             self.active_obstacles.remove(obstacle)
-            print(f'after removing {self.active_obstacles}')
+            # print(f'after removing {self.active_obstacles}')
             obstacle.delete()
             destroy(obstacle)
             # self.obstacle_pool.release(obstacle)
@@ -184,5 +184,5 @@ class RunningState(GameState):
                 metadata=obstacle_type.entity_metadata
             )
             self.active_obstacles.append(obstacle)
-            self.context.data_manager.obstacle_data.append((str(obstacle_type.obstacle.__name__), obstacle_type.position_z, obstacle_type.lane))
-            print(f'after adding {self.active_obstacles}')
+            self.context.data_manager.obstacle_data.append((str(obstacle_type.obstacle), obstacle_type.position_z, obstacle_type.lane))
+            # print(f'after adding {self.active_obstacles}')
