@@ -18,6 +18,7 @@ from entities.obstacles.impl.indicator_obstacle import ObstacleIndicator
 from entities.obstacles.impl.long_cube import ObstacleLongCube
 from entities.obstacles.impl.wooden_sign_obstacle import ObstacleWoodenSign
 from entities.obstacles.impl.train_obstacle import ObstacleTrain
+from camera_reading.read_camera import EmotionHolder
 
 import multiprocessing
 
@@ -92,7 +93,7 @@ class RunningState(GameState):
             self.context.player.set_jump()
 
     def start(self):
-        self.context.player.set_values()
+        self.context.player.z = 0
         self.context.player.visible = True
 
         for obstacle in self.active_obstacles:
@@ -174,8 +175,6 @@ class RunningState(GameState):
         obstacles_to_remove.clear()
 
     def __render_obstacles_from_queue(self):
-        # print(f'active obstacles: {len(self.active_obstacles)}')
-        # print(f'obstacle queue: {self.obstacle_queue.qsize()}')
         for _ in range(self.obstacles_per_frame):
             if self.obstacle_queue.empty():
                 break

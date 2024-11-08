@@ -16,7 +16,7 @@ class GameManager:
         self.player = player
         self.camera = camera
         self.time_playing = 0
-        
+
         self.data_manager = data_manager
         self.camera_reader = camera_reader
         self.queue = queue
@@ -28,7 +28,7 @@ class GameManager:
         self._state.on_exit()
         if state == "running_state":
             self.time_playing = time.time()
-            self.queue.put(True)   
+            self.queue.put(True)
             self._state = RunningState(self)
         elif state == "game_over_state":
             self.time_playing = time.time() - self.time_playing
