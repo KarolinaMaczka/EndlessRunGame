@@ -17,20 +17,7 @@ class Player(FrameAnimation3d):
              double_sided=True, position=(0, 2, 0), collider='box',
              scale=5, rotation=(0,0,0), fps=5),
 
-        self.speed = 250
-        self.velocity_y = 0
-        self.is_jumping = False
-        self.jump_height = 0.55
-        self.is_climbing = False
-        self.climb_height = 0
-        self.is_falling = False
-        self.ground = 1
-        self.climb_speed = 20
-        self.velocity_x = 30
-        self.prev_speed = self.speed
-        self.is_crouching = False
-        self.bouncing_dist = 3
-        self.gravity = -1
+        self.set_values()
 
     def set_jump(self):
         self.velocity_y += self.jump_height
@@ -62,6 +49,24 @@ class Player(FrameAnimation3d):
     def reset(self):
         # self.context.player.scale = 5
         self.is_crouching = False
+
+    def set_values(self):
+        self.z = 0
+        self.x = 0
+        self.speed = 250
+        self.velocity_y = 0
+        self.is_jumping = False
+        self.jump_height = 0.55
+        self.is_climbing = False
+        self.climb_height = 0
+        self.is_falling = False
+        self.ground = 1
+        self.climb_speed = 20
+        self.velocity_x = 30
+        self.prev_speed = self.speed
+        self.is_crouching = False
+        self.bouncing_dist = 3
+        self.gravity = -1
 
     def fall_down(self):
         gravity = self.gravity
