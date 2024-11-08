@@ -18,7 +18,7 @@ from entities.obstacles.impl.indicator_obstacle import ObstacleIndicator
 from entities.obstacles.impl.long_cube import ObstacleLongCube
 from entities.obstacles.impl.wooden_sign_obstacle import ObstacleWoodenSign
 from entities.obstacles.impl.train_obstacle import ObstacleTrain
-
+from camera_reading.read_camera import EmotionHolder
 
 import multiprocessing
 
@@ -50,14 +50,14 @@ class RunningState(GameState):
         self.go = multiprocessing.Value('b', True)
         self.player_z = multiprocessing.Value('d', 0.0)
         self.obstacle_queue = multiprocessing.Queue()
+        self.map_data_queue = multiprocessing.Queue()
         self.obstacle_process = multiprocessing.Process(
             target=obstacle_generator_worker,
-            args=(self.obstacle_queue, self.player_z, self.go, self.difficulty_level)
+            args=(self.obstacle_queue, self.player_z, self.go, self.difficulty_level, self.map_data_queue)
         )
         self.obstacle_process.start()
         self.start()
         self.create_paused_panel()
-
 
     def on_exit(self):
         for obstacle in self.active_obstacles:
@@ -106,7 +106,6 @@ class RunningState(GameState):
         if self.is_game_over:
             return
         self.context.player.run()
-        # self.__generate_obstacle()
         self.handle_input()
         self.context.physics_engine.apply_gravity(self.active_obstacles)
         if self.context.physics_engine.handle_player_collisions():
@@ -114,6 +113,7 @@ class RunningState(GameState):
         self.player_z.value = self.context.player.z
         self.__render_obstacles_from_queue()
         self.__cleanup_obstacles()
+        self.__save_mapp_data()
 
     def create_paused_panel(self):
         self.pause_panel = WindowPanel(
@@ -135,17 +135,24 @@ class RunningState(GameState):
         application.paused = not application.paused
         self.pause_panel.enabled = application.paused
 
+    def __save_mapp_data(self):
+        while not self.map_data_queue.empty():
+            mapp_data = self.map_data_queue.get()
+            self.context.data_manager.save_map_data(mapp_data)
+
     def __transition_to_main_menu(self):
         self.__toggle_paused()
         self.on_exit()
         self.context.transition_to('main_menu')
 
     def __initialize_obstacles(self):
-        obstacles = self.difficulty_class_level.initialize_obstacles()
+        obstacles, mapp_data = self.difficulty_class_level.initialize_obstacles()
+        self.context.data_manager.save_map_data(mapp_data)
         for obstacle_type in obstacles:
-            self.context.data_manager.obstacle_data.append((str(obstacle_type.obstacle), obstacle_type.position_z, obstacle_type.lane))
+            self.context.data_manager.save_obstacle_data(obstacle_type=obstacle_type)
             obstacle = self.obstacle_pool.acquire(obstacle_type.obstacle, position_z=obstacle_type.position_z,
-                                                  difficulty=obstacle_type.difficulty, lane=obstacle_type.lane, metadata=obstacle_type.entity_metadata)
+                                                  difficulty=obstacle_type.difficulty, lane=obstacle_type.lane,
+                                                  metadata=obstacle_type.entity_metadata)
 
             # obstacle = obstacle_type.obstacle(obstacle_type.position_z, obstacle_type.difficulty, obstacle_type.lane)
             self.active_obstacles.append(obstacle)
@@ -155,25 +162,23 @@ class RunningState(GameState):
         obstacles_to_remove = []
         for obstacle in list(self.active_obstacles):
             if obstacle.z < player_z - self.cleanup_threshold:
-                # print(f'remove obst {obstacle.z}, player {player_z}')
+                print(f'remove obst {obstacle.z}, player {player_z}')
                 obstacles_to_remove.append(obstacle)
 
         for obstacle in obstacles_to_remove:
-            # print(self.active_obstacles)
+            print(self.active_obstacles)
             self.active_obstacles.remove(obstacle)
-            # print(f'after removing {self.active_obstacles}')
+            print(f'after removing {self.active_obstacles}')
             obstacle.delete()
             destroy(obstacle)
             # self.obstacle_pool.release(obstacle)
         obstacles_to_remove.clear()
 
     def __render_obstacles_from_queue(self):
-        # print(f'active obstacles: {len(self.active_obstacles)}')
-        # print(f'obstacle queue: {self.obstacle_queue.qsize()}')
         for _ in range(self.obstacles_per_frame):
             if self.obstacle_queue.empty():
                 break
-
+            print(f'not empty queue')
             obstacle_type = self.obstacle_queue.get()
             # obstacle = obstacle_type.obstacle(obstacle_type.position_z, obstacle_type.difficulty, obstacle_type.lane)
             obstacle = self.obstacle_pool.acquire(
@@ -184,5 +189,5 @@ class RunningState(GameState):
                 metadata=obstacle_type.entity_metadata
             )
             self.active_obstacles.append(obstacle)
-            self.context.data_manager.obstacle_data.append((str(obstacle_type.obstacle), obstacle_type.position_z, obstacle_type.lane))
-            # print(f'after adding {self.active_obstacles}')
+            self.context.data_manager.save_obstacle_data(obstacle_type=obstacle_type)
+            print(f'after adding {self.active_obstacles}')

@@ -3,7 +3,6 @@ from dataclasses import dataclass, field
 from typing import List
 
 from config.constants import LANE_COUNT, Color
-from difficulty.maps.color_themes import COLOR_THEME_BASIC, COLOR_THEME_COLORFULL, COLOR_THEME_DARK
 from difficulty.maps.map import ObstacleMap
 from entities.obstacles.impl.board_obstacle import ObstacleBoard
 from entities.obstacles.impl.cube_obstacle import ObstacleCube

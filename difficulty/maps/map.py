@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from typing import List
 
 from config.constants import LANE_COUNT, Color
-from difficulty.maps.color_themes import COLOR_THEME_BASIC, COLOR_THEME_COLORFULL, COLOR_THEME_DARK
+from difficulty.maps.color_themes import ColorTheme
 from entities.obstacles.impl.board_obstacle import ObstacleBoard
 from entities.obstacles.impl.cube_obstacle import ObstacleCube
 from entities.obstacles.impl.fence_obstacle import ObstacleFence
@@ -45,12 +45,12 @@ class ObstacleMap(ABC):
     lane_change_const: float = 0.2
     small_obstacle_const: float = 0.7
     gate_generation_const: float = 0.3
-    color_theme: dict = field(default_factory=lambda: COLOR_THEME_BASIC)
+    color_theme: ColorTheme = field(default_factory=lambda: ColorTheme.COLOR_THEME_BASIC)
 
     def __post_init__(self):
         self._create_factories()
         for factory in self._factories:
-            factory.apply_color_palette(self.color_theme)
+            factory.apply_color_palette(self.color_theme.value)
 
     def _create_factories(self):
         self._factories = [self._gates, self._signs, self._big_obstacles, self._small_obstacles]
