@@ -21,21 +21,26 @@ class ObstaclePool:
         for obstacle_class in self.obstacle_types:
             for _ in range(1):
                 obstacle = obstacle_class(position_z=-1000, difficulty=1)
+                obstacle.visible = False
+                obstacle.enabled = False
+                for child in obstacle.children:
+                    child.visible = False
+                    child.enabled = False
                 self.reusable_obstacles[obstacle_class].append(obstacle)
 
     def acquire(self, obstacle_class, position_z, difficulty, lane, metadata, *args, **kwargs) -> Obstacle:
-        if not (
-                obstacle_class == ObstacleLongCube or obstacle_class == ObstaclePoleGate or obstacle_class == ObstacleBoard) and \
-                self.reusable_obstacles[obstacle_class]:
-            obstacle = self.reusable_obstacles[obstacle_class].pop()
-            self.__set_obstacle_attr(obstacle, **metadata)
-            obstacle.set_lane(lane)
-            obstacle.set_position_z(position_z)
-            obstacle.enabled = True
-            for child in obstacle.children:
-                child.enabled = True
-        else:
-            obstacle = obstacle_class(position_z=position_z, difficulty=difficulty, lane=lane, **metadata)
+        # if not (
+        #         obstacle_class == ObstacleLongCube or obstacle_class == ObstaclePoleGate or obstacle_class == ObstacleBoard) and \
+        #         self.reusable_obstacles[obstacle_class]:
+        #     obstacle = self.reusable_obstacles[obstacle_class].pop()
+        #     self.__set_obstacle_attr(obstacle, **metadata)
+        #     obstacle.set_lane(lane)
+        #     obstacle.set_position_z(position_z)
+        #     obstacle.enabled = True
+        #     for child in obstacle.children:
+        #         child.enabled = True
+        # else:
+        obstacle = obstacle_class(position_z=position_z, difficulty=difficulty, lane=lane, **metadata)
         return obstacle
 
     def release(self, obstacle: Obstacle):
