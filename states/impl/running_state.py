@@ -93,7 +93,7 @@ class RunningState(GameState):
             self.context.player.set_jump()
 
     def start(self):
-        self.context.player.z = 0
+        self.context.player.set_values()
         self.context.player.visible = True
 
         for obstacle in self.active_obstacles:
