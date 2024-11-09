@@ -6,9 +6,11 @@ from difficulty.difficulty_manager import DifficultyManager
 
 
 def obstacle_generator_worker(obstacle_queue, player_z, go, difficulty_level, **kwargs):
+    print('Obstacle generator worker started')
     prev = difficulty_level.value
     difficulty_level_obj = Difficulty1()
     difficulty_manager = DifficultyManager()
+    print(f'go: {go.value}')
     while go.value:
         obstacles = difficulty_level_obj.generate_obstacle(player_z.value)
         if obstacles:

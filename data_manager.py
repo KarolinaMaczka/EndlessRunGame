@@ -26,10 +26,10 @@ class DataManager:
             "player_emotions": self.player_emotions,
         }
 
-        with open(file_path, 'w') as f:
-            json.dump(data, f)
+        # with open(file_path, 'w') as f:
+        #     json.dump(data, f)
 
-        print(f"saved  data {file_path}")
+        # print(f"saved  data {file_path}")
 
     def add_emotion(self, dominant_emotion, second_dominant_emotion):
         self.player_emotions.append((dominant_emotion, second_dominant_emotion))

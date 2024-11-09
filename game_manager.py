@@ -6,28 +6,29 @@ from states.impl.game_over_state import GameOver
 from states.impl.main_menu import MainMenu
 from states.impl.running_state import RunningState
 from camera_reading.read_camera import CameraReader
+from multiprocessing import Queue
 
 class GameManager:
     _state = None
-    emotion_holder = None
-    def __init__(self, player: Player, camera: PlayerCamera, camera_reader: CameraReader, data_manager: DataManager):
+    def __init__(self, player: Player, camera: PlayerCamera, data_manager: DataManager, queue: Queue, camera_reader: CameraReader):
         self.player = player
         self.camera = camera
        
         self.data_manager = data_manager
         self.camera_reader = camera_reader
+        self.queue = queue
         self.physics_engine = PhysicsEngine(player, camera, self.data_manager)
         self._state = MainMenu(self)
-        RunningState(self, camera_reader.emotion_holder).on_exit()
+        RunningState(self).on_exit()
 
     def transition_to(self, state: str):
         self._state.on_exit()
         if state == "running_state":
-            self.camera_reader.game_is_running = True # Start reading camera
-            self._state = RunningState(self, self.emotion_holder)
+            self.queue.put(True)   
+            self._state = RunningState(self)
         elif state == "game_over_state":
+            self.queue.put(False)
             self._state = GameOver(self)
-            self.camera_reader.game_is_running = False
         elif state == "main_menu":
             self._state = MainMenu(self)
         elif state == "change_settings":
