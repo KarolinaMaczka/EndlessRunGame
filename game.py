@@ -7,14 +7,15 @@ from scenery import Scenery
 import atexit
 
 
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Queue, Manager
 from camera_reading.read_camera import CameraReader
 from data_manager import DataManager
 
 
 if __name__ == '__main__':
 
-    data_manager = DataManager()
+    list_manager = Manager()
+    data_manager = DataManager(list_manager)
 
     queue = Queue()
     camera_reading = CameraReader(data_manager)
