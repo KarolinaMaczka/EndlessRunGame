@@ -18,7 +18,6 @@ from entities.obstacles.impl.indicator_obstacle import ObstacleIndicator
 from entities.obstacles.impl.long_cube import ObstacleLongCube
 from entities.obstacles.impl.wooden_sign_obstacle import ObstacleWoodenSign
 from entities.obstacles.impl.train_obstacle import ObstacleTrain
-from camera_reading.read_camera import EmotionHolder
 
 import multiprocessing
 
@@ -26,7 +25,7 @@ from states.workers import obstacle_generator_worker
 
 
 class RunningState(GameState):
-    def __init__(self, context, emotion_holder: EmotionHolder):
+    def __init__(self, context):
         self.is_game_over = False
         self.difficulty_class_level = Difficulty1()
         self.active_obstacles = deque()
@@ -105,7 +104,6 @@ class RunningState(GameState):
     def update(self):
         if self.is_game_over:
             return
-
         self.context.player.run()
         self.handle_input()
         self.context.physics_engine.apply_gravity(self.active_obstacles)

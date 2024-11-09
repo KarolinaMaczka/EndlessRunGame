@@ -19,7 +19,7 @@ class ObstacleFactory:
     def apply_color_palette(self, palette):
         for obstacle in self._obstacles:
             if str(obstacle.obstacle.__name__) in palette.keys():
-                print(obstacle.obstacle.__name__)
+                # print(obstacle.obstacle.__name__)
                 obstacle.entity_metadata['colorr'] = palette[str(obstacle.obstacle.__name__)]
 
     def get_random(self):

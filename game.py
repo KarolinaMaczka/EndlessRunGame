@@ -6,12 +6,26 @@ from entities.player import Player
 from scenery import Scenery
 import atexit
 
-import threading
+
+from multiprocessing import Process, Queue
 from camera_reading.read_camera import CameraReader
+from data_manager import DataManager
 
 
 if __name__ == '__main__':
 
+    data_manager = DataManager()
+
+    queue = Queue()
+    camera_reading = CameraReader(data_manager)
+    p = Process(target=camera_reading.run, args=(queue,))
+    p.start()
+
+    def on_exit():
+        p.terminate()
+        p.join()
+        
+    atexit.register(on_exit)
 
     app = Ursina()
 
@@ -23,13 +37,9 @@ if __name__ == '__main__':
 
     camera = PlayerCamera(player)
 
-    camera_reading = CameraReader()
-
     scenery = Scenery()
 
-    game_manager = GameManager(player, camera, camera_reading)
-
-    threading.Thread(target=camera_reading.run, daemon=True).start()
+    game_manager = GameManager(player, camera, data_manager, queue, camera_reading)
 
     def update():
         game_manager.update()
@@ -37,7 +47,5 @@ if __name__ == '__main__':
     atexit.register(game_manager.on_exit)
 
     sky = Sky()
-
-    #TODO Change to new process instead of thread
 
     app.run()
