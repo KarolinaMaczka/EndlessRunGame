@@ -1,7 +1,9 @@
 from ursina import destroy, color, WindowPanel, Button, application
 
+from config.logger import get_game_logger
 from states.state import GameState
 
+logger = get_game_logger()
 
 class MainMenu(GameState):
     def __init__(self, context):
@@ -15,13 +17,13 @@ class MainMenu(GameState):
         pass
 
     def on_exit(self):
+        logger.info(f'Exiting main menu')
         destroy(self.context.window_panel)
         self.context.window_panel = None
 
     def start(self):
         self.on_exit()
         self.context.transition_to('running_state')
-
 
     def change_settings(self):
         self.on_exit()

@@ -1,7 +1,9 @@
 from ursina import destroy, color, WindowPanel, Button, application, Func, Entity, Text
 
 from states.state import GameState
+from config.logger import get_game_logger
 
+logger = get_game_logger()
 
 class GameOver(GameState):
     def __init__(self, context):
@@ -16,6 +18,7 @@ class GameOver(GameState):
         pass
 
     def on_exit(self):
+        logger.info(f'Exiting game over state')
         self.context.data_manager.save()
         self.context.data_manager.clean_data()
         destroy(self.context.window_panel)
@@ -63,6 +66,7 @@ class GameOver(GameState):
         return star_container
 
     def set_rating(self, rating):
+        logger.info(f'Setting satisfaction rating to {rating}')
         self.rating = rating
         self.context.data_manager.save_player_satisfaction(rating)
         for i, star in enumerate(self.stars):

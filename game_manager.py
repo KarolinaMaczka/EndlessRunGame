@@ -1,3 +1,4 @@
+from config.logger import get_game_logger
 from data_manager import DataManager
 from entities.camera import PlayerCamera
 from physics_engine import PhysicsEngine
@@ -9,7 +10,7 @@ from camera_reading.read_camera import CameraReader
 from multiprocessing import Queue
 
 import time
-
+logger = get_game_logger()
 class GameManager:
     _state = None
     def __init__(self, player: Player, camera: PlayerCamera, data_manager: DataManager, queue: Queue, camera_reader: CameraReader):
@@ -26,6 +27,7 @@ class GameManager:
         self.data_manager.clean_data()
 
     def transition_to(self, state: str):
+        logger.info(f'Transitioning to {state}')
         self._state.on_exit()
         if state == "running_state":
             self.time_playing = time.time()
@@ -35,7 +37,7 @@ class GameManager:
             self.time_playing = time.time() - self.time_playing
             self.data_manager.playing_time = self.time_playing
             self.queue.put(False)
-            print(f'game over, score: {self.player.Z}')
+            logger.info(f'game over, score: {self.player.Z}')
             self.data_manager.score = self.player.Z
             self._state = GameOver(self)
         elif state == "main_menu":
@@ -47,5 +49,5 @@ class GameManager:
         self._state.update()
 
     def on_exit(self):
-        print('exiting')
+        logger.info(f'Exiting game manager {self.player.Z}')
         self._state.on_exit()

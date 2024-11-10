@@ -1,11 +1,11 @@
 from ursina import *
 
+from config.logger import get_game_logger
 from entities.camera import PlayerCamera
 from game_manager import GameManager
 from entities.player import Player
 from scenery import Scenery
 import atexit
-
 
 from multiprocessing import Process, Queue, Manager
 from camera_reading.read_camera import CameraReader
@@ -13,6 +13,8 @@ from data_manager import DataManager
 
 
 if __name__ == '__main__':
+    logger = get_game_logger()
+    logger.info('Starting game')
 
     list_manager = Manager()
     data_manager = DataManager(list_manager)
@@ -25,6 +27,7 @@ if __name__ == '__main__':
     def on_exit():
         p.terminate()
         p.join()
+        logger.info('Closed camera process')
         
     atexit.register(on_exit)
 
