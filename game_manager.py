@@ -23,6 +23,7 @@ class GameManager:
         self.physics_engine = PhysicsEngine(player, camera, self.data_manager)
         self._state = MainMenu(self)
         RunningState(self).on_exit()
+        self.data_manager.clean_data()
 
     def transition_to(self, state: str):
         self._state.on_exit()
