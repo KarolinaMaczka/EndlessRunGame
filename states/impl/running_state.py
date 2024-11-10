@@ -18,6 +18,7 @@ from entities.obstacles.impl.indicator_obstacle import ObstacleIndicator
 from entities.obstacles.impl.long_cube import ObstacleLongCube
 from entities.obstacles.impl.wooden_sign_obstacle import ObstacleWoodenSign
 from entities.obstacles.impl.train_obstacle import ObstacleTrain
+from camera_reading.read_camera import EmotionHolder
 
 import multiprocessing
 
