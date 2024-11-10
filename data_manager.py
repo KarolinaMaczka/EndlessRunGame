@@ -12,6 +12,10 @@ class DataManager:
         self.hit_obstacles = []
         self.player_satisfaction = -1
         self.player_emotions = list_manager.list()
+        self.score = 0
+        self.playing_time = 0
+        self.difficulties = []
+        self.maps_used = []
         self.__folder = config['player_data']['player_data.folder']
         os.makedirs(self.__folder, exist_ok=True)
 
@@ -25,6 +29,10 @@ class DataManager:
             "hit_obstacles": self.hit_obstacles,
             "player_satisfaction": self.player_satisfaction,
             "player_emotions": list(self.player_emotions),
+            'score': self.score,
+            'playing_time': self.playing_time,
+            'difficulties': self.difficulties,
+            'maps_used': self.maps_used,
         }
 
         with open(file_path, 'w') as f:
