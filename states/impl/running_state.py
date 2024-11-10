@@ -1,5 +1,6 @@
 from ursina import *
 
+from config.logger import get_game_logger
 from difficulty.difficulty.difficulty_levels import Difficulty1
 from difficulty.difficulty_manager import DifficultyManager
 
@@ -19,7 +20,7 @@ from entities.obstacles.impl.train_obstacle import ObstacleTrain
 import multiprocessing
 
 from states.workers import obstacle_generator_worker
-
+logger = get_game_logger()
 
 class RunningState(GameState):
     def __init__(self, context):
@@ -60,12 +61,13 @@ class RunningState(GameState):
             obstacle.delete()
             destroy(obstacle)
         self.active_obstacles.clear()
-        print('exiting state')
+        logger.info(f'Cleaned obstacles')
         self.go.value = False
         if hasattr(self, "obstacle_process"):
             self.obstacle_process.terminate()
             self.obstacle_process.join()
             del self.obstacle_process
+            logger.info(f'Deleted obstacle process')
 
     def handle_input(self):
         self.context.player.reset()
@@ -124,25 +126,32 @@ class RunningState(GameState):
         )
 
     def set_difficulty(self, level, **kwargs):
-        print(f'set difficulty: {level}')
+        logger.info(f'RunningState setting difficulty to {level}')
         self.difficulty_level.value = level
         self.difficulty_manager.set_player_settings(level, self.context.player)
 
     def __toggle_paused(self):
+        if not application.paused:
+            logger.info('Pausing game')
+        else:
+            logger.info('Resuming game')
         application.paused = not application.paused
         self.pause_panel.enabled = application.paused
 
     def __save_mapp_data(self):
         while not self.map_data_queue.empty():
+            logger.info('Saving mapp data')
             mapp_data = self.map_data_queue.get()
             self.context.data_manager.save_map_data(mapp_data)
 
     def __transition_to_main_menu(self):
+        logger.info('Transitioning to main menu')
         self.__toggle_paused()
         self.on_exit()
         self.context.transition_to('main_menu')
 
     def __initialize_obstacles(self):
+        logger.info('initializing objects')
         obstacles, mapp_data = self.difficulty_class_level.initialize_obstacles()
         self.context.data_manager.save_map_data(mapp_data)
         for obstacle_type in obstacles:
@@ -159,13 +168,11 @@ class RunningState(GameState):
         obstacles_to_remove = []
         for obstacle in list(self.active_obstacles):
             if obstacle.z < player_z - self.cleanup_threshold:
-                print(f'remove obst {obstacle.z}, player {player_z}')
+                logger.info(f'Adding obstacles to remove to the stack: obstacle.z {obstacle.z}, player.z {player_z}')
                 obstacles_to_remove.append(obstacle)
 
         for obstacle in obstacles_to_remove:
-            print(self.active_obstacles)
             self.active_obstacles.remove(obstacle)
-            print(f'after removing {self.active_obstacles}')
             obstacle.delete()
             destroy(obstacle)
             # self.obstacle_pool.release(obstacle)
@@ -175,7 +182,7 @@ class RunningState(GameState):
         for _ in range(self.obstacles_per_frame):
             if self.obstacle_queue.empty():
                 break
-            print(f'not empty queue')
+            logger.info(f'Rendering obstacles from queue')
             obstacle_type = self.obstacle_queue.get()
             # obstacle = obstacle_type.obstacle(obstacle_type.position_z, obstacle_type.difficulty, obstacle_type.lane)
             obstacle = self.obstacle_pool.acquire(
@@ -187,4 +194,3 @@ class RunningState(GameState):
             )
             self.active_obstacles.append(obstacle)
             self.context.data_manager.save_obstacle_data(obstacle_type=obstacle_type)
-            print(f'after adding {self.active_obstacles}')

@@ -1,7 +1,9 @@
 import copy
 
+from config.logger import get_game_logger
 from entities.obstacles.obstacle_metadata import ObstacleMetaData
 import random
+logger = get_game_logger()
 
 
 class ObstacleFactory:
@@ -17,6 +19,7 @@ class ObstacleFactory:
         return self._obstacles
 
     def apply_color_palette(self, palette):
+        logger.info(f"Applying color palette {type(palette).__name__}")
         for obstacle in self._obstacles:
             if str(obstacle.obstacle.__name__) in palette.keys():
                 # print(obstacle.obstacle.__name__)
@@ -36,5 +39,6 @@ class ObstacleFactory:
         obstacle_type = self.get_random()
         obstacle_type.position_z = position_z
         obstacle_type.lane = lane
+        logger.info(f"Drawed by lot {type(obstacle_type.obstacle).__name__}")
         return copy.copy(obstacle_type)
 

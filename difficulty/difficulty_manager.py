@@ -1,5 +1,6 @@
+from config.logger import get_game_logger
 from difficulty.difficulty.difficulty_levels import *
-
+logger = get_game_logger()
 class DifficultyManager:
     def __init__(self):
         self.player_settings = {
@@ -32,10 +33,12 @@ class DifficultyManager:
 
     def set_player_settings(self, difficulty_level: int, player):
         settings = self.get_player_settings(difficulty_level)
+        logger.info(f'Setting player settings to {settings}')
         for attribute, value in settings.items():
             setattr(player, attribute, value)
 
     def change_level_class(self, difficulty_level: int, prev_difficulty: Difficulty):
         difficulty_object = self.difficulties.get(difficulty_level)
         difficulty_object.switch(prev_difficulty.first_obstacle, prev_difficulty.last_obstacle_z)
+        logger.info(f'Changing difficulty object to {difficulty_object}')
         return difficulty_object

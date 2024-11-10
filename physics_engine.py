@@ -2,14 +2,15 @@ import random
 
 from ursina import time
 
+from config.logger import get_game_logger
 from data_manager import DataManager
 from entities.camera import PlayerCamera
 from config.constants import CollisionType, CollisionSide, ROAD_WIDTH
-from entities.obstacles.impl.gate_obstacle import ObstacleGate
 
 from entities.obstacles.utils import right_border_lane, left_border_lane
 from entities.player import Player
 from typing import Optional, Tuple
+logger = get_game_logger()
 
 
 class PhysicsEngine:
@@ -84,25 +85,25 @@ class PhysicsEngine:
 
                 if side == CollisionSide.UP:
                     if not obstacle.jump:
-                        print(f"UP collision with obstacle:  {obstacle.position}, {self.player.position}")
+                        logger.info(f"UP collision with obstacle:  {obstacle.position}, {self.player.position}")
                         self.__handle_full_collision(side, collision_type)
                         self.data_manager.save_collision(side, CollisionType.FULL, obstacle, self.player)
 
                         return True
                     return False
                 elif side == CollisionSide.DOWN:
-                    print(f"DOWN collision with obstacle {type(obstacle.parentt).__name__}:  {obstacle.position}, {self.player.position}")
+                    logger.info(f"DOWN collision with obstacle {type(obstacle.parentt).__name__}:  {obstacle.position}, {self.player.position}")
                     self.data_manager.save_collision(side, CollisionType.LIGHT, obstacle, self.player)
 
                     return False
                 elif obstacle.sign or collision_type == CollisionType.LIGHT:
-                    print(f"LIGHT {side} collision with obstacle {type(obstacle.parentt).__name__}: {obstacle.position}, {self.player.position}")
+                    logger.info(f"LIGHT {side} collision with obstacle {type(obstacle.parentt).__name__}: {obstacle.position}, {self.player.position}")
                     self.__handle_light_collision(side, collision_type)
                     self.data_manager.save_collision(side, collision_type, obstacle, self.player)
 
                     return False
                 elif collision_type == CollisionType.FULL:
-                    print(f"FULL {side} collision with obstacle {type(obstacle.parentt).__name__}: {obstacle.position}, {self.player.position}")
+                    logger.info(f"FULL {side} collision with obstacle {type(obstacle.parentt).__name__}: {obstacle.position}, {self.player.position}")
                     self.__handle_full_collision(side, collision_type)
                     self.data_manager.save_collision(side, collision_type, obstacle, self.player)
                     return True
