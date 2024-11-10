@@ -53,7 +53,7 @@ class DataManager:
         self.obstacle_data = []
         self.hit_obstacles = []
         self.player_satisfaction = -1
-        self.player_emotions = []
+        # self.player_emotions = []
         self.map_data = []
         self.score = 0
         self.playing_time = 0
