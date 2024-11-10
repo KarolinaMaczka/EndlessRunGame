@@ -1,16 +1,30 @@
-from difficulty.difficulty.difficulty_level import Difficulty
-from difficulty.difficulty.impl.difficulty_level1 import Difficulty1
-from difficulty.difficulty.impl.difficulty_level2 import Difficulty2
+from difficulty.difficulty.difficulty_levels import *
 
 class DifficultyManager:
     def __init__(self):
         self.player_settings = {
-            1: {"speed": 100, "jump_height": 0.3, "gravity": -1},
-            2: {"speed": 200, "jump_height": 0.5, "gravity": -1},
+            1: {"speed": 100, "jump_height": 0.55, "gravity": -1, "velocity_x": 30, "prev_speed": 100, "bouncing_dist": 1},
+            2: {"speed": 150, "jump_height": 0.55, "gravity": -1, "velocity_x": 30, "prev_speed": 150, "bouncing_dist": 2},
+            3: {"speed": 150, "jump_height": 0.55, "gravity": -1, "velocity_x": 30, "prev_speed": 150, "bouncing_dist": 3},
+            4: {"speed": 200, "jump_height": 0.55, "gravity": -1, "velocity_x": 30, "prev_speed": 200, "bouncing_dist": 3},
+            5: {"speed": 200, "jump_height": 0.55, "gravity": -1, "velocity_x": 30, "prev_speed": 200, "bouncing_dist": 3},
+            6: {"speed": 200, "jump_height": 0.55, "gravity": -1, "velocity_x": 30, "prev_speed": 200, "bouncing_dist": 3},
+            7: {"speed": 250, "jump_height": 0.55, "gravity": -1, "velocity_x": 30, "prev_speed": 250, "bouncing_dist": 3},
+            8: {"speed": 200, "jump_height": 0.55, "gravity": -1, "velocity_x": 30, "prev_speed": 200, "bouncing_dist": 3.5},
+            9: {"speed": 300, "jump_height": 0.7, "gravity": -2, "velocity_x": 30, "prev_speed": 300, "bouncing_dist": 4},
+            10: {"speed": 400, "jump_height": 1, "gravity": -3, "velocity_x": 30, "prev_speed": 400, "bouncing_dist": 5},
         }
         self.difficulties = {
             1: Difficulty1(),
-            2: Difficulty2()
+            2: Difficulty2(),
+            3: Difficulty3(),
+            4: Difficulty4(),
+            5: Difficulty5(),
+            6: Difficulty6(),
+            7: Difficulty7(),
+            8: Difficulty8(),
+            9: Difficulty9(),
+            10: Difficulty10()
         }
 
     def get_player_settings(self, difficulty_level: int):
@@ -25,7 +39,3 @@ class DifficultyManager:
         difficulty_object = self.difficulties.get(difficulty_level)
         difficulty_object.switch(prev_difficulty.first_obstacle, prev_difficulty.last_obstacle_z)
         return difficulty_object
-        # if difficulty_level == 1:
-        #     return Difficulty1(prev_difficulty.first_obstacle, prev_difficulty.last_obstacle_z)
-        # elif difficulty_level == 2:
-        #     return Difficulty2(prev_difficulty.first_obstacle, prev_difficulty.last_obstacle_z)
