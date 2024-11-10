@@ -2,7 +2,7 @@ import random
 from abc import ABC, abstractmethod
 
 from config.constants import INITIAL_FIRST_OBSTACLE_Z_POS, INITIAL_LAST_OBSTACLE_Z_POS
-from difficulty.maps.impl.map1 import FirstObstacleMap
+from difficulty.maps.map import ObstacleMap
 from entities.obstacles.obstacle_metadata import ObstacleMetaData
 from typing import Tuple, Any, Dict, List
 
@@ -11,7 +11,7 @@ class Difficulty(ABC):
     first_obstacle: float
     last_obstacle_z: float
     obstacle_generation_distance: int
-    maps: list[FirstObstacleMap]
+    maps: list[ObstacleMap]
 
     def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS,
                  obstacle_generation_distance=100, **kwargs):

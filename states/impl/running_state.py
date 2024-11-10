@@ -1,10 +1,7 @@
 from ursina import *
 
-from difficulty.difficulty.difficulty_level import Difficulty
-from difficulty.difficulty.impl.difficulty_level1 import Difficulty1
-from difficulty.difficulty.impl.difficulty_level2 import Difficulty2
+from difficulty.difficulty.difficulty_levels import Difficulty1
 from difficulty.difficulty_manager import DifficultyManager
-from datetime import datetime
 
 from entities.obstacles.obstacle_pool import ObstaclePool
 from states.state import GameState
@@ -18,7 +15,6 @@ from entities.obstacles.impl.indicator_obstacle import ObstacleIndicator
 from entities.obstacles.impl.long_cube import ObstacleLongCube
 from entities.obstacles.impl.wooden_sign_obstacle import ObstacleWoodenSign
 from entities.obstacles.impl.train_obstacle import ObstacleTrain
-from camera_reading.read_camera import EmotionHolder
 
 import multiprocessing
 
@@ -83,12 +79,12 @@ class RunningState(GameState):
             self.context.player.crouch()
             # self.context.player.scale = 3.5
             self.context.camera.camera.y = self.context.camera.camera.y - 0.3
-        if held_keys['l']:
-            self.set_difficulty(1)
         if held_keys['escape']:
             self.__toggle_paused()
-        if held_keys['h']:
-            self.set_difficulty(2)
+        if held_keys['control']:
+            for i in range(10):
+                if held_keys[str(i)]:
+                    self.set_difficulty(max(1, min(10, i+1)))
         if held_keys['space'] and not self.context.player.is_jumping:
             self.context.player.set_jump()
 
@@ -128,6 +124,7 @@ class RunningState(GameState):
         )
 
     def set_difficulty(self, level, **kwargs):
+        print(f'set difficulty: {level}')
         self.difficulty_level.value = level
         self.difficulty_manager.set_player_settings(level, self.context.player)
 
