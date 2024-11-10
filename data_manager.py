@@ -14,30 +14,31 @@ class DataManager:
         self.obstacle_data = []
         self.hit_obstacles = []
         self.player_satisfaction = -1
+        self.player_emotions = []
+        self.map_data = []
         self.player_emotions = list_manager.list()
         self.score = 0
         self.playing_time = 0
         self.difficulties = []
         self.maps_used = []
-        self.player_emotions = []
-        self.map_data = []
         self.__folder = config['player_data']['player_data.folder']
         os.makedirs(self.__folder, exist_ok=True)
 
     def save(self):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
         file_path = os.path.join(self.__folder, f'game_data_{timestamp}.json')
 
         data_to_save = {
             "obstacle_data": self.obstacle_data,
             "hit_obstacles": self.hit_obstacles,
             "player_satisfaction": self.player_satisfaction,
+            "map_data": self.map_data,
             "player_emotions": list(self.player_emotions),
             'score': self.score,
             'playing_time': self.playing_time,
             'difficulties': self.difficulties,
             'maps_used': self.maps_used,
-            "map_data": self.map_data
         }
 
         try:
@@ -54,6 +55,9 @@ class DataManager:
         self.player_satisfaction = -1
         self.player_emotions = []
         self.map_data = []
+        self.score = 0
+        self.playing_time = 0
+        self.difficulties = []
 
     def save_collision(self, side: CollisionSide, collision_type: CollisionType, obstacle: Obstacle, player: Player):
         self.hit_obstacles.append(
