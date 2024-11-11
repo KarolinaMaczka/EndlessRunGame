@@ -1,3 +1,5 @@
+import multiprocessing
+
 from ursina import Ursina, window, Sky
 
 from config.logger import get_game_logger
@@ -11,6 +13,7 @@ from states.process_managers.impl.read_camera import CameraReader
 from data_manager import DataManager
 
 if __name__ == '__main__':
+    multiprocessing.freeze_support()
     logger = get_game_logger()
     logger.info('Starting game')
 

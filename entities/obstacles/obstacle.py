@@ -6,6 +6,9 @@ from typing_extensions import Optional
 from ursina import Entity, destroy
 
 from config.constants import CollisionType, CollisionSide, LANE_WIDTH, ROAD_HEIGHT
+from config.logger import get_game_logger
+
+logger = get_game_logger()
 
 
 class Obstacle(Entity):
@@ -19,6 +22,7 @@ class Obstacle(Entity):
         self.height = height
         self.width = width
         self.depth = depth
+        logger.info('Creating obstacle')
 
     @staticmethod
     def set_fixed_width(obj, fixed_width):

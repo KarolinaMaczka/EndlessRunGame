@@ -192,6 +192,7 @@ class RunningState(GameState):
             destroy(obstacle)
             # self.obstacle_pool.release(obstacle)
         obstacles_to_remove.clear()
+        logger.info(f'Number of obstacles after removing {len(self.active_obstacles)}')
 
     def __render_obstacles_from_queue(self):
         for _ in range(self.obstacles_per_frame):
