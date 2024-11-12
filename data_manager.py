@@ -44,8 +44,14 @@ class DataManager:
         }
 
         if self.send_data_enabled:
-            thread = threading.Thread(target=self.send_data, args=(data_to_save,))
-            thread.start()
+            try:
+                thread = threading.Thread(target=self.send_data, args=(data_to_save,))
+                thread.start()
+            except Exception as e:
+                try:
+                    self.send_data(data_to_save)
+                except Exception as e:
+                    self.save_csv(data_to_save)
         else:
             self.save_csv(data_to_save)
 
