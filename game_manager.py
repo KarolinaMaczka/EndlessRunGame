@@ -6,12 +6,14 @@ from entities.player import Player
 from states.impl.game_over_state import GameOver
 from states.impl.main_menu import MainMenu
 from states.impl.running_state import RunningState
+from states.impl.change_settings import SettingsMenu
 from camera_reading.read_camera import CameraReader
 from multiprocessing import Queue
 
 import time
 logger = get_game_logger()
 class GameManager:
+    camera = None
     _state = None
     def __init__(self, player: Player, camera: PlayerCamera, data_manager: DataManager, queue: Queue, camera_reader: CameraReader):
         self.player = player
@@ -43,7 +45,7 @@ class GameManager:
         elif state == "main_menu":
             self._state = MainMenu(self)
         elif state == "change_settings":
-            print("change settings")
+            self._state = SettingsMenu(self, self.camera_reader)
 
     def update(self):
         self._state.update()
