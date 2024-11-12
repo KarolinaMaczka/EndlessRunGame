@@ -6,9 +6,9 @@ import json
 from config.config import config
 from config.constants import CollisionSide, CollisionType
 from config.logger import get_game_logger
+from config.utils import catch_exceptions
 from entities.obstacles.obstacle import Obstacle
 from entities.player import Player
-import subprocess
 from multiprocessing import Manager
 logger = get_game_logger()
 import os
@@ -17,7 +17,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class DataManager:
-    def __init__(self, list_manager: Manager): # type: ignore
+    def __init__(self, list_manager: Manager):
+
         self.obstacle_data = []
         self.hit_obstacles = []
         self.player_satisfaction = -1
@@ -84,6 +85,7 @@ class DataManager:
     def add_player_satisfaction(self, satisfaction):
         self.player_satisfaction = satisfaction
 
+    @catch_exceptions
     def save_csv(self, data_to_save):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
@@ -97,9 +99,10 @@ class DataManager:
             logger.error(f"error saving data: {e}")
             return
 
+    @catch_exceptions
     def send_data(self, data_to_save):
         api_key = os.getenv("API_KEY")
-        url = "http://127.0.0.1:5000/player-data"
+        url = "https://karolinamaczka.pythonanywhere.com/player-data"
 
         try:
             response = requests.post(
