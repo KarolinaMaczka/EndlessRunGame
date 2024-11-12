@@ -1,13 +1,20 @@
 import os
+import threading
 from datetime import datetime
 import json
 
 from config.config import config
 from config.constants import CollisionSide, CollisionType
+from config.logger import get_game_logger
 from entities.obstacles.obstacle import Obstacle
 from entities.player import Player
-
+import subprocess
 from multiprocessing import Manager
+logger = get_game_logger()
+import os
+import requests
+from dotenv import load_dotenv
+load_dotenv()
 
 class DataManager:
     def __init__(self, list_manager: Manager): # type: ignore
@@ -20,14 +27,11 @@ class DataManager:
         self.score = 0
         self.playing_time = 0
         self.difficulties = []
+        self.send_data_enabled = True
         self.__folder = config['player_data']['player_data.folder']
         os.makedirs(self.__folder, exist_ok=True)
 
     def save(self):
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-        file_path = os.path.join(self.__folder, f'game_data_{timestamp}.json')
-
         data_to_save = {
             "obstacle_data": self.obstacle_data,
             "hit_obstacles": self.hit_obstacles,
@@ -39,13 +43,11 @@ class DataManager:
             'difficulties': self.difficulties,
         }
 
-        try:
-            with open(file_path, 'w') as f:
-                json.dump(data_to_save, f, indent=1)
-            print(f"saved data {file_path}")
-        except Exception as e:
-            print(f"error saving data: {e}")
-            return
+        if self.send_data_enabled:
+            thread = threading.Thread(target=self.send_data, args=(data_to_save,))
+            thread.start()
+        else:
+            self.save_csv(data_to_save)
 
     def clean_data(self):
         self.obstacle_data = []
@@ -75,3 +77,39 @@ class DataManager:
 
     def add_player_satisfaction(self, satisfaction):
         self.player_satisfaction = satisfaction
+
+    def save_csv(self, data_to_save):
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+        file_path = os.path.join(self.__folder, f'game_data_{timestamp}.json')
+
+        try:
+            with open(file_path, 'w') as f:
+                json.dump(data_to_save, f, indent=1)
+            logger.info(f"saved data {file_path}")
+        except Exception as e:
+            logger.error(f"error saving data: {e}")
+            return
+
+    def send_data(self, data_to_save):
+        api_key = os.getenv("API_KEY")
+        url = "http://127.0.0.1:5000/player-data"
+
+        try:
+            response = requests.post(
+                url,
+                headers={
+                    "Content-Type": "application/json",
+                    "X-API-Key": api_key
+                },
+                json=data_to_save
+            )
+
+            if response.status_code == 200:
+                logger.info(f"Data was send")
+            else:
+                self.save()
+                logger.error(f"Error while sending data, code: {response.status_code}")
+        except Exception as e:
+            self.save()
+            logger.error(f"Error sending data: {e}")
