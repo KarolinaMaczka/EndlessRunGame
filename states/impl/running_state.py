@@ -45,7 +45,7 @@ class RunningState(GameState):
             ObstacleTrain
         ], max_size_per_type=15)
         self.difficulty_manager = DifficultyManager()
-        self.difficulty_logic = DifficultyLogic(self.context.emotion_queue, self.context.data_manager, self.context.player.z)
+        self.difficulty_logic = DifficultyLogic(self.context.emotion_queue, self.context.data_manager)
         self.difficulty_level = multiprocessing.Value('i', 1)
         self.go = multiprocessing.Value('b', True)
         self.player_z = multiprocessing.Value('d', 0.0)

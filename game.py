@@ -20,9 +20,9 @@ if __name__ == '__main__':
     data_manager = DataManager(list_manager)
 
     emotion_queue = Queue()
-    queue = Queue()
-    camera_reading = CameraReader(data_manager, list_manager, emotion_queue)
-    p = Process(target=camera_reading.run, args=(queue,))
+    ready_queue = Queue()
+    camera_reading = CameraReader(data_manager, list_manager)
+    p = Process(target=camera_reading.run, args=(ready_queue, emotion_queue))
     p.start()
 
     def on_exit():
@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
     scenery = Scenery()
 
-    game_manager = GameManager(player, camera, data_manager, queue, camera_reading)
+    game_manager = GameManager(player, camera, data_manager, ready_queue, camera_reading, emotion_queue)
 
     def update():
         game_manager.update()
