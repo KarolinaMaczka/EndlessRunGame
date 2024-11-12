@@ -144,7 +144,7 @@ class RunningState(GameState):
         while not self.map_data_queue.empty():
             logger.info('Saving mapp data')
             mapp_data = self.map_data_queue.get()
-            self.context.data_manager.save_map_data(mapp_data)
+            self.context.data_manager.add_map_data(mapp_data)
 
     def __transition_to_main_menu(self):
         logger.info('Transitioning to main menu')
@@ -155,9 +155,9 @@ class RunningState(GameState):
     def __initialize_obstacles(self):
         logger.info('initializing objects')
         obstacles, mapp_data = Difficulty1().initialize_obstacles()
-        self.context.data_manager.save_map_data(mapp_data)
+        self.context.data_manager.add_map_data(mapp_data)
         for obstacle_type in obstacles:
-            self.context.data_manager.save_obstacle_data(obstacle_type=obstacle_type)
+            self.context.data_manager.add_obstacle_data(obstacle_type=obstacle_type)
             obstacle = self.obstacle_pool.acquire(obstacle_type.obstacle, position_z=obstacle_type.position_z,
                                                   difficulty=obstacle_type.difficulty, lane=obstacle_type.lane,
                                                   metadata=obstacle_type.entity_metadata)
@@ -195,4 +195,4 @@ class RunningState(GameState):
                 metadata=obstacle_type.entity_metadata
             )
             self.active_obstacles.append(obstacle)
-            self.context.data_manager.save_obstacle_data(obstacle_type=obstacle_type)
+            self.context.data_manager.add_obstacle_data(obstacle_type=obstacle_type)

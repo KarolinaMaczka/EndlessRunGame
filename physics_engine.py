@@ -87,25 +87,25 @@ class PhysicsEngine:
                     if not obstacle.jump:
                         logger.info(f"UP collision with obstacle:  {obstacle.position}, {self.player.position}")
                         self.__handle_full_collision(side, collision_type)
-                        self.data_manager.save_collision(side, CollisionType.FULL, obstacle, self.player)
+                        self.data_manager.add_collision(side, CollisionType.FULL, obstacle, self.player)
 
                         return True
                     return False
                 elif side == CollisionSide.DOWN:
                     logger.info(f"DOWN collision with obstacle {type(obstacle.parentt).__name__}:  {obstacle.position}, {self.player.position}")
-                    self.data_manager.save_collision(side, CollisionType.LIGHT, obstacle, self.player)
+                    self.data_manager.add_collision(side, CollisionType.LIGHT, obstacle, self.player)
 
                     return False
                 elif obstacle.sign or collision_type == CollisionType.LIGHT:
                     logger.info(f"LIGHT {side} collision with obstacle {type(obstacle.parentt).__name__}: {obstacle.position}, {self.player.position}")
                     self.__handle_light_collision(side, collision_type)
-                    self.data_manager.save_collision(side, collision_type, obstacle, self.player)
+                    self.data_manager.add_collision(side, collision_type, obstacle, self.player)
 
                     return False
                 elif collision_type == CollisionType.FULL:
                     logger.info(f"FULL {side} collision with obstacle {type(obstacle.parentt).__name__}: {obstacle.position}, {self.player.position}")
                     self.__handle_full_collision(side, collision_type)
-                    self.data_manager.save_collision(side, collision_type, obstacle, self.player)
+                    self.data_manager.add_collision(side, collision_type, obstacle, self.player)
                     return True
         return False
 

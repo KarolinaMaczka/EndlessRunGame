@@ -68,7 +68,7 @@ class GameOver(GameState):
     def set_rating(self, rating):
         logger.info(f'Setting satisfaction rating to {rating}')
         self.rating = rating
-        self.context.data_manager.save_player_satisfaction(rating)
+        self.context.data_manager.add_player_satisfaction(rating)
         for i, star in enumerate(self.stars):
             star.text_entity.color = color.yellow if i < rating else color.gray
 
