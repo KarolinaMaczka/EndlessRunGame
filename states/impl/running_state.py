@@ -3,6 +3,7 @@ from ursina import *
 from config.logger import get_game_logger
 from difficulty.difficulty.difficulty_levels import Difficulty1
 from difficulty.difficulty_manager import DifficultyManager
+from difficulty.difficulty_logic import DifficultyLogic
 
 from entities.obstacles.obstacle_pool import ObstaclePool
 from scenery import Scenery
@@ -44,6 +45,7 @@ class RunningState(GameState):
             ObstacleTrain
         ], max_size_per_type=15)
         self.difficulty_manager = DifficultyManager()
+        self.difficulty_logic = DifficultyLogic(self.context.emotion_queue, self.context.data_manager, self.context.player.z)
         self.difficulty_level = multiprocessing.Value('i', 1)
         self.go = multiprocessing.Value('b', True)
         self.player_z = multiprocessing.Value('d', 0.0)
@@ -95,7 +97,8 @@ class RunningState(GameState):
     def start(self):
         self.context.player.set_values()
         self.context.player.visible = True
-
+        logic_process = multiprocessing.Process(target=self.difficulty_logic.update, args=(self.player_z,))
+        logic_process.start()
         for obstacle in self.active_obstacles:
             obstacle.delete()
             destroy(obstacle)

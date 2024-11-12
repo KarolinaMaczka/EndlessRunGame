@@ -76,8 +76,8 @@ class DataManager:
     def add_obstacle_data(self, obstacle_type):
         self.obstacle_data.append((str(obstacle_type.obstacle.__name__), obstacle_type.position_z, obstacle_type.lane))
 
-    def add_emotion(self, dominant_emotion, second_dominant_emotion):
-        self.player_emotions.append((dominant_emotion, second_dominant_emotion))
+    def add_emotion(self, emotions: tuple):
+        self.player_emotions.append(emotions)
 
     def add_map_data(self, mapp_data: tuple):
         self.map_data.append(mapp_data)

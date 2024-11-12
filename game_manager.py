@@ -15,7 +15,8 @@ logger = get_game_logger()
 class GameManager:
     camera = None
     _state = None
-    def __init__(self, player: Player, camera: PlayerCamera, data_manager: DataManager, queue: Queue, camera_reader: CameraReader):
+    def __init__(self, player: Player, camera: PlayerCamera, data_manager: DataManager,
+                  queue: Queue, camera_reader: CameraReader):
         self.player = player
         self.camera = camera
         self.time_playing = 0

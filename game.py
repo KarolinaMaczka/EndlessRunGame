@@ -1,11 +1,10 @@
-import multiprocessing
-
 from ursina import *
 
 from config.logger import get_game_logger
 from entities.camera import PlayerCamera
 from game_manager import GameManager
 from entities.player import Player
+from scenery import Scenery
 import atexit
 
 from multiprocessing import Process, Queue, Manager
@@ -20,13 +19,11 @@ if __name__ == '__main__':
     list_manager = Manager()
     data_manager = DataManager(list_manager)
 
+    emotion_queue = Queue()
     queue = Queue()
-    camera_ready_event = multiprocessing.Event()
-    camera_reading = CameraReader(data_manager)
-    p = Process(target=camera_reading.run, args=(queue, camera_ready_event))
+    camera_reading = CameraReader(data_manager, list_manager, emotion_queue)
+    p = Process(target=camera_reading.run, args=(queue,))
     p.start()
-    camera_ready_event.wait()
-    logger.info('Camera process started')
 
     def on_exit():
         p.terminate()
@@ -38,13 +35,14 @@ if __name__ == '__main__':
     app = Ursina()
 
     window.fps_counter.enabled = True
-    window.exit_button.enabled = False
     #TODO fill
     window.title = 'Fill this'
 
     player = Player()
 
     camera = PlayerCamera(player)
+
+    scenery = Scenery()
 
     game_manager = GameManager(player, camera, data_manager, queue, camera_reading)
 
