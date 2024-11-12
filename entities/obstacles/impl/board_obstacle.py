@@ -29,19 +29,19 @@ class ObstacleBoard(ObstaclePoleGate):
         self.top_pole.y = self.right_pole.y + (height + board_height) / 2
         invoke(Obstacle.set_fixed_height, self.top_pole, board_height)
 
-    def check_collision_type(self, player_x, is_crouching, *args, **kwargs) -> CollisionType:
-        collision_type_full = (right_inner_border_lane(self.lane) <= player_x <= right_outer_border_lane(
-            self.lane)) or (left_outer_border_lane(self.lane) <= player_x <= left_inner_border_lane(self.lane))
-        if collision_type_full:
-            collision_type = CollisionType.FULL
-        elif is_crouching:
-            collision_type_none = left_inner_border_lane(self.lane) < player_x < right_inner_border_lane(self.lane)
-            if collision_type_none:
-                collision_type = None
-            else:
-                collision_type = CollisionType.LIGHT
-        else:
-            collision_type = CollisionType.FULL
-
-        return collision_type
+    # def check_collision_type(self, player_x, is_crouching, is_jumping, *args, **kwargs) -> CollisionType:
+    #     collision_type_full = (right_inner_border_lane(self.lane) <= player_x <= right_outer_border_lane(
+    #         self.lane)) or (left_outer_border_lane(self.lane) <= player_x <= left_inner_border_lane(self.lane))
+    #     if collision_type_full:
+    #         collision_type = CollisionType.FULL
+    #     elif is_crouching and not is_jumping:
+    #         collision_type_none = left_inner_border_lane(self.lane) < player_x < right_inner_border_lane(self.lane)
+    #         if collision_type_none:
+    #             collision_type = None
+    #         else:
+    #             collision_type = CollisionType.LIGHT
+    #     else:
+    #         collision_type = CollisionType.FULL
+    #
+    #     return collision_type
 
