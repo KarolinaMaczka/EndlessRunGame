@@ -19,10 +19,8 @@ class ObstacleFactory:
         return self._obstacles
 
     def apply_color_palette(self, palette):
-        logger.info(f"Applying color palette {type(palette).__name__}")
         for obstacle in self._obstacles:
             if str(obstacle.obstacle.__name__) in palette.keys():
-                # print(obstacle.obstacle.__name__)
                 obstacle.entity_metadata['colorr'] = palette[str(obstacle.obstacle.__name__)]
 
     def get_random(self):
@@ -39,6 +37,6 @@ class ObstacleFactory:
         obstacle_type = self.get_random()
         obstacle_type.position_z = position_z
         obstacle_type.lane = lane
-        logger.info(f"Drawed by lot {type(obstacle_type.obstacle).__name__}")
+        logger.info(f"Drawed obstacle by lot")
         return copy.copy(obstacle_type)
 
