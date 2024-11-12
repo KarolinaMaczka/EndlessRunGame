@@ -50,31 +50,3 @@ class SettingsMenu(GameState):
                     text = "Cameras",
                     buttons = [DropdownMenuButton(f"Camera {i}", on_click = Func(self.pass_camera, i)) for i in range(1, camera_count+1)]
         )   
-
-    # def create_window(self, camera_count):
-    #     self.context.window_panel = WindowPanel(
-    #         title='Settings',
-    #         content=(
-    #             Button('Go back', color=color.red,
-    #                     on_click=self.main_menu),
-    #             Text('Choose appropriate camera: ', color=color.gray),
-    #             self.create_button_list(camera_count),
-
-    #         ),        
-    #         position=(0, 0.25),
-    #     )
-    # def button_clicked(self, camera_number):
-    #     print(f'Camera {camera_number} clicked')
-
-    # def create_button_list(self, camera_count):
-    #     buttons_container = Entity()
-    #     self.buttons = []
-    #     for i in range(1, camera_count+1):
-    #         button = Button(text= f'Camera {i}',
-    #                          parent=buttons_container,
-    #                          position=(0, -i, 0),
-    #                          scale = (5,1,1),
-    #                          on_click=Func(self.button_clicked, i)
-    #                          )
-    #         self.buttons.append(button)
-    #     return buttons_container
