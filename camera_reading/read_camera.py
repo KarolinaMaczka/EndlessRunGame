@@ -21,23 +21,26 @@ class CameraReader:
         self.game_is_running = False
         self.data_manager = data_manager
         self.debug = False
-        self.camera_index = Value('i', 0)
+        self.current_camera_index = Value('i', 0)
+        self.passed_camera_index = Value('i', 0)
         self.cameras = list_manager.list()
-        self.cameras = self.list_cameras()
+        self.list_cameras()
+        logger.info(f'Cameras found: {len(self.cameras)}')
 
     def run(self, queue: Queue):
         from deepface.DeepFace import analyze # Importuję tutaj, żeby nie było problemów z importem w innych plikach (konkretnie blokuje wtedy workerów)
 
         if self.cameras is not None and len(self.cameras) > 0:
-            self.camera_index = self.cameras[0]
-        cap = cv.VideoCapture(self.camera_index)
+            self.current_camera_index.value = self.cameras[0]
+        cap = cv.VideoCapture(self.current_camera_index.value)
         logger.info(f'Camera connected')
         
         while True:
-            if self.camera_index != cap.get(cv.CAP_PROP_INDEX):
+            if self.current_camera_index.value != self.passed_camera_index.value:
                 cap.release()
-                cap = cv.VideoCapture(self.camera_index)
-                logger.info(f'Camera changed to {self.camera_index}')
+                self.current_camera_index.value = self.passed_camera_index.value
+                cap = cv.VideoCapture(self.current_camera_index.value)
+                logger.info(f'Camera changed to {self.passed_camera_index.value}')
             try:
                 ret, frame = cap.read()
             except Exception as e:
@@ -78,11 +81,11 @@ class CameraReader:
         logger.info(f'Found {len(self.cameras)} cameras')
         for i in self.cameras:
             logger.info(f'Camera {i}')
-        return self.cameras
+        return
 
     def change_camera(self, camera_number):
         logger.info(f'Camera {camera_number} clicked')
-        self.camera_index = camera_number
+        self.passed_camera_index.value = camera_number
 
 if __name__ == '__main__':
     camera_reading = CameraReader(DataManager(), Manager())

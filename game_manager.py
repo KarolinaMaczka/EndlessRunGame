@@ -45,7 +45,7 @@ class GameManager:
         elif state == "main_menu":
             self._state = MainMenu(self)
         elif state == "change_settings":
-            self._state = SettingsMenu(self, self.camera_reader.cameras)
+            self._state = SettingsMenu(self, self.camera_reader)
 
     def update(self):
         self._state.update()

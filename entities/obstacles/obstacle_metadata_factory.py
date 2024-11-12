@@ -19,7 +19,7 @@ class ObstacleFactory:
         return self._obstacles
 
     def apply_color_palette(self, palette):
-        logger.info(f"Applying color palette {type(palette).__name__}")
+        # logger.info(f"Applying color palette {type(palette).__name__}")
         for obstacle in self._obstacles:
             if str(obstacle.obstacle.__name__) in palette.keys():
                 # print(obstacle.obstacle.__name__)
