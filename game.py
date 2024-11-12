@@ -20,7 +20,7 @@ if __name__ == '__main__':
     data_manager = DataManager(list_manager)
 
     queue = Queue()
-    camera_reading = CameraReader(data_manager)
+    camera_reading = CameraReader(data_manager, list_manager)
     p = Process(target=camera_reading.run, args=(queue,))
     p.start()
 
