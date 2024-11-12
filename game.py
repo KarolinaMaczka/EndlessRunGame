@@ -19,8 +19,9 @@ if __name__ == '__main__':
     list_manager = Manager()
     data_manager = DataManager(list_manager)
 
+    emotion_queue = Queue()
     queue = Queue()
-    camera_reading = CameraReader(data_manager, list_manager)
+    camera_reading = CameraReader(data_manager, list_manager, emotion_queue)
     p = Process(target=camera_reading.run, args=(queue,))
     p.start()
 

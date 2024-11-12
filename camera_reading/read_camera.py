@@ -3,27 +3,24 @@ import time
 
 from multiprocessing import Queue, Value, Manager
 
+
+from difficulty.difficulty_logic import DifficultyLogic
 from config.logger import get_game_logger
 from data_manager import DataManager
 
 logger = get_game_logger()
 
-class EmotionHolder():
-    def __init__(self):
-        self.dominant_emotion = None
-        self.second_dominant_emotion = None
-
 class CameraReader:
-    def __init__(self, data_manager: DataManager, list_manager: Manager):
+    def __init__(self, data_manager: DataManager, manager: Manager, emotion_queue: Queue):
         self.last_analysis_time = time.time()
         self.analysis_interval = 1
-        self.emotion_holder = EmotionHolder()
         self.game_is_running = False
         self.data_manager = data_manager
         self.debug = False
         self.current_camera_index = Value('i', 0)
         self.passed_camera_index = Value('i', 0)
-        self.cameras = list_manager.list()
+        self.cameras = manager.list()
+
         self.list_cameras()
         logger.info(f'Cameras found: {len(self.cameras)}')
 
@@ -36,6 +33,7 @@ class CameraReader:
         logger.info(f'Camera connected')
         
         while True:
+            # Check if camera has been changed
             if self.current_camera_index.value != self.passed_camera_index.value:
                 cap.release()
                 self.current_camera_index.value = self.passed_camera_index.value
@@ -46,20 +44,23 @@ class CameraReader:
             except Exception as e:
                 logger.error(f'Błąd podczas odczytu kamery: {e}')
                 break
+            # Check if game is running then analyze emotions
             if not queue.empty():
                 self.game_is_running = queue.get()
             if time.time() - self.last_analysis_time > self.analysis_interval and self.game_is_running:
                 try:
                     logger.info(f'Analyzing emotions...')
                     result = analyze(frame, actions=['emotion'], enforce_detection=False, detector_backend='mtcnn')[0]
-                    self.emotion_holder.dominant_emotion = max(result['emotion'], key=result['emotion'].get)
-                    self.emotion_holder.second_dominant_emotion = sorted(result['emotion'], key=result['emotion'].get)[-2]
-
-                    self.data_manager.add_emotion(self.emotion_holder.dominant_emotion, self.emotion_holder.second_dominant_emotion)
+                    dominant_emotion = max(result['emotion'], key=result['emotion'].get)
+                    second_dominant_emotion = sorted(result['emotion'], key=result['emotion'].get)[-2]
+                    emotions = (dominant_emotion, second_dominant_emotion)
+                    # Put emotions to queue so that they can be read by the difficulty logic
+                    self.emotion_queue.put(emotions)
+                    self.data_manager.add_emotion(emotions) # TODO - remove later - it should be done inside difficulty logic
                     if self.debug:
                         logger.info(f'Analyzing emotions...')
                         logger.info(f'Result of analyzing emotions {result}')
-                        logger.info(f'Prevailing emotions: {self.emotion_holder.dominant_emotion} i {self.emotion_holder.second_dominant_emotion}')
+                        logger.info(f'Prevailing emotions: {dominant_emotion} i {second_dominant_emotion}')
                 except Exception as e:
                     logger.error(f'Błąd podczas analizy: {e}')
                 self.last_analysis_time = time.time()
