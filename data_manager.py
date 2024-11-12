@@ -59,21 +59,21 @@ class DataManager:
         self.playing_time = 0
         self.difficulties = []
 
-    def save_collision(self, side: CollisionSide, collision_type: CollisionType, obstacle: Obstacle, player: Player):
+    def add_collision(self, side: CollisionSide, collision_type: CollisionType, obstacle: Obstacle, player: Player):
         self.hit_obstacles.append(
             (str(type(obstacle.parentt).__name__), str(side.value), str(collision_type.value),
              obstacle.parentt.position_z, obstacle.parentt.lane,
              player.position.z, player.position.x,
              player.position.y))
 
-    def save_obstacle_data(self, obstacle_type):
+    def add_obstacle_data(self, obstacle_type):
         self.obstacle_data.append((str(obstacle_type.obstacle.__name__), obstacle_type.position_z, obstacle_type.lane))
 
     def add_emotion(self, dominant_emotion, second_dominant_emotion):
         self.player_emotions.append((dominant_emotion, second_dominant_emotion))
 
-    def save_map_data(self, mapp_data: tuple):
+    def add_map_data(self, mapp_data: tuple):
         self.map_data.append(mapp_data)
 
-    def save_player_satisfaction(self, satisfaction):
+    def add_player_satisfaction(self, satisfaction):
         self.player_satisfaction = satisfaction
