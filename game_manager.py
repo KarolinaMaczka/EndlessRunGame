@@ -16,14 +16,15 @@ class GameManager:
     camera = None
     _state = None
     def __init__(self, player: Player, camera: PlayerCamera, data_manager: DataManager,
-                  queue: Queue, camera_reader: CameraReader):
+                  ready_queue: Queue, camera_reader: CameraReader, emotion_queue: Queue):
         self.player = player
         self.camera = camera
         self.time_playing = 0
 
         self.data_manager = data_manager
         self.camera_reader = camera_reader
-        self.queue = queue
+        self.ready_queue = ready_queue
+        self.emotion_queue = emotion_queue
         self.physics_engine = PhysicsEngine(player, camera, self.data_manager)
         self._state = MainMenu(self)
         RunningState(self).on_exit()
@@ -34,12 +35,12 @@ class GameManager:
         self._state.on_exit()
         if state == "running_state":
             self.time_playing = time.time()
-            self.queue.put(True)
+            self.ready_queue.put(True)
             self._state = RunningState(self)
         elif state == "game_over_state":
             self.time_playing = time.time() - self.time_playing
             self.data_manager.playing_time = self.time_playing
-            self.queue.put(False)
+            self.ready_queue.put(False)
             logger.info(f'game over, score: {self.player.Z}')
             self.data_manager.score = self.player.Z
             self._state = GameOver(self)

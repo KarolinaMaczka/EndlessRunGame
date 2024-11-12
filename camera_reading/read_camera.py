@@ -11,7 +11,7 @@ from data_manager import DataManager
 logger = get_game_logger()
 
 class CameraReader:
-    def __init__(self, data_manager: DataManager, manager: Manager, emotion_queue: Queue):
+    def __init__(self, data_manager: DataManager, manager: Manager):
         self.last_analysis_time = time.time()
         self.analysis_interval = 1
         self.game_is_running = False
@@ -24,7 +24,7 @@ class CameraReader:
         self.list_cameras()
         logger.info(f'Cameras found: {len(self.cameras)}')
 
-    def run(self, queue: Queue):
+    def run(self, ready_queue: Queue, emotion_queue: Queue):
         from deepface.DeepFace import analyze # Importuję tutaj, żeby nie było problemów z importem w innych plikach (konkretnie blokuje wtedy workerów)
 
         if self.cameras is not None and len(self.cameras) > 0:
@@ -45,8 +45,8 @@ class CameraReader:
                 logger.error(f'Błąd podczas odczytu kamery: {e}')
                 break
             # Check if game is running then analyze emotions
-            if not queue.empty():
-                self.game_is_running = queue.get()
+            if not ready_queue.empty():
+                self.game_is_running = ready_queue.get()
             if time.time() - self.last_analysis_time > self.analysis_interval and self.game_is_running:
                 try:
                     logger.info(f'Analyzing emotions...')
