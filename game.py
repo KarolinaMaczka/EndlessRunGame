@@ -4,7 +4,6 @@ from config.logger import get_game_logger
 from entities.camera import PlayerCamera
 from game_manager import GameManager
 from entities.player import Player
-from scenery import Scenery
 import atexit
 
 from multiprocessing import Process, Queue, Manager
@@ -40,8 +39,6 @@ if __name__ == '__main__':
     player = Player()
 
     camera = PlayerCamera(player)
-
-    scenery = Scenery()
 
     game_manager = GameManager(player, camera, data_manager, queue, camera_reading)
 
