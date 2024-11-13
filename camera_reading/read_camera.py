@@ -31,6 +31,7 @@ class CameraReader:
             if cap.isOpened():
                 camera_ready_event.set()
             else:
+                camera_ready_event.set()
                 logger.error('Failed to connect to the camera')
                 return
             if not queue.empty():
