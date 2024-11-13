@@ -38,7 +38,7 @@ if __name__ == '__main__':
     app = Ursina()
 
     window.fps_counter.enabled = True
-    window.exit_button.enabled = False
+    # window.exit_button.enabled = False
     #TODO fill
     window.title = 'Fill this'
 

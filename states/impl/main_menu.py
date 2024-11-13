@@ -55,5 +55,5 @@ class MainMenu(GameState):
                 Button('Change Settings', color=color.gray, on_click=self.change_settings),
                 Button('Quit', color=color.red, on_click=application.quit)
             ),
-            position=(0, 0)
+            position=(0, 0.25)
         )
