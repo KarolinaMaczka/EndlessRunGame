@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
     queue = Queue()
     camera_ready_event = multiprocessing.Event()
-    camera_reading = CameraReader(data_manager)
+    camera_reading = CameraReader(data_manager, list_manager)
     p = Process(target=camera_reading.run, args=(queue, camera_ready_event))
     p.start()
     camera_ready_event.wait()
