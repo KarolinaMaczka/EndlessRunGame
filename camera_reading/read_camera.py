@@ -11,12 +11,12 @@ from data_manager import DataManager
 logger = get_game_logger()
 
 class CameraReader:
-    def __init__(self, data_manager: DataManager, manager: Manager):
+    def __init__(self, data_manager: DataManager, manager: Manager): # type: ignore
         self.last_analysis_time = time.time()
         self.analysis_interval = 1
         self.game_is_running = False
         self.data_manager = data_manager
-        self.debug = False
+        self.debug = True
         self.current_camera_index = Value('i', 0)
         self.passed_camera_index = Value('i', 0)
         self.cameras = manager.list()
@@ -55,10 +55,8 @@ class CameraReader:
                     second_dominant_emotion = sorted(result['emotion'], key=result['emotion'].get)[-2]
                     emotions = (dominant_emotion, second_dominant_emotion)
                     # Put emotions to queue so that they can be read by the difficulty logic
-                    self.emotion_queue.put(emotions)
-                    self.data_manager.add_emotion(emotions) # TODO - remove later - it should be done inside difficulty logic
+                    emotion_queue.put(emotions)
                     if self.debug:
-                        logger.info(f'Analyzing emotions...')
                         logger.info(f'Result of analyzing emotions {result}')
                         logger.info(f'Prevailing emotions: {dominant_emotion} i {second_dominant_emotion}')
                 except Exception as e:

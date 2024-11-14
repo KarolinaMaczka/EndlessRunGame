@@ -44,8 +44,8 @@ class RunningState(GameState):
             ObstacleTrain
         ], max_size_per_type=15)
         self.difficulty_manager = DifficultyManager()
-        self.difficulty_logic = DifficultyLogic(self.context.emotion_queue, self.context.data_manager)
         self.difficulty_level = multiprocessing.Value('i', 1)
+        self.difficulty_level_new = multiprocessing.Value('i', 1)
         self.go = multiprocessing.Value('b', True)
         self.player_z = multiprocessing.Value('d', 0.0)
         self.obstacle_queue = multiprocessing.Queue()
@@ -55,6 +55,9 @@ class RunningState(GameState):
             args=(self.obstacle_queue, self.player_z, self.go, self.difficulty_level, self.map_data_queue)
         )
         self.obstacle_process.start()
+        self.difficulty_logic = DifficultyLogic(self.context.data_manager, self.difficulty_level_new)
+        self.logic_process = multiprocessing.Process(target=self.difficulty_logic.update, args=(self.player_z, self.context.emotion_queue))
+        self.logic_process.start()
         self.start()
         self.create_paused_panel()
 
@@ -68,6 +71,8 @@ class RunningState(GameState):
         if hasattr(self, "obstacle_process"):
             self.obstacle_process.terminate()
             self.obstacle_process.join()
+            self.logic_process.terminate()
+            self.logic_process.join()
             del self.obstacle_process
             logger.info(f'Deleted obstacle process')
 
@@ -75,14 +80,17 @@ class RunningState(GameState):
         self.context.player.reset()
         if held_keys['d']:
             self.context.player.go_right()
+            self.context.data_manager.save_pressed_key(('d', self.player_z.value))
         if held_keys['a']:
             self.context.player.go_left()
+            self.context.data_manager.save_pressed_key(('a', self.player_z.value))
         # if held_keys['w']:
         #     self.context.player.run_faster()
         if held_keys['s']:
             self.context.player.crouch()
             # self.context.player.scale = 3.5
             self.context.camera.camera.y = self.context.camera.camera.y - 0.3
+            self.context.data_manager.save_pressed_key(('s', self.player_z.value))
         if held_keys['escape']:
             self.__toggle_paused()
         if held_keys['control']:
@@ -91,12 +99,11 @@ class RunningState(GameState):
                     self.set_difficulty(max(1, min(10, i+1)))
         if held_keys['space'] and not self.context.player.is_jumping:
             self.context.player.set_jump()
+            self.context.data_manager.save_pressed_key(('space', self.player_z.value))
 
     def start(self):
         self.context.player.set_values()
         self.context.player.visible = True
-        logic_process = multiprocessing.Process(target=self.difficulty_logic.update, args=(self.player_z,))
-        logic_process.start()
         for obstacle in self.active_obstacles:
             obstacle.delete()
             destroy(obstacle)
@@ -106,6 +113,8 @@ class RunningState(GameState):
     def update(self):
         if self.is_game_over:
             return
+        if self.difficulty_level.value != self.difficulty_level_new.value:
+            self.set_difficulty(self.difficulty_level_new.value)
         self.context.player.run()
         self.handle_input()
         self.context.physics_engine.apply_gravity(self.active_obstacles)
@@ -132,6 +141,7 @@ class RunningState(GameState):
         logger.info(f'RunningState setting difficulty to {level}')
         self.difficulty_level.value = level
         self.difficulty_manager.set_player_settings(level, self.context.player)
+        self.context.data_manager.save_difficulty(level)
 
     def __toggle_paused(self):
         if not application.paused:

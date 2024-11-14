@@ -39,6 +39,6 @@ class ObstacleFactory:
         obstacle_type = self.get_random()
         obstacle_type.position_z = position_z
         obstacle_type.lane = lane
-        logger.info(f"Drawed by lot {type(obstacle_type.obstacle).__name__}")
+        # logger.info(f"Drawed by lot {type(obstacle_type.obstacle).__name__}")
         return copy.copy(obstacle_type)
 

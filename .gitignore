@@ -11,3 +11,4 @@ origin/game
 *.json
 /player_data/
 .venv/*
+*.log

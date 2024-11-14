@@ -19,7 +19,8 @@ class DataManager:
         self.player_emotions = list_manager.list()
         self.score = 0
         self.playing_time = 0
-        self.difficulties = []
+        self.difficulties = list_manager.list()
+        self.keys_pressed = list_manager.list()
         self.__folder = config['player_data']['player_data.folder']
         os.makedirs(self.__folder, exist_ok=True)
 
@@ -36,7 +37,8 @@ class DataManager:
             "player_emotions": list(self.player_emotions),
             'score': self.score,
             'playing_time': self.playing_time,
-            'difficulties': self.difficulties,
+            'difficulties': list(self.difficulties),
+            'keys_pressed': list(self.keys_pressed),
         }
 
         try:
@@ -55,7 +57,8 @@ class DataManager:
         self.map_data = []
         self.score = 0
         self.playing_time = 0
-        self.difficulties = []
+        self.difficulties[:] = []
+        self.keys_pressed[:] = []
 
     def save_collision(self, side: CollisionSide, collision_type: CollisionType, obstacle: Obstacle, player: Player):
         self.hit_obstacles.append(
@@ -70,8 +73,14 @@ class DataManager:
     def add_emotion(self, emotions: tuple):
         self.player_emotions.append(emotions)
 
+    def save_pressed_key(self, key: tuple):
+        self.keys_pressed.append(key)
+
     def save_map_data(self, mapp_data: tuple):
         self.map_data.append(mapp_data)
 
     def save_player_satisfaction(self, satisfaction):
         self.player_satisfaction = satisfaction
+    
+    def save_difficulty(self, difficulty):
+        self.difficulties.append(difficulty)
