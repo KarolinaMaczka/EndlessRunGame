@@ -73,10 +73,13 @@ class RunningState(GameState):
         if hasattr(self, "obstacle_process"):
             self.obstacle_process.terminate()
             self.obstacle_process.join()
-            self.logic_process.terminate()
-            self.logic_process.join()
             del self.obstacle_process
             logger.info(f'Deleted obstacle process')
+        if hasattr(self, "logic_process"):
+            self.logic_process.terminate()
+            self.logic_process.join()
+            del self.logic_process
+            logger.info(f'Deleted logic process')
         self.scenery.delete()
 
     def handle_input(self):
