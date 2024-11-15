@@ -88,7 +88,7 @@ class DataManager:
     def add_map_data(self, mapp_data: tuple):
         self.map_data.append(mapp_data)
 
-    def save_player_satisfaction(self, satisfaction):
+    def add_player_satisfaction(self, satisfaction):
         self.player_satisfaction = satisfaction
     
     def save_difficulty(self, difficulty):
