@@ -20,6 +20,7 @@ from entities.obstacles.impl.wooden_sign_obstacle import ObstacleWoodenSign
 from entities.obstacles.impl.train_obstacle import ObstacleTrain
 
 import multiprocessing
+import atexit
 
 from states.workers import obstacle_generator_worker
 logger = get_game_logger()
@@ -112,7 +113,8 @@ class RunningState(GameState):
         self.active_obstacles.clear()
         self.__initialize_obstacles()
         self.context.data_manager.save_difficulty(self.difficulty_level.value)
-
+        atexit.register(self.on_exit)
+        
     def update(self):
         if self.difficulty_level.value != self.difficulty_level_new.value:
             self.set_difficulty(self.difficulty_level_new.value)
