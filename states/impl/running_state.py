@@ -109,10 +109,9 @@ class RunningState(GameState):
             destroy(obstacle)
         self.active_obstacles.clear()
         self.__initialize_obstacles()
+        self.context.data_manager.save_difficulty(self.difficulty_level.value)
 
     def update(self):
-        if self.is_game_over:
-            return
         if self.difficulty_level.value != self.difficulty_level_new.value:
             self.set_difficulty(self.difficulty_level_new.value)
         self.context.player.run()
