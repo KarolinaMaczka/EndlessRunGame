@@ -21,25 +21,24 @@ class DifficultyLogic():
             time.sleep(0.1)
 
     def update_difficulty(self, emotions:tuple):
-        #TODO implement
-        dominant_emotion = emotions[0]
-        second_dominant_emotion = emotions[1]
-        logger.info(f'Logic change: Dominant emotion: {dominant_emotion}, second dominant emotion: {second_dominant_emotion}')
-        if dominant_emotion == 'happy':
-            self.difficulty_value.value = 1
-            logger.info('Difficulty set to 1 - difficulty logic')
-        elif dominant_emotion == 'neutral' or dominant_emotion == 'sad':
-            if random() < 0.5:
-                self.difficulty_value.value = 5
-                logger.info('Difficulty set to 2 - difficulty logic')
-            else:  
-                self.difficulty_value.value = 9
-                logger.info('Difficulty set to 9 - difficulty logic')
-            # self.data_manager.difficulties.append('medium')
-        elif dominant_emotion == 'angry':
-            self.difficulty_value.value = 10
-            logger.info('Difficulty set to 10 - difficulty logic')
-            # self.data_manager.difficulties.append('hard')        
+        pass
+        # TODO - uncomment this code for changing difficulty based on emotions
+        # dominant_emotion = emotions[0]
+        # second_dominant_emotion = emotions[1]
+        # logger.info(f'Logic change: Dominant emotion: {dominant_emotion}, second dominant emotion: {second_dominant_emotion}')
+        # if dominant_emotion == 'happy':
+        #     self.difficulty_value.value = 1
+        #     logger.info('Difficulty set to 1 - difficulty logic')
+        # elif dominant_emotion == 'neutral' or dominant_emotion == 'sad':
+        #     if random() < 0.5:
+        #         self.difficulty_value.value = 5
+        #         logger.info('Difficulty set to 2 - difficulty logic')
+        #     else:  
+        #         self.difficulty_value.value = 9
+        #         logger.info('Difficulty set to 9 - difficulty logic')
+        # elif dominant_emotion == 'angry':
+        #     self.difficulty_value.value = 10
+        #     logger.info('Difficulty set to 10 - difficulty logic')
 
 
 
