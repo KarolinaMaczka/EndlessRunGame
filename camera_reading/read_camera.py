@@ -1,7 +1,8 @@
 import cv2 as cv
 import time
 
-from multiprocessing import Queue, Value, Manager
+from multiprocessing import Queue, Value, Manager, Event
+
 
 
 from difficulty.difficulty_logic import DifficultyLogic
@@ -24,7 +25,8 @@ class CameraReader:
         self.list_cameras()
         logger.info(f'Cameras found: {len(self.cameras)}')
 
-    def run(self, ready_queue: Queue, emotion_queue: Queue):
+
+    def run(self, ready_queue: Queue, emotion_queue: Queue, camera_ready_event: Event):
         from deepface.DeepFace import analyze # Importuję tutaj, żeby nie było problemów z importem w innych plikach (konkretnie blokuje wtedy workerów)
 
         if self.cameras is not None and len(self.cameras) > 0:
@@ -42,10 +44,19 @@ class CameraReader:
             try:
                 ret, frame = cap.read()
             except Exception as e:
-                logger.error(f'Błąd podczas odczytu kamery: {e}')
+                logger.error(f'Failed to connect to the camera: {e}')
                 break
             # Check if game is running then analyze emotions
             if not ready_queue.empty():
+                self.game_is_running = ready_queue.get()
+            if cap.isOpened():
+                camera_ready_event.set()
+            else:
+                camera_ready_event.set()
+                logger.error('Failed to connect to the camera')
+                return
+            if not ready_queue.empty():
+                logger.info(f'Processing queue for camera')
                 self.game_is_running = ready_queue.get()
             if time.time() - self.last_analysis_time > self.analysis_interval and self.game_is_running:
                 try:

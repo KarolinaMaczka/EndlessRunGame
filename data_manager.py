@@ -1,16 +1,24 @@
 import os
+import threading
 from datetime import datetime
 import json
 
 from config.config import config
 from config.constants import CollisionSide, CollisionType
+from config.logger import get_game_logger
+from config.utils import catch_exceptions
 from entities.obstacles.obstacle import Obstacle
 from entities.player import Player
-
 from multiprocessing import Manager
+logger = get_game_logger()
+import os
+import requests
+from dotenv import load_dotenv
+load_dotenv()
 
 class DataManager:
-    def __init__(self, list_manager: Manager): # type: ignore
+    def __init__(self, list_manager: Manager):
+
         self.obstacle_data = []
         self.hit_obstacles = []
         self.player_satisfaction = -1
@@ -21,14 +29,11 @@ class DataManager:
         self.playing_time = 0
         self.difficulties = list_manager.list()
         self.keys_pressed = list_manager.list()
+        self.send_data_enabled = True
         self.__folder = config['player_data']['player_data.folder']
         os.makedirs(self.__folder, exist_ok=True)
 
     def save(self):
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-        file_path = os.path.join(self.__folder, f'game_data_{timestamp}.json')
-
         data_to_save = {
             "obstacle_data": self.obstacle_data,
             "hit_obstacles": self.hit_obstacles,
@@ -41,13 +46,17 @@ class DataManager:
             'keys_pressed': list(self.keys_pressed),
         }
 
-        try:
-            with open(file_path, 'w') as f:
-                json.dump(data_to_save, f, indent=1)
-            print(f"saved data {file_path}")
-        except Exception as e:
-            print(f"error saving data: {e}")
-            return
+        if self.send_data_enabled:
+            try:
+                thread = threading.Thread(target=self.send_data, args=(data_to_save,))
+                thread.start()
+            except Exception as e:
+                try:
+                    self.send_data(data_to_save)
+                except Exception as e:
+                    self.save_csv(data_to_save)
+        else:
+            self.save_csv(data_to_save)
 
     def clean_data(self):
         self.obstacle_data = []
@@ -60,14 +69,14 @@ class DataManager:
         self.difficulties[:] = []
         self.keys_pressed[:] = []
 
-    def save_collision(self, side: CollisionSide, collision_type: CollisionType, obstacle: Obstacle, player: Player):
+    def add_collision(self, side: CollisionSide, collision_type: CollisionType, obstacle: Obstacle, player: Player):
         self.hit_obstacles.append(
             (str(type(obstacle.parentt).__name__), str(side.value), str(collision_type.value),
              obstacle.parentt.position_z, obstacle.parentt.lane,
              player.position.z, player.position.x,
              player.position.y))
 
-    def save_obstacle_data(self, obstacle_type):
+    def add_obstacle_data(self, obstacle_type):
         self.obstacle_data.append((str(obstacle_type.obstacle.__name__), obstacle_type.position_z, obstacle_type.lane))
 
     def add_emotion(self, emotions: tuple):
@@ -76,7 +85,7 @@ class DataManager:
     def save_pressed_key(self, key: tuple):
         self.keys_pressed.append(key)
 
-    def save_map_data(self, mapp_data: tuple):
+    def add_map_data(self, mapp_data: tuple):
         self.map_data.append(mapp_data)
 
     def save_player_satisfaction(self, satisfaction):
@@ -84,3 +93,41 @@ class DataManager:
     
     def save_difficulty(self, difficulty):
         self.difficulties.append(difficulty)
+
+    @catch_exceptions
+    def save_csv(self, data_to_save):
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+        file_path = os.path.join(self.__folder, f'game_data_{timestamp}.json')
+
+        try:
+            with open(file_path, 'w') as f:
+                json.dump(data_to_save, f, indent=1)
+            logger.info(f"saved data {file_path}")
+        except Exception as e:
+            logger.error(f"error saving data: {e}")
+            return
+
+    @catch_exceptions
+    def send_data(self, data_to_save):
+        api_key = os.getenv("API_KEY")
+        url = "https://karolinamaczka.pythonanywhere.com/player-data"
+
+        try:
+            response = requests.post(
+                url,
+                headers={
+                    "Content-Type": "application/json",
+                    "X-API-Key": api_key
+                },
+                json=data_to_save
+            )
+
+            if response.status_code == 200:
+                logger.info(f"Data was send")
+            else:
+                self.save()
+                logger.error(f"Error while sending data, code: {response.status_code}")
+        except Exception as e:
+            self.save()
+            logger.error(f"Error sending data: {e}")
