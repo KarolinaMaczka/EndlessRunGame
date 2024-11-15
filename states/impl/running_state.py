@@ -6,6 +6,7 @@ from difficulty.difficulty_manager import DifficultyManager
 from difficulty.difficulty_logic import DifficultyLogic
 
 from entities.obstacles.obstacle_pool import ObstaclePool
+from scenery import Scenery
 from states.state import GameState
 from collections import deque
 from entities.obstacles.impl.fence_obstacle import ObstacleFence
@@ -24,10 +25,10 @@ import atexit
 from states.workers import obstacle_generator_worker
 logger = get_game_logger()
 
+
 class RunningState(GameState):
     def __init__(self, context):
-        self.is_game_over = False
-        self.difficulty_class_level = Difficulty1()
+        self.scenery = Scenery()
         self.active_obstacles = deque()
         self.obstacles_to_render = deque()
         self.obstacles_per_frame = 1
@@ -72,10 +73,14 @@ class RunningState(GameState):
         if hasattr(self, "obstacle_process"):
             self.obstacle_process.terminate()
             self.obstacle_process.join()
-            self.logic_process.terminate()
-            self.logic_process.join()
             del self.obstacle_process
             logger.info(f'Deleted obstacle process')
+        if hasattr(self, "logic_process"):
+            self.logic_process.terminate()
+            self.logic_process.join()
+            del self.logic_process
+            logger.info(f'Deleted logic process')
+        self.scenery.delete()
 
     def handle_input(self):
         self.context.player.reset()
@@ -121,10 +126,12 @@ class RunningState(GameState):
         self.context.physics_engine.apply_gravity(self.active_obstacles)
         if self.context.physics_engine.handle_player_collisions():
             self.context.transition_to("game_over_state")
+            return
         self.player_z.value = self.context.player.z
         self.__render_obstacles_from_queue()
         self.__cleanup_obstacles()
         self.__save_mapp_data()
+        self.scenery.move(self.context.player.z)
 
     def create_paused_panel(self):
         self.pause_panel = WindowPanel(
@@ -156,7 +163,7 @@ class RunningState(GameState):
         while not self.map_data_queue.empty():
             logger.info('Saving mapp data')
             mapp_data = self.map_data_queue.get()
-            self.context.data_manager.save_map_data(mapp_data)
+            self.context.data_manager.add_map_data(mapp_data)
 
     def __transition_to_main_menu(self):
         logger.info('Transitioning to main menu')
@@ -166,10 +173,10 @@ class RunningState(GameState):
 
     def __initialize_obstacles(self):
         logger.info('initializing objects')
-        obstacles, mapp_data = self.difficulty_class_level.initialize_obstacles()
-        self.context.data_manager.save_map_data(mapp_data)
+        obstacles, mapp_data = Difficulty1().initialize_obstacles()
+        self.context.data_manager.add_map_data(mapp_data)
         for obstacle_type in obstacles:
-            self.context.data_manager.save_obstacle_data(obstacle_type=obstacle_type)
+            self.context.data_manager.add_obstacle_data(obstacle_type=obstacle_type)
             obstacle = self.obstacle_pool.acquire(obstacle_type.obstacle, position_z=obstacle_type.position_z,
                                                   difficulty=obstacle_type.difficulty, lane=obstacle_type.lane,
                                                   metadata=obstacle_type.entity_metadata)
@@ -207,4 +214,4 @@ class RunningState(GameState):
                 metadata=obstacle_type.entity_metadata
             )
             self.active_obstacles.append(obstacle)
-            self.context.data_manager.save_obstacle_data(obstacle_type=obstacle_type)
+            self.context.data_manager.add_obstacle_data(obstacle_type=obstacle_type)
