@@ -102,7 +102,9 @@ class RunningState(GameState):
         if held_keys['control']:
             for i in range(10):
                 if held_keys[str(i)]:
-                    self.set_difficulty(max(1, min(10, i+1)))
+                    # self.set_difficulty(max(1, min(10, i+1)))
+                    self.difficulty_level_new.value = max(1, min(10, i))
+                    # logger.info(f'Clicked ctrl+{i}')
         if held_keys['space'] and not self.context.player.is_jumping:
             self.context.player.set_jump()
             self.context.data_manager.save_pressed_key(('space', self.player_z.value))
@@ -148,8 +150,10 @@ class RunningState(GameState):
     def set_difficulty(self, level, **kwargs):
         logger.info(f'RunningState setting difficulty to {level}')
         self.difficulty_level.value = level
+        # self.difficulty_level_new.value = level
         self.difficulty_manager.set_player_settings(level, self.context.player)
         self.context.data_manager.save_difficulty(level)
+
 
     def __toggle_paused(self):
         if not application.paused:
