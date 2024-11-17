@@ -1,4 +1,5 @@
 from config.logger import get_game_logger
+from difficulty.difficulty.difficulty_level import Difficulty
 from difficulty.difficulty.difficulty_levels import Difficulty1, Difficulty2, Difficulty3, Difficulty4, Difficulty5, \
     Difficulty6, Difficulty7, Difficulty8, Difficulty9, Difficulty10
 
