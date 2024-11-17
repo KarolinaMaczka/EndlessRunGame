@@ -20,13 +20,12 @@ if __name__ == '__main__':
     list_manager = Manager()
     data_manager = DataManager(list_manager)
 
-    queue = Queue()
+    emotion_queue = Queue()
+    ready_queue = Queue()
     camera_ready_event = multiprocessing.Event()
     camera_reading = CameraReader(data_manager, list_manager)
-    p = Process(target=camera_reading.run, args=(queue, camera_ready_event))
+    p = Process(target=camera_reading.run, args=(ready_queue,emotion_queue, camera_ready_event))
     p.start()
-    camera_ready_event.wait()
-    logger.info('Camera process started')
 
     def on_exit():
         p.terminate()
@@ -46,12 +45,14 @@ if __name__ == '__main__':
 
     camera = PlayerCamera(player)
 
-    game_manager = GameManager(player, camera, data_manager, queue, camera_reading)
+    game_manager = GameManager(player, camera, data_manager, ready_queue, camera_reading, emotion_queue)
+    atexit.register(game_manager.on_exit)
+
+    camera_ready_event.wait()
+    logger.info('Camera process started')
 
     def update():
         game_manager.update()
-
-    atexit.register(game_manager.on_exit)
 
     sky = Sky()
 
