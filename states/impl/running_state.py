@@ -1,4 +1,4 @@
-from ursina import *
+from ursina import destroy, held_keys, WindowPanel, Button, color, application
 
 from config.logger import get_game_logger
 from difficulty.difficulty.difficulty_levels import Difficulty1

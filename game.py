@@ -1,6 +1,6 @@
 import multiprocessing
 
-from ursina import *
+from ursina import Ursina, window, Sky
 
 from config.logger import get_game_logger
 from entities.camera import PlayerCamera

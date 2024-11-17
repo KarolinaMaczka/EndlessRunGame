@@ -1,6 +1,5 @@
-from ursina import FrameAnimation3d, time, color
+from ursina import FrameAnimation3d, time
 
-from config.config import config
 from config.constants import CollisionSide, CollisionType
 
 
