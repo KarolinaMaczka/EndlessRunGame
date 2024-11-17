@@ -28,6 +28,7 @@ logger = get_game_logger()
 
 class RunningState(GameState):
     def __init__(self, context):
+        self.run = False
         self.scenery = Scenery()
         self.active_obstacles = deque()
         self.obstacles_to_render = deque()
@@ -60,8 +61,9 @@ class RunningState(GameState):
         self.difficulty_logic = DifficultyLogic(self.context.data_manager, self.difficulty_level_new)
         self.logic_process = multiprocessing.Process(target=self.difficulty_logic.update, args=(self.player_z, self.context.emotion_queue))
         self.logic_process.start()
-        self.start()
         self.create_paused_panel()
+        self.start()
+        self.run = True
 
     def on_exit(self):
         for obstacle in self.active_obstacles:
@@ -121,6 +123,8 @@ class RunningState(GameState):
         atexit.register(self.on_exit)
         
     def update(self):
+        if not self.run:
+            return
         if self.difficulty_level.value != self.difficulty_level_new.value:
             self.set_difficulty(self.difficulty_level_new.value)
         self.context.player.run()
