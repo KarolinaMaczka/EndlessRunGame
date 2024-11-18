@@ -1,7 +1,7 @@
 from config.logger import get_game_logger
 from difficulty.difficulty.difficulty_level import Difficulty
 from difficulty.difficulty.difficulty_levels import Difficulty1, Difficulty2, Difficulty3, Difficulty4, Difficulty5, \
-    Difficulty6, Difficulty7, Difficulty8, Difficulty9, Difficulty10
+    Difficulty6, Difficulty7, Difficulty8, Difficulty9, Difficulty10, DifficultyTest1, DifficultyTest2, DifficultyTest3
 
 logger = get_game_logger()
 class DifficultyManager:
@@ -19,16 +19,16 @@ class DifficultyManager:
             10: {"speed": 400, "jump_height": 1, "gravity": -3, "velocity_x": 30, "prev_speed": 400, "bouncing_dist": 5},
         }
         self.difficulties = {
-            1: Difficulty1(),
-            2: Difficulty2(),
-            3: Difficulty3(),
+            1: DifficultyTest1(),
+            2: DifficultyTest2(),
+            3: DifficultyTest3(),
             4: Difficulty4(),
             5: Difficulty5(),
             6: Difficulty6(),
             7: Difficulty7(),
             8: Difficulty8(),
             9: Difficulty9(),
-            10: Difficulty10()
+            10: Difficulty10(),
         }
 
     def get_player_settings(self, difficulty_level: int):

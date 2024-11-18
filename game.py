@@ -1,6 +1,6 @@
 import multiprocessing
 
-from ursina import Ursina, window, Sky
+from ursina import Ursina, window, Sky, Text
 
 from config.logger import get_game_logger
 from entities.camera import PlayerCamera
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     window.fps_counter.enabled = True
     # window.exit_button.enabled = False
     #TODO fill
-    window.title = 'Fill this'
+    window.title = 'Game'
 
     player = Player()
 
@@ -51,8 +51,14 @@ if __name__ == '__main__':
     camera_ready_event.wait()
     logger.info('Camera process started')
 
+    score_tracker = Text(text=f'0', position=(-0.8, 0.5), scale=1.5)
     def update():
         game_manager.update()
+        if game_manager._state.__class__.__name__ == 'RunningState':
+            if int(game_manager._state.player_z.value) % 100 == 0:
+                score_tracker.text = f'Score:{str(int(game_manager._state.player_z.value))}'
+        else:
+            score_tracker.text = 'Score: 0'
 
     sky = Sky()
 

@@ -86,6 +86,19 @@ class CameraReader:
         logger.info(f'Camera {camera_number} clicked')
         self.passed_camera_index.value = camera_number
 
+    def show_camera_image(self, close_event: Event):
+        cap = cv.VideoCapture(self.current_camera_index.value)
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                logger.error('Failed to connect to the camera')
+                break
+            cv.imshow('Camera', frame)
+            if cv.waitKey(1) & 0xFF == ord('q') or close_event.is_set():
+                break
+        cap.release()
+        cv.destroyAllWindows()
+
 if __name__ == '__main__':
     camera_reading = CameraReader(DataManager(), Manager())
     camera_reading.run()

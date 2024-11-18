@@ -12,3 +12,4 @@ origin/game
 /player_data/
 .venv/*
 *.log
+.env

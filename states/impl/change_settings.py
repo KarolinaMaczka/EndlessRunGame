@@ -7,11 +7,15 @@ from states.state import GameState
 
 logger = get_game_logger()
 
+import threading
 
 class SettingsMenu(GameState):
     def __init__(self, context, camera_reader: CameraReader):
         self.context = context
         self.create_window(len(camera_reader.cameras))
+        self.closign_event = threading.Event()
+        self.show_camera_thread = threading.Thread(target=camera_reader.show_camera_image, args=(self.closign_event,))
+        self.show_camera_thread.start()
 
     def handle_input(self):
         pass
@@ -28,6 +32,7 @@ class SettingsMenu(GameState):
         # destroy(self.context.menu)
         self.context.window_panel = None
         # self.context.menu = None
+        self.closign_event.set()
 
     def main_menu(self):
         self.context.transition_to('main_menu')
