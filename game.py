@@ -60,6 +60,11 @@ if __name__ == '__main__':
         else:
             score_tracker.text = 'Score: 0'
 
+    def input(key):
+        if game_manager._state.__class__.__name__ == 'RunningState':
+            if key in ['w', 'a', 's', 'd', 'space', 'w up', 'a up', 's up', 'd up', 'space up']:
+                data_manager.save_pressed_key((f'{key}', game_manager._state.player_z.value))
+
     sky = Sky()
 
     app.run()
