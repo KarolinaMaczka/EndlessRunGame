@@ -22,8 +22,9 @@ def obstacle_generator_worker(obstacle_queue, player_z, go, difficulty_level, ma
                 prev = difficulty_level.value
                 logger.info(f'Changed difficulty level to {type(difficulty_level_obj).__name__}')
 
-            if map_data[0]:
+            if map_data:
                 mapp_data_queue.put(map_data)
+
             for obstacle in obstacles:
                 obstacle_queue.put(obstacle)
                 time.sleep(0.1)

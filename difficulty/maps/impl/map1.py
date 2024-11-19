@@ -26,78 +26,25 @@ class FirstObstacleMap(ObstacleMap):
     small obstacles and trains are always at the same z position
     small obstacles cannot be next to each other
     """
-    # _big_obstacles: ObstacleFactory = field(default_factory=lambda: ObstacleFactory([
-    #     {"obstacle": ObstacleLongCube, 'difficulty': 1, 'probability': 0.5, "has_ladder": 0.7},
-    #     {"obstacle": ObstacleTrain, 'difficulty': 1, 'probability': 0.5}],
-    #     4))
-    #
-    # _small_obstacles: ObstacleFactory = field(default_factory=lambda: ObstacleFactory([
-    #     {"obstacle": ObstacleFence, 'difficulty': 1, 'probability': 0.3},
-    #     {"obstacle": ObstacleBoard, 'difficulty': 1, 'probability': 0.2},
-    #     {"obstacle": ObstacleCube, 'difficulty': 1, 'probability': 0.3},
-    #     {"obstacle": ObstaclePoleGate, 'difficulty': 1, 'probability': 0.2}],
-    #     4))
-    #
-    # _signs: ObstacleFactory = field(default_factory=lambda: ObstacleFactory([
-    #     {"obstacle": ObstacleWoodenSign, 'difficulty': 1, 'probability': 0.5},
-    #     {"obstacle": ObstacleIndicator, 'difficulty': 1, 'probability': 0.5}],
-    #     5))
-    #
-    # _gates: ObstacleFactory = field(default_factory=lambda: ObstacleFactory([
-    #     {"obstacle": ObstacleGate, 'difficulty': 1, 'probability': 0.1}],
-    #     1))
-    #
-    # obstacles: List = field(default_factory=list)
-    # lane_change_const: float = 0.2
-    # small_obstacle_const: float = 0.7
-    # gate_generation_const: float = 0.3
-    # color_theme: dict = field(default_factory=lambda: COLOR_THEME_BASIC)
-    #
-    # def __post_init__(self):
-    #     self._create_factories()
-    #     for factory in self._factories:
-    #         factory.apply_color_palette(self.color_theme)
-    #
-    # def _create_factories(self):
-    #     self._factories = [self._gates, self._signs, self._big_obstacles, self._small_obstacles]
-
-    def generate_obstacles(self, obstacle_generation_distance, start, length):
-        last_obstacle_z = start + obstacle_generation_distance
+    def generate_obstacles(self, start, length):
+        last_obstacle_z = start + self.obstacle_generation_distance
+        last_obstacle_z = self._adjust_last_position(last_obstacle_z)
         end = start + length
         start_x = random.randint(0, 1)
 
         self.obstacles = []
         while last_obstacle_z <= end:
             if random.random() < self.lane_change_const:
-                if obstacle_generation_distance <= 150:
-                    last_obstacle_z += obstacle_generation_distance
-
+                last_obstacle_z = self._adjust_last_position(last_obstacle_z)
                 start_x = int(not start_x)
 
-            self._create_signs(z_position=last_obstacle_z - obstacle_generation_distance / 2)
+            self._create_signs(z_position=last_obstacle_z - self.obstacle_generation_distance / 2)
             if random.random() < self.gate_generation_const:
-                if obstacle_generation_distance <= 150:
-                    last_obstacle_z += obstacle_generation_distance
-                self._generate_gate(last_obstacle_z)
-                if obstacle_generation_distance <= 150:
-                    last_obstacle_z += obstacle_generation_distance
+                last_obstacle_z = self._generate_gate(last_obstacle_z)
             else:
                 self._create_trains(start_x, last_obstacle_z)
                 self._create_small_obstacles(int(not start_x), last_obstacle_z, self.small_obstacle_const)
-            last_obstacle_z += obstacle_generation_distance
+            last_obstacle_z += self.obstacle_generation_distance
+        last_obstacle_z = self._adjust_last_position(last_obstacle_z)
         return last_obstacle_z
 
-    # def _create_trains(self, start_x: int, z_position: float):
-    #     for lane in range(start_x, LANE_COUNT, 2):
-    #         self.obstacles.append(self._big_obstacles.create_obstacle(z_position, lane))
-    #
-    # def _create_signs(self, z_position: float):
-    #     self.obstacles.append(self._signs.create_obstacle(z_position, random.randint(0,LANE_COUNT)))
-    #
-    # def _generate_gate(self, z_position: float):
-    #     self.obstacles.append(self._gates.create_obstacle(z_position, 0))
-    #
-    # def _create_small_obstacles(self, start_x: int, z_position: float, small_obstacle_const):
-    #     for lane in range(start_x, LANE_COUNT, 2):
-    #         if random.random() < small_obstacle_const:
-    #             self.obstacles.append(self._small_obstacles.create_obstacle(z_position, lane))

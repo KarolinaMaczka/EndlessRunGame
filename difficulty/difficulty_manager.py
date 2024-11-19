@@ -7,9 +7,9 @@ logger = get_game_logger()
 class DifficultyManager:
     def __init__(self):
         self.player_settings = {
-            1: {"speed": 200, "jump_height": 0.50, "gravity": -1, "velocity_x": 30, "prev_speed": 100, "bouncing_dist": 1},
-            2: {"speed": 275, "jump_height": 0.60, "gravity": -2, "velocity_x": 50, "prev_speed": 275, "bouncing_dist": 2},
-            3: {"speed": 350, "jump_height": 0.65, "gravity": -3, "velocity_x": 70, "prev_speed": 350, "bouncing_dist": 3},
+            1: {"speed": 200, "jump_height": 0.50, "gravity": -1, "velocity_x": 30, "prev_speed": 200, "bouncing_dist": 2},
+            2: {"speed": 275, "jump_height": 0.60, "gravity": -2, "velocity_x": 50, "prev_speed": 275, "bouncing_dist": 3},
+            3: {"speed": 350, "jump_height": 0.65, "gravity": -3, "velocity_x": 70, "prev_speed": 350, "bouncing_dist": 4},
             4: {"speed": 200, "jump_height": 0.55, "gravity": -1, "velocity_x": 30, "prev_speed": 200, "bouncing_dist": 3},
             5: {"speed": 200, "jump_height": 0.55, "gravity": -1, "velocity_x": 30, "prev_speed": 200, "bouncing_dist": 3},
             6: {"speed": 200, "jump_height": 0.55, "gravity": -1, "velocity_x": 30, "prev_speed": 200, "bouncing_dist": 3},

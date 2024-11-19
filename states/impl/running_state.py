@@ -1,7 +1,7 @@
 from ursina import destroy, held_keys, WindowPanel, Button, color, application
 
 from config.logger import get_game_logger
-from difficulty.difficulty.difficulty_levels import Difficulty1
+from difficulty.difficulty.difficulty_levels import Difficulty1, DifficultyTest1
 from difficulty.difficulty_manager import DifficultyManager
 from difficulty.difficulty_logic import DifficultyLogic
 
@@ -182,7 +182,7 @@ class RunningState(GameState):
 
     def __initialize_obstacles(self):
         logger.info('initializing objects')
-        obstacles, mapp_data = Difficulty1().initialize_obstacles()
+        obstacles, mapp_data = DifficultyTest1().initialize_obstacles()
         self.context.data_manager.add_map_data(mapp_data)
         for obstacle_type in obstacles:
             self.context.data_manager.add_obstacle_data(obstacle_type=obstacle_type)

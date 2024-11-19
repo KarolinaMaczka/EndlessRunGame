@@ -8,6 +8,7 @@ from config.config import config
 from config.constants import CollisionSide, CollisionType
 from config.logger import get_game_logger
 from config.utils import catch_exceptions
+from difficulty.maps.map import MapMetadata
 from entities.obstacles.obstacle import Obstacle
 from entities.player import Player
 from multiprocessing import Manager
@@ -86,8 +87,8 @@ class DataManager:
     def save_pressed_key(self, key: tuple):
         self.keys_pressed.append(key)
 
-    def add_map_data(self, mapp_data: tuple):
-        self.map_data.append(mapp_data)
+    def add_map_data(self, mapp_data: MapMetadata):
+        self.map_data.append((mapp_data.name, mapp_data.lane_change_const, mapp_data.small_obstacle_const, mapp_data.gate_generation_const, mapp_data.color_theme, mapp_data.first_obstacle, mapp_data.last_obstacle, mapp_data.obstacle_generation_distance))
 
     def add_player_satisfaction(self, satisfaction):
         self.player_satisfaction = satisfaction
