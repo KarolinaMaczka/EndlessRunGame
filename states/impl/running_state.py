@@ -1,3 +1,5 @@
+import math
+
 from ursina import destroy, held_keys, WindowPanel, Button, color, application
 
 from config.logger import get_game_logger
@@ -28,6 +30,7 @@ logger = get_game_logger()
 
 class RunningState(GameState):
     def __init__(self, context, selected_difficulty_level=1):
+        super().__init__()
         self.run = False
         self.scenery = Scenery()
         self.active_obstacles = deque()
@@ -58,6 +61,7 @@ class RunningState(GameState):
         self.run = True
 
     def on_exit(self):
+        super().on_exit()
         for obstacle in self.active_obstacles:
             obstacle.delete()
             destroy(obstacle)
@@ -70,6 +74,10 @@ class RunningState(GameState):
             del self.logic_process
             logger.info(f'Deleted logic process')
         self.scenery.delete()
+
+    def input(self, key):
+        if key in ['w', 'a', 's', 'd', 'space', 'w up', 'a up', 's up', 'd up', 'space up']:
+            self.context.data_manager.save_pressed_key((f'{key}', self.context.player.z))
 
     def handle_input(self):
         self.context.player.reset()
@@ -126,6 +134,7 @@ class RunningState(GameState):
         self.__cleanup_obstacles()
         self.__save_mapp_data()
         self.scenery.move(self.context.player.z)
+        self.__update_score()
 
     def create_paused_panel(self):
         self.pause_panel = WindowPanel(
@@ -153,6 +162,9 @@ class RunningState(GameState):
             logger.info('Resuming game')
         application.paused = not application.paused
         self.pause_panel.enabled = application.paused
+
+    def __update_score(self):
+        self.score_tracker.text = f'Score:{str(int(math.ceil(self.context.player.z / 100.0)) * 100)}'
 
     def __save_mapp_data(self):
         while not self.obstacle_generator.map_data_queue.empty():

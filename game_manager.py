@@ -56,6 +56,9 @@ class GameManager:
     def update(self):
         self._state.update()
 
+    def input(self, key):
+        self._state.input(key)
+
     def on_exit(self):
         logger.info(f'Exiting game manager {self.player.Z}')
         self._state.on_exit()

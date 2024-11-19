@@ -9,6 +9,7 @@ logger = get_game_logger()
 
 class ObstacleGenerator:
     def __init__(self, selected_difficulty_level):
+        super().__init__()
         self.obstacle_queue = multiprocessing.Queue()
         self.map_data_queue = multiprocessing.Queue()
         self.player_z = multiprocessing.Value('d', 0.0)

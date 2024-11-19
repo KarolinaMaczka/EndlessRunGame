@@ -7,17 +7,19 @@ logger = get_game_logger()
 
 class GameOver(GameState):
     def __init__(self, context):
+        super().__init__()
         self.rating = -1
         self.context = context
         self.create_window()
 
-    def handle_input(self):
+    def input(self, key):
         pass
 
     def update(self):
         pass
 
     def on_exit(self):
+        super().on_exit()
         logger.info(f'Exiting game over state')
         self.context.data_manager.save()
         self.context.data_manager.clean_data()

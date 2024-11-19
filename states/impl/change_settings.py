@@ -11,12 +11,13 @@ import threading
 
 class SettingsMenu(GameState):
     def __init__(self, context, camera_reader: CameraReader):
+        super().__init__()
         self.context = context
         self.create_window(len(camera_reader.cameras))
         self.camera_reader = camera_reader
         self.camera_reader.is_in_settings.set()
 
-    def handle_input(self):
+    def input(self, key):
         pass
 
     def update(self):
@@ -26,6 +27,7 @@ class SettingsMenu(GameState):
         pass
 
     def on_exit(self):
+        super().on_exit()
         logger.info(f'Exiting settings')
         destroy(self.context.window_panel)
         self.context.window_panel = None

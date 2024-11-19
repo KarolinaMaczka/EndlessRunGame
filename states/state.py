@@ -1,10 +1,15 @@
 from abc import ABC, abstractmethod
+from ursina import Text, destroy
 
 
 class GameState(ABC):
 
+    def __init__(self):
+        self.score_tracker = Text(text=f'0', position=(-0.8, 0.5), scale=1.5)
+        self.score_tracker.text = 'Score: 0'
+
     @abstractmethod
-    def handle_input(self):
+    def input(self, key):
         pass
 
     @abstractmethod
@@ -17,4 +22,4 @@ class GameState(ABC):
 
     @abstractmethod
     def on_exit(self):
-        pass
+        destroy(self.score_tracker)
