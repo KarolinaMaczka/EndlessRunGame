@@ -56,15 +56,15 @@ if __name__ == '__main__':
     def update():
         game_manager.update()
         if game_manager._state.__class__.__name__ == 'RunningState':
-            if int(game_manager._state.player_z.value) % 100 == 0:
-                score_tracker.text = f'Score:{str(int(game_manager._state.player_z.value))}'
+            if int(game_manager._state.obstacle_generator.player_z.value) % 100 == 0:
+                score_tracker.text = f'Score:{str(int(game_manager._state.obstacle_generator.player_z.value))}'
         else:
             score_tracker.text = 'Score: 0'
 
     def input(key):
         if game_manager._state.__class__.__name__ == 'RunningState':
             if key in ['w', 'a', 's', 'd', 'space', 'w up', 'a up', 's up', 'd up', 'space up']:
-                data_manager.save_pressed_key((f'{key}', game_manager._state.player_z.value))
+                data_manager.save_pressed_key((f'{key}', game_manager._state.obstacle_generator.player_z.value))
 
     sky = Sky()
 

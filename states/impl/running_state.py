@@ -7,6 +7,7 @@ from difficulty.difficulty_logic import DifficultyLogic
 
 from entities.obstacles.obstacle_pool import ObstaclePool
 from scenery import Scenery
+from states.impl.obstacle_generator import ObstacleGenerator
 from states.state import GameState
 from collections import deque
 from entities.obstacles.impl.fence_obstacle import ObstacleFence
@@ -22,7 +23,6 @@ from entities.obstacles.impl.train_obstacle import ObstacleTrain
 import multiprocessing
 import atexit
 
-from states.workers import obstacle_generator_worker
 logger = get_game_logger()
 
 
@@ -47,19 +47,11 @@ class RunningState(GameState):
             ObstacleTrain
         ], max_size_per_type=15)
         self.difficulty_manager = DifficultyManager()
-        self.difficulty_level = multiprocessing.Value('i', selected_difficulty_level)
         self.difficulty_level_new = multiprocessing.Value('i', selected_difficulty_level)
-        self.go = multiprocessing.Value('b', True)
-        self.player_z = multiprocessing.Value('d', 0.0)
-        self.obstacle_queue = multiprocessing.Queue()
-        self.map_data_queue = multiprocessing.Queue()
-        self.obstacle_process = multiprocessing.Process(
-            target=obstacle_generator_worker,
-            args=(self.obstacle_queue, self.player_z, self.go, self.difficulty_level, self.map_data_queue)
-        )
-        self.obstacle_process.start()
+        self.obstacle_generator = ObstacleGenerator(selected_difficulty_level)
         self.difficulty_logic = DifficultyLogic(self.context.data_manager, self.difficulty_level_new)
-        self.logic_process = multiprocessing.Process(target=self.difficulty_logic.update, args=(self.player_z, self.context.emotion_queue))
+        self.logic_process = multiprocessing.Process(target=self.difficulty_logic.update,
+                                                     args=(self.obstacle_generator.player_z, self.context.emotion_queue))
         self.logic_process.start()
         self.create_paused_panel()
         self.start()
@@ -71,12 +63,7 @@ class RunningState(GameState):
             destroy(obstacle)
         self.active_obstacles.clear()
         logger.info(f'Cleaned obstacles')
-        self.go.value = False
-        if hasattr(self, "obstacle_process"):
-            self.obstacle_process.terminate()
-            self.obstacle_process.join()
-            del self.obstacle_process
-            logger.info(f'Deleted obstacle process')
+        self.obstacle_generator.on_exit()
         if hasattr(self, "logic_process"):
             self.logic_process.terminate()
             self.logic_process.join()
@@ -119,14 +106,14 @@ class RunningState(GameState):
             destroy(obstacle)
         self.active_obstacles.clear()
         self.__initialize_obstacles()
-        self.set_difficulty(self.difficulty_level.value)
+        self.set_difficulty(self.obstacle_generator.difficulty_level.value)
         # self.context.data_manager.save_difficulty(self.difficulty_level.value)
         atexit.register(self.on_exit)
-        
+
     def update(self):
         if not self.run:
             return
-        if self.difficulty_level.value != self.difficulty_level_new.value:
+        if self.obstacle_generator.difficulty_level.value != self.difficulty_level_new.value:
             self.set_difficulty(self.difficulty_level_new.value)
         self.context.player.run()
         self.handle_input()
@@ -134,7 +121,7 @@ class RunningState(GameState):
         if self.context.physics_engine.handle_player_collisions():
             self.context.transition_to("game_over_state")
             return
-        self.player_z.value = self.context.player.z
+        self.obstacle_generator.player_z.value = self.context.player.z
         self.__render_obstacles_from_queue()
         self.__cleanup_obstacles()
         self.__save_mapp_data()
@@ -154,11 +141,10 @@ class RunningState(GameState):
 
     def set_difficulty(self, level, **kwargs):
         logger.info(f'RunningState setting difficulty to {level}')
-        self.difficulty_level.value = level
+        self.obstacle_generator.difficulty_level.value = level
         # self.difficulty_level_new.value = level
         self.difficulty_manager.set_player_settings(level, self.context.player)
         self.context.data_manager.save_difficulty(level)
-
 
     def __toggle_paused(self):
         if not application.paused:
@@ -169,9 +155,9 @@ class RunningState(GameState):
         self.pause_panel.enabled = application.paused
 
     def __save_mapp_data(self):
-        while not self.map_data_queue.empty():
+        while not self.obstacle_generator.map_data_queue.empty():
             logger.info('Saving mapp data')
-            mapp_data = self.map_data_queue.get()
+            mapp_data = self.obstacle_generator.map_data_queue.get()
             self.context.data_manager.add_map_data(mapp_data)
 
     def __transition_to_main_menu(self):
@@ -210,10 +196,10 @@ class RunningState(GameState):
 
     def __render_obstacles_from_queue(self):
         for _ in range(self.obstacles_per_frame):
-            if self.obstacle_queue.empty():
+            if self.obstacle_generator.obstacle_queue.empty():
                 break
             logger.info(f'Rendering obstacles from queue')
-            obstacle_type = self.obstacle_queue.get()
+            obstacle_type = self.obstacle_generator.obstacle_queue.get()
             # obstacle = obstacle_type.obstacle(obstacle_type.position_z, obstacle_type.difficulty, obstacle_type.lane)
             obstacle = self.obstacle_pool.acquire(
                 obstacle_type.obstacle,
