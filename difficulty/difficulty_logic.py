@@ -1,9 +1,10 @@
 from multiprocessing import Queue
 from data_manager import DataManager
 import time
-from random import random
 from config.logger import get_game_logger
+
 logger = get_game_logger()
+
 
 class DifficultyLogic():
     def __init__(self, data_manager: DataManager, difficulty_value):
@@ -20,7 +21,7 @@ class DifficultyLogic():
                 self.update_difficulty(emotions)
             time.sleep(0.1)
 
-    def update_difficulty(self, emotions:tuple):
+    def update_difficulty(self, emotions: tuple):
         pass
         # TODO - uncomment this code for changing difficulty based on emotions
         # dominant_emotion = emotions[0]
@@ -39,8 +40,3 @@ class DifficultyLogic():
         # elif dominant_emotion == 'angry':
         #     self.difficulty_value.value = 10
         #     logger.info('Difficulty set to 10 - difficulty logic')
-
-
-
-
-

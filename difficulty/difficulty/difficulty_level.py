@@ -12,6 +12,9 @@ class Difficulty(ABC):
     maps: list[ObstacleMap]
 
     def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, **kwargs):
+        self.switch(first_obstacle, last_obstacle_z)
+
+    def switch(self, first_obstacle: float, last_obstacle_z: float):
         self.first_obstacle = first_obstacle
         self.last_obstacle_z = last_obstacle_z
 
