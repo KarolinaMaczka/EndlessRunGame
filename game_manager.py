@@ -6,6 +6,7 @@ from entities.player import Player
 from states.impl.game_over_state import GameOver
 from states.impl.main_menu import MainMenu
 from states.impl.running_state import RunningState
+from states.impl.level_select import LevelSelect
 from states.impl.change_settings import SettingsMenu
 from camera_reading.read_camera import CameraReader
 from multiprocessing import Queue
@@ -20,6 +21,7 @@ class GameManager:
         self.player = player
         self.camera = camera
         self.time_playing = 0
+        self.selected_level = 1
 
         self.data_manager = data_manager
         self.camera_reader = camera_reader
@@ -27,7 +29,8 @@ class GameManager:
         self.emotion_queue = emotion_queue
         self.physics_engine = PhysicsEngine(player, camera, self.data_manager)
         self._state = MainMenu(self)
-        RunningState(self).on_exit()
+        RunningState(self, self.selected_level).on_exit()
+        self.data_manager.clean_data()
 
     def transition_to(self, state: str):
         logger.info(f'Transitioning to {state}')
@@ -35,7 +38,7 @@ class GameManager:
         if state == "running_state":
             self.time_playing = time.time()
             self.ready_queue.put(True)
-            self._state = RunningState(self)
+            self._state = RunningState(self, self.selected_level)
         elif state == "game_over_state":
             self.time_playing = time.time() - self.time_playing
             self.data_manager.playing_time = self.time_playing
@@ -47,6 +50,8 @@ class GameManager:
             self._state = MainMenu(self)
         elif state == "change_settings":
             self._state = SettingsMenu(self, self.camera_reader)
+        elif state == "level_select":
+            self._state = LevelSelect(self)
 
     def update(self):
         self._state.update()

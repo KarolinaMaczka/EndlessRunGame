@@ -27,7 +27,7 @@ logger = get_game_logger()
 
 
 class RunningState(GameState):
-    def __init__(self, context):
+    def __init__(self, context, selected_difficulty_level=1):
         self.run = False
         self.scenery = Scenery()
         self.active_obstacles = deque()
@@ -47,8 +47,8 @@ class RunningState(GameState):
             ObstacleTrain
         ], max_size_per_type=15)
         self.difficulty_manager = DifficultyManager()
-        self.difficulty_level = multiprocessing.Value('i', 1)
-        self.difficulty_level_new = multiprocessing.Value('i', 1)
+        self.difficulty_level = multiprocessing.Value('i', selected_difficulty_level)
+        self.difficulty_level_new = multiprocessing.Value('i', selected_difficulty_level)
         self.go = multiprocessing.Value('b', True)
         self.player_z = multiprocessing.Value('d', 0.0)
         self.obstacle_queue = multiprocessing.Queue()
@@ -119,7 +119,8 @@ class RunningState(GameState):
             destroy(obstacle)
         self.active_obstacles.clear()
         self.__initialize_obstacles()
-        self.context.data_manager.save_difficulty(self.difficulty_level.value)
+        self.set_difficulty(self.difficulty_level.value)
+        # self.context.data_manager.save_difficulty(self.difficulty_level.value)
         atexit.register(self.on_exit)
         
     def update(self):

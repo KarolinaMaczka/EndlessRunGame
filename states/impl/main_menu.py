@@ -29,6 +29,10 @@ class MainMenu(GameState):
         self.on_exit()
         self.context.transition_to('change_settings')
 
+    def level_select(self):
+        self.on_exit()
+        self.context.transition_to('level_select')
+
     def toggle_send_data(self):
         self.context.data_manager.send_data_enabled = not self.context.data_manager.send_data_enabled
         self.toggle_button.text = "Don't send data" if self.context.data_manager.send_data_enabled else "Send Data"
@@ -53,6 +57,7 @@ class MainMenu(GameState):
                 Button('Play the Game', color=color.gray, on_click=self.start),
                 self.toggle_button,
                 Button('Change Settings', color=color.gray, on_click=self.change_settings),
+                Button('Level Select', color=color.gray, on_click=self.level_select),
                 Button('Quit', color=color.red, on_click=application.quit)
             ),
             position=(0, 0.25)
