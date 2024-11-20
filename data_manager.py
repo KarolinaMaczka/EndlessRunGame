@@ -54,9 +54,9 @@ class DataManager:
                 try:
                     self.send_data(data_to_save)
                 except Exception as e:
-                    self.save_csv(data_to_save)
+                    self.save_json(data_to_save)
         else:
-            self.save_csv(data_to_save)
+            self.save_json(data_to_save)
 
     def clean_data(self):
         self.obstacle_data = []
@@ -104,7 +104,7 @@ class DataManager:
         self.difficulties.append(difficulty)
 
     @catch_exceptions
-    def save_csv(self, data_to_save):
+    def save_json(self, data_to_save):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
         file_path = os.path.join(self.__folder, f'game_data_{timestamp}.json')
@@ -117,7 +117,6 @@ class DataManager:
             logger.error(f"error saving data: {e}")
             return
 
-    @catch_exceptions
     def send_data(self, data_to_save):
         api_key = os.getenv("API_KEY")
         url = "https://karolinamaczka.pythonanywhere.com/player-data"
@@ -137,7 +136,7 @@ class DataManager:
                 logger.info(f"Data was send")
             else:
                 logger.error(f"Error while sending data, code: {response.status_code}")
-                self.save_csv(data_to_save)
+                self.save_json(data_to_save)
         except Exception as e:
             logger.error(f"Error sending data: {e}")
-            self.save_csv(data_to_save)
+            self.save_json(data_to_save)
