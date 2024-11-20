@@ -99,7 +99,7 @@ class RunningState(GameState):
             for i in range(10):
                 if held_keys[str(i)]:
                     # self.set_difficulty(max(1, min(10, i+1)))
-                    self.difficulty_level_new.value = max(1, min(10, i))
+                    self.difficulty_logic.difficulty_value = max(1, min(10, i))
                     # logger.info(f'Clicked ctrl+{i}')
         if held_keys['space'] and not self.context.player.is_jumping:
             self.context.player.set_jump()
@@ -111,8 +111,8 @@ class RunningState(GameState):
     def update(self):
         if not self.run:
             return
-        if self.obstacle_generator.difficulty_level.value != self.difficulty_level_new:
-            self.set_difficulty(self.difficulty_level_new)
+        if self.obstacle_generator.difficulty_level.value != self.difficulty_logic.difficulty_value:
+            self.set_difficulty(self.difficulty_logic.difficulty_value)
         self.context.player.run()
         self.handle_input()
         self.context.physics_engine.apply_gravity(self.active_obstacles)
@@ -142,7 +142,7 @@ class RunningState(GameState):
     def set_difficulty(self, level, **kwargs):
         logger.info(f'RunningState setting difficulty to {level}')
         self.obstacle_generator.difficulty_level.value = level
-        # self.difficulty_level_new.value = level
+        # self.difficulty_logic.difficulty_value = level
         self.difficulty_manager.set_player_settings(level, self.context.player)
         self.context.data_manager.save_difficulty(level)
 
