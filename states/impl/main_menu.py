@@ -22,15 +22,12 @@ class MainMenu(GameState):
         self.context.window_panel = None
 
     def start(self):
-        self.on_exit()
         self.context.transition_to('running_state')
 
     def change_settings(self):
-        self.on_exit()
         self.context.transition_to('change_settings')
 
     def level_select(self):
-        self.on_exit()
         self.context.transition_to('level_select')
 
     def toggle_send_data(self):

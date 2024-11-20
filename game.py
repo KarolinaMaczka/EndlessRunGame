@@ -23,6 +23,7 @@ if __name__ == '__main__':
     emotion_queue = Queue()
     ready_queue = Queue()
     camera_ready_event = multiprocessing.Event()
+
     camera_reading = CameraReader(data_manager, list_manager)
     p = Process(target=camera_reading.run, args=(ready_queue,emotion_queue, camera_ready_event))
     p.start()

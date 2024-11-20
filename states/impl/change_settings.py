@@ -13,9 +13,8 @@ class SettingsMenu(GameState):
     def __init__(self, context, camera_reader: CameraReader):
         self.context = context
         self.create_window(len(camera_reader.cameras))
-        self.closign_event = threading.Event()
-        self.show_camera_thread = threading.Thread(target=camera_reader.show_camera_image, args=(self.closign_event,))
-        self.show_camera_thread.start()
+        self.camera_reader = camera_reader
+        self.camera_reader.is_in_settings.set()
 
     def handle_input(self):
         pass
@@ -29,10 +28,8 @@ class SettingsMenu(GameState):
     def on_exit(self):
         logger.info(f'Exiting settings')
         destroy(self.context.window_panel)
-        # destroy(self.context.menu)
         self.context.window_panel = None
-        # self.context.menu = None
-        self.closign_event.set()
+        self.camera_reader.is_in_settings.clear()
 
     def main_menu(self):
         self.context.transition_to('main_menu')

@@ -20,9 +20,9 @@ class CameraReader:
         self.current_camera_index = Value('i', 0)
         self.passed_camera_index = Value('i', 0)
         self.cameras = manager.list()
+        self.is_in_settings = Event()
 
         self.list_cameras()
-        logger.info(f'Cameras found: {len(self.cameras)}')
 
     def run(self, ready_queue: Queue, emotion_queue: Queue):
         from deepface.DeepFace import analyze # Importuję tutaj, żeby nie było problemów z importem w innych plikach (konkretnie blokuje wtedy workerów)
@@ -35,6 +35,7 @@ class CameraReader:
         while True:
             # Check if camera has been changed
             if self.current_camera_index.value != self.passed_camera_index.value:
+                logger.info(f'Changing camera from {self.current_camera_index.value} to {self.passed_camera_index.value}')
                 cap.release()
                 self.current_camera_index.value = self.passed_camera_index.value
                 cap = cv.VideoCapture(self.current_camera_index.value)
@@ -44,6 +45,11 @@ class CameraReader:
             except Exception as e:
                 logger.error(f'Błąd podczas odczytu kamery: {e}')
                 break
+            if self.is_in_settings.is_set():
+                cv.imshow('Camera', frame)
+            else:
+                cv.destroyAllWindows()
+
             # Check if game is running then analyze emotions
             if not ready_queue.empty():
                 self.game_is_running = ready_queue.get()
@@ -85,19 +91,6 @@ class CameraReader:
     def change_camera(self, camera_number):
         logger.info(f'Camera {camera_number} clicked')
         self.passed_camera_index.value = camera_number
-
-    def show_camera_image(self, close_event: Event):
-        cap = cv.VideoCapture(self.current_camera_index.value)
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                logger.error('Failed to connect to the camera')
-                break
-            cv.imshow('Camera', frame)
-            if cv.waitKey(1) & 0xFF == ord('q') or close_event.is_set():
-                break
-        cap.release()
-        cv.destroyAllWindows()
 
 if __name__ == '__main__':
     camera_reading = CameraReader(DataManager(), Manager())
