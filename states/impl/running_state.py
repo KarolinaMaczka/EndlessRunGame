@@ -1,6 +1,6 @@
 import math
 
-from ursina import destroy, held_keys, WindowPanel, Button, color, application
+from ursina import destroy, held_keys, WindowPanel, Button, color, application, invoke
 
 from config.logger import get_game_logger
 from difficulty.difficulty.difficulty_levels import DifficultyTest1
@@ -32,6 +32,7 @@ class RunningState(GameState):
     def __init__(self, context, selected_difficulty_level=1):
         super().__init__()
         self.run = False
+        self.obstacle_generator = ObstacleProcesManager(selected_difficulty_level)
         self.scenery = Scenery()
         self.active_obstacles = deque()
         self.obstacles_to_render = deque()
@@ -50,15 +51,13 @@ class RunningState(GameState):
             ObstacleTrain
         ], max_size_per_type=15)
         self.difficulty_manager = DifficultyManager()
-        self.difficulty_level_new = multiprocessing.Value('i', selected_difficulty_level)
-        self.obstacle_generator = ObstacleProcesManager(selected_difficulty_level)
+        self.difficulty_level_new = selected_difficulty_level
         self.difficulty_logic = DifficultyLogic(self.context.data_manager, self.difficulty_level_new)
-        self.logic_process = multiprocessing.Process(target=self.difficulty_logic.update,
-                                                     args=(self.obstacle_generator.player_z, self.context.emotion_queue))
-        self.logic_process.start()
         self.create_paused_panel()
-        self.start()
-        self.run = True
+        self.__initialize_obstacles()
+        self.context.player.set_values()
+        self.context.player.enabled = True
+        invoke(self.start)
 
     def on_exit(self):
         super().on_exit()
@@ -68,12 +67,8 @@ class RunningState(GameState):
         self.active_obstacles.clear()
         logger.info(f'Cleaned obstacles')
         self.obstacle_generator.on_exit()
-        if hasattr(self, "logic_process"):
-            self.logic_process.terminate()
-            self.logic_process.join()
-            del self.logic_process
-            logger.info(f'Deleted logic process')
         self.scenery.delete()
+        self.context.player.enabled = False
 
     def input(self, key):
         if key in ['w', 'a', 's', 'd', 'space', 'w up', 'a up', 's up', 'd up', 'space up']:
@@ -107,22 +102,15 @@ class RunningState(GameState):
             # self.context.data_manager.save_pressed_key(('space', self.player_z.value))
 
     def start(self):
-        self.context.player.set_values()
-        self.context.player.visible = True
-        for obstacle in self.active_obstacles:
-            obstacle.delete()
-            destroy(obstacle)
-        self.active_obstacles.clear()
-        self.__initialize_obstacles()
-        self.set_difficulty(self.obstacle_generator.difficulty_level.value)
+        print("Run")
+        self.run = True
         # self.context.data_manager.save_difficulty(self.difficulty_level.value)
-        atexit.register(self.on_exit)
 
     def update(self):
         if not self.run:
             return
-        if self.obstacle_generator.difficulty_level.value != self.difficulty_level_new.value:
-            self.set_difficulty(self.difficulty_level_new.value)
+        if self.obstacle_generator.difficulty_level.value != self.difficulty_level_new:
+            self.set_difficulty(self.difficulty_level_new)
         self.context.player.run()
         self.handle_input()
         self.context.physics_engine.apply_gravity(self.active_obstacles)
@@ -134,6 +122,7 @@ class RunningState(GameState):
         self.__cleanup_obstacles()
         self.__save_mapp_data()
         self.scenery.move(self.context.player.z)
+        self.difficulty_logic.update(self.context.player.z, self.context.emotion_queue)
         self.__update_score()
 
     def create_paused_panel(self):

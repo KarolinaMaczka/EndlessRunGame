@@ -11,11 +11,10 @@ from data_manager import DataManager
 logger = get_game_logger()
 
 class CameraReader:
-    def __init__(self, data_manager: DataManager, manager: Manager): # type: ignore
+    def __init__(self, manager: Manager): # type: ignore
         self.last_analysis_time = time.time()
         self.analysis_interval = 1
         self.game_is_running = False
-        self.data_manager = data_manager
         self.debug = True
         self.current_camera_index = Value('i', 0)
         self.passed_camera_index = Value('i', 0)

@@ -16,6 +16,7 @@ class ObstacleProcesManager(ProcessManager):
         self.player_z = multiprocessing.Value('d', 0.0)
         self.go = multiprocessing.Value('b', True)
         self.difficulty_level = multiprocessing.Value('i', selected_difficulty_level)
+        # self.process_ready_event = multiprocessing.Event()
         self.process = multiprocessing.Process(
             target=self.obstacle_generator_worker,
             args=(self.obstacle_queue, self.player_z, self.go, self.difficulty_level, self.map_data_queue)
@@ -31,7 +32,7 @@ class ObstacleProcesManager(ProcessManager):
         while go.value:
             obstacles, map_data = difficulty_level_obj.generate_obstacle(player_z.value)
             if obstacles:
-                logger.info(f'worker - Difficulty level obj {difficulty_level_obj}')
+                logger.info(f'worker - Difficulty level obj {type(difficulty_level_obj).__name__}')
                 logger.info(
                     f'Putting obstacles in range {obstacles[0].position_z} - {obstacles[len(obstacles) - 1].position_z} to the queue')
                 if prev != difficulty_level.value:
