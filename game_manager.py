@@ -1,16 +1,6 @@
-from ursina import destroy
-
 from config.logger import get_game_logger
 from data_manager import DataManager
 from entities.camera import PlayerCamera
-from entities.obstacles.impl.board_obstacle import ObstacleBoard
-from entities.obstacles.impl.cube_obstacle import ObstacleCube
-from entities.obstacles.impl.fence_obstacle import ObstacleFence
-from entities.obstacles.impl.horizontal_pole_obstacle import ObstaclePoleGate
-from entities.obstacles.impl.indicator_obstacle import ObstacleIndicator
-from entities.obstacles.impl.long_cube import ObstacleLongCube
-from entities.obstacles.impl.train_obstacle import ObstacleTrain
-from entities.obstacles.impl.wooden_sign_obstacle import ObstacleWoodenSign
 from physics_engine import PhysicsEngine
 from entities.player import Player
 from states.impl.game_over_state import GameOver
@@ -18,8 +8,7 @@ from states.impl.main_menu import MainMenu
 from states.impl.running_state import RunningState
 from states.impl.level_select import LevelSelect
 from states.impl.change_settings import SettingsMenu
-from camera_reading.read_camera import CameraReader
-from multiprocessing import Queue
+from states.process_managers.impl.read_camera import CameraReader
 
 import time
 logger = get_game_logger()

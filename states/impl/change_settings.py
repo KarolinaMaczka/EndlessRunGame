@@ -1,13 +1,12 @@
-from ursina import destroy, color, WindowPanel, Button, Text, Func, Entity
+from ursina import destroy, color, WindowPanel, Button, Func, Entity
 from ursina.prefabs.dropdown_menu import DropdownMenu, DropdownMenuButton
-from camera_reading.read_camera import CameraReader
+from states.process_managers.impl.read_camera import CameraReader
 
 from config.logger import get_game_logger
 from states.state import GameState
 
 logger = get_game_logger()
 
-import threading
 
 class SettingsMenu(GameState):
     def __init__(self, context, camera_reader: CameraReader):

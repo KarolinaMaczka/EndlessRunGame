@@ -1,6 +1,4 @@
-import multiprocessing
-
-from ursina import Ursina, window, Sky, Text
+from ursina import Ursina, window, Sky
 
 from config.logger import get_game_logger
 from entities.camera import PlayerCamera
@@ -8,8 +6,8 @@ from game_manager import GameManager
 from entities.player import Player
 import atexit
 
-from multiprocessing import Process, Queue, Manager
-from camera_reading.read_camera import CameraReader
+from multiprocessing import Manager
+from states.process_managers.impl.read_camera import CameraReader
 from data_manager import DataManager
 
 if __name__ == '__main__':
