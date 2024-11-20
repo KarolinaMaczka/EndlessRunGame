@@ -5,7 +5,7 @@ from entities.obstacles.impl.board_obstacle import ObstacleBoard
 from entities.obstacles.impl.cube_obstacle import ObstacleCube
 from entities.obstacles.impl.fence_obstacle import ObstacleFence
 from entities.obstacles.impl.horizontal_pole_obstacle import ObstaclePoleGate
-from entities.obstacles.obstacle_metadata_factory import ObstacleFactory
+from entities.obstacles.obstacle_metadata_factory import ObstacleMetadataFactory
 
 
 @dataclass
@@ -18,7 +18,7 @@ class FifthObstacleMap(ObstacleMap):
     small obstacles are not next to each other
     """
 
-    _small_obstacles: ObstacleFactory = field(default_factory=lambda: ObstacleFactory([
+    _small_obstacles: ObstacleMetadataFactory = field(default_factory=lambda: ObstacleMetadataFactory([
         {"obstacle": ObstacleFence, 'difficulty': 1, 'probability': 0.3},
         {"obstacle": ObstacleBoard, 'difficulty': 1, 'probability': 0.4},
         {"obstacle": ObstacleCube, 'difficulty': 1, 'probability': 0.2},

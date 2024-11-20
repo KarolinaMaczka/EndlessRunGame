@@ -13,7 +13,7 @@ from entities.obstacles.obstacle import Obstacle
 logger = get_game_logger()
 
 class ObstaclePool:
-    def __init__(self, obstacle_types: list, max_size_per_type=100):
+    def __init__(self, obstacle_types: list, max_size_per_type=1):
         self.max_size_per_type = max_size_per_type
         self.reusable_obstacles = defaultdict(deque)
         self.obstacle_types = obstacle_types
@@ -50,6 +50,7 @@ class ObstaclePool:
         obstacle_class = type(obstacle)
         if not (type(obstacle) == ObstacleLongCube or type(obstacle) == ObstaclePoleGate or type(
                 obstacle) == ObstacleBoard) and len(self.reusable_obstacles[obstacle_class]) < self.max_size_per_type:
+            # dont delete, it makes init generation smooth
             logger.info(f"Releasing obstacle {type(obstacle).__name__}")
             # obstacle.set_position_z(-1000)
             obstacle.enabled = False
@@ -63,9 +64,9 @@ class ObstaclePool:
             obstacle.delete()
             del obstacle
 
-    def __set_obstacle_attr(self, obstacle: Obstacle, **kwargs):
-        for key, value in kwargs.items():
-            setter_name = f"set_{key}"
-            if hasattr(obstacle, setter_name):
-                # print(f'set {setter_name}, {value}')
-                getattr(obstacle, setter_name)(value)
+    # def __set_obstacle_attr(self, obstacle: Obstacle, **kwargs):
+    #     for key, value in kwargs.items():
+    #         setter_name = f"set_{key}"
+    #         if hasattr(obstacle, setter_name):
+    #             # print(f'set {setter_name}, {value}')
+    #             getattr(obstacle, setter_name)(value)

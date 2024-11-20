@@ -16,29 +16,29 @@ from entities.obstacles.impl.long_cube import ObstacleLongCube
 from entities.obstacles.impl.train_obstacle import ObstacleTrain
 from entities.obstacles.impl.wooden_sign_obstacle import ObstacleWoodenSign
 from entities.obstacles.impl.indicator_obstacle import ObstacleIndicator
-from entities.obstacles.obstacle_metadata_factory import ObstacleFactory
+from entities.obstacles.obstacle_metadata_factory import ObstacleMetadataFactory
 
 
 @dataclass
 class ObstacleMap(ABC):
-    _big_obstacles: ObstacleFactory = field(default_factory=lambda: ObstacleFactory([
+    _big_obstacles: ObstacleMetadataFactory = field(default_factory=lambda: ObstacleMetadataFactory([
         {"obstacle": ObstacleLongCube, 'difficulty': 1, 'probability': 0.5, "has_ladder": 0.7},
         {"obstacle": ObstacleTrain, 'difficulty': 1, 'probability': 0.5}],
         4))
 
-    _small_obstacles: ObstacleFactory = field(default_factory=lambda: ObstacleFactory([
+    _small_obstacles: ObstacleMetadataFactory = field(default_factory=lambda: ObstacleMetadataFactory([
         {"obstacle": ObstacleFence, 'difficulty': 1, 'probability': 0.3},
         {"obstacle": ObstacleBoard, 'difficulty': 1, 'probability': 0.2},
         {"obstacle": ObstacleCube, 'difficulty': 1, 'probability': 0.3},
         {"obstacle": ObstaclePoleGate, 'difficulty': 1, 'probability': 0.2}],
         4))
 
-    _signs: ObstacleFactory = field(default_factory=lambda: ObstacleFactory([
+    _signs: ObstacleMetadataFactory = field(default_factory=lambda: ObstacleMetadataFactory([
         {"obstacle": ObstacleWoodenSign, 'difficulty': 1, 'probability': 0.5},
         {"obstacle": ObstacleIndicator, 'difficulty': 1, 'probability': 0.5}],
         5))
 
-    _gates: ObstacleFactory = field(default_factory=lambda: ObstacleFactory([
+    _gates: ObstacleMetadataFactory = field(default_factory=lambda: ObstacleMetadataFactory([
         {"obstacle": ObstacleGate, 'difficulty': 1, 'probability': 0.1}],
         1))
 

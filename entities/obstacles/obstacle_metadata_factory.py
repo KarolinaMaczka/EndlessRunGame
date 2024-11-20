@@ -6,7 +6,7 @@ import random
 logger = get_game_logger()
 
 
-class ObstacleFactory:
+class ObstacleMetadataFactory:
     _obstacles: list[ObstacleMetaData]
 
     def __init__(self, init_lane_obstacles: list[dict], lanes: int):

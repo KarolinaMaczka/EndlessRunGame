@@ -50,7 +50,7 @@ class RunningState(GameState):
             ObstacleLongCube,
             ObstacleWoodenSign,
             ObstacleTrain
-        ], max_size_per_type=15)
+        ], max_size_per_type=1)
         self.difficulty_manager = DifficultyManager()
         self.difficulty_level_new = selected_difficulty_level
         self.difficulty_logic = DifficultyLogic(self.context.data_manager, self.difficulty_level_new)
