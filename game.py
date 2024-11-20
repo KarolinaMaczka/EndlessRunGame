@@ -19,22 +19,9 @@ if __name__ == '__main__':
     list_manager = Manager()
     data_manager = DataManager(list_manager)
 
-    emotion_queue = Queue()
-    ready_queue = Queue()
-    camera_ready_event = multiprocessing.Event()
-
     camera_reading = CameraReader(list_manager)
-    p = Process(target=camera_reading.run, args=(ready_queue, emotion_queue, camera_ready_event))
-    p.start()
 
-
-    def on_exit():
-        p.terminate()
-        p.join()
-        logger.info('Closed camera process')
-
-
-    atexit.register(on_exit)
+    atexit.register(camera_reading.on_exit)
 
     app = Ursina()
 
@@ -47,10 +34,10 @@ if __name__ == '__main__':
 
     camera = PlayerCamera(player)
 
-    game_manager = GameManager(player, camera, data_manager, ready_queue, camera_reading, emotion_queue)
+    game_manager = GameManager(player, camera, data_manager, camera_reading)
     atexit.register(game_manager.on_exit)
 
-    camera_ready_event.wait()
+    camera_reading.camera_ready_event.wait()
     logger.info('Camera process started')
 
 

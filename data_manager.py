@@ -90,6 +90,9 @@ class DataManager:
 
     def add_player_satisfaction(self, satisfaction):
         self.player_satisfaction = satisfaction
+
+    def add_playing_time(self, playing_time):
+        pass
     
     def save_difficulty(self, difficulty):
         self.difficulties.append(difficulty)

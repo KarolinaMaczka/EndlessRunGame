@@ -104,7 +104,7 @@ class RunningState(GameState):
     def start(self):
         print("Run")
         self.run = True
-        # self.context.data_manager.save_difficulty(self.difficulty_level.value)
+        self.context.data_manager.save_difficulty(self.difficulty_level_new)
 
     def update(self):
         if not self.run:
@@ -122,7 +122,7 @@ class RunningState(GameState):
         self.__cleanup_obstacles()
         self.__save_mapp_data()
         self.scenery.move(self.context.player.z)
-        self.difficulty_logic.update(self.context.player.z, self.context.emotion_queue)
+        self.difficulty_logic.update(self.context.player.z, self.context.camera_reader.emotion_queue)
         self.__update_score()
 
     def create_paused_panel(self):
