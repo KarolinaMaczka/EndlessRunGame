@@ -59,7 +59,7 @@ class PhysicsEngine:
                     if ground_y < obstacle_top_y <= self.player.y:
                         ground_y = obstacle_top_y + 1
 
-        return ground_y + 1
+        return ground_y
 
     def handle_player_collisions(self):
         stop = self.handle_road_collision() or self.handle_obstacle_collision()
