@@ -26,8 +26,7 @@ class GameOver(GameState):
         logger.info(f'Exiting game over state')
         self.context.data_manager.save()
         self.context.data_manager.clean_data()
-        destroy(self.context.window_panel)
-        self.context.window_panel = None
+        destroy(self.window_panel)
 
     def start(self):
         self.context.transition_to('running_state')
@@ -36,7 +35,7 @@ class GameOver(GameState):
         self.context.transition_to('main_menu')
 
     def create_window(self):
-        self.context.window_panel = WindowPanel(
+        self.window_panel = WindowPanel(
             title='Game Over :(',
             content=(
                 Text(f'Your score: {self.score}', color=color.gray),

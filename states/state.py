@@ -7,6 +7,7 @@ class GameState(ABC):
     def __init__(self):
         self.score_tracker = Text(text=f'0', position=(-0.8, 0.5), scale=1.5)
         self.score_tracker.text = 'Score: 0'
+        self.window_panel = None
 
     @abstractmethod
     def input(self, key):

@@ -28,8 +28,7 @@ class SettingsMenu(GameState):
     def on_exit(self):
         super().on_exit()
         logger.info(f'Exiting settings')
-        destroy(self.context.window_panel)
-        self.context.window_panel = None
+        destroy(self.window_panel)
         self.camera_reader.is_in_settings.clear()
 
     def main_menu(self):
@@ -41,7 +40,7 @@ class SettingsMenu(GameState):
 
     def create_window(self, camera_count):
         menu = Entity()
-        self.context.menu = DropdownMenu(
+        self.menu = DropdownMenu(
             text="Choose a camera",
             buttons=[DropdownMenuButton(f"Camera {i}", on_click=Func(self.pass_camera, i)) for i in
                      range(1, camera_count + 1)],
@@ -50,7 +49,7 @@ class SettingsMenu(GameState):
             parent=menu,
             color=color.gray
         )
-        self.context.window_panel = WindowPanel(
+        self.window_panel = WindowPanel(
             title='Settings',
             content=(
                 Button('Go back', color=color.red,

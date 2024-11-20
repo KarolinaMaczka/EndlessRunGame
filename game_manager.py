@@ -10,13 +10,13 @@ from states.impl.level_select import LevelSelect
 from states.impl.change_settings import SettingsMenu
 from states.process_managers.impl.read_camera import CameraReader
 
-import time
 logger = get_game_logger()
+
+
 class GameManager:
-    camera = None
-    _state = None
+
     def __init__(self, player: Player, camera: PlayerCamera, data_manager: DataManager,
-                  camera_reader: CameraReader):
+                 camera_reader: CameraReader):
         self.player = player
         self.camera = camera
         self.selected_level = 1
@@ -53,4 +53,3 @@ class GameManager:
     def on_exit(self):
         logger.info(f'Exiting game manager {self.player.Z}')
         self._state.on_exit()
-

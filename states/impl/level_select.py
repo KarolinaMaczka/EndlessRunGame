@@ -22,15 +22,14 @@ class LevelSelect(GameState):
     def on_exit(self):
         super().on_exit()
         logger.info(f'Exiting settings')
-        destroy(self.context.window_panel)
-        self.context.window_panel = None
+        destroy(self.window_panel)
 
     def start(self):
         pass
 
     def create_window(self):
         menu = Entity()
-        self.context.menu = DropdownMenu(
+        self.menu = DropdownMenu(
             text="Choose presets",
             buttons=[DropdownMenuButton(f"Level {i}", on_click=Func(self.pass_level, i)) for i in
                      range(1, 4)],
@@ -39,7 +38,7 @@ class LevelSelect(GameState):
             parent=menu,
             color=color.gray
         )
-        self.context.window_panel = WindowPanel(
+        self.window_panel = WindowPanel(
             title='Game Settings',
             content=(
                 Button('Go back', color=color.red,

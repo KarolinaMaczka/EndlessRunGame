@@ -20,8 +20,7 @@ class MainMenu(GameState):
     def on_exit(self):
         super().on_exit()
         logger.info(f'Exiting main menu')
-        destroy(self.context.window_panel)
-        self.context.window_panel = None
+        destroy(self.window_panel)
 
     def start(self):
         self.context.transition_to('running_state')
@@ -50,7 +49,7 @@ class MainMenu(GameState):
             on_click=self.toggle_send_data
         )
 
-        self.context.window_panel = WindowPanel(
+        self.window_panel = WindowPanel(
             title='Main Menu',
             content=(
                 Button('Play the Game', color=color.gray, on_click=self.start),
