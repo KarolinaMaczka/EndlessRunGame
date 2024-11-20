@@ -59,6 +59,7 @@ class RunningState(GameState):
         self.context.data_manager.add_playing_time(time.time())
         self.__initialize_obstacles()
         self.context.player.set_values()
+        self.difficulty_manager.set_player_settings(self.difficulty_level_new, self.context.player)
         self.context.player.enabled = True
         invoke(self.start)  # we start running after rendering
 
