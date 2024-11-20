@@ -3,11 +3,12 @@ import time
 
 from config.logger import get_game_logger
 from difficulty.difficulty_manager import DifficultyManager
+from states.process_managers.process_manager import ProcessManager
 
 logger = get_game_logger()
 
 
-class ObstacleGenerator:
+class ObstacleProcesManager(ProcessManager):
     def __init__(self, selected_difficulty_level):
         super().__init__()
         self.obstacle_queue = multiprocessing.Queue()
@@ -15,11 +16,11 @@ class ObstacleGenerator:
         self.player_z = multiprocessing.Value('d', 0.0)
         self.go = multiprocessing.Value('b', True)
         self.difficulty_level = multiprocessing.Value('i', selected_difficulty_level)
-        self.obstacle_process = multiprocessing.Process(
+        self.process = multiprocessing.Process(
             target=self.obstacle_generator_worker,
             args=(self.obstacle_queue, self.player_z, self.go, self.difficulty_level, self.map_data_queue)
         )
-        self.obstacle_process.start()
+        self.process.start()
 
     def obstacle_generator_worker(self, obstacle_queue, player_z, go, difficulty_level, mapp_data_queue, **kwargs):
         logger.info(f'Start generating obstacles')
@@ -51,8 +52,4 @@ class ObstacleGenerator:
 
     def on_exit(self):
         self.go.value = False
-        if hasattr(self.obstacle_process, "obstacle_process"):
-            self.obstacle_process.terminate()
-            self.obstacle_process.join()
-            del self.obstacle_process
-            logger.info(f'Deleted obstacle process')
+        super().on_exit()

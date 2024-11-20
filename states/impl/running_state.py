@@ -3,13 +3,13 @@ import math
 from ursina import destroy, held_keys, WindowPanel, Button, color, application
 
 from config.logger import get_game_logger
-from difficulty.difficulty.difficulty_levels import Difficulty1, DifficultyTest1
+from difficulty.difficulty.difficulty_levels import DifficultyTest1
 from difficulty.difficulty_manager import DifficultyManager
 from difficulty.difficulty_logic import DifficultyLogic
 
 from entities.obstacles.obstacle_pool import ObstaclePool
 from scenery import Scenery
-from states.impl.obstacle_generator import ObstacleGenerator
+from states.process_managers.impl.obstacle_process_manager import ObstacleProcesManager
 from states.state import GameState
 from collections import deque
 from entities.obstacles.impl.fence_obstacle import ObstacleFence
@@ -51,7 +51,7 @@ class RunningState(GameState):
         ], max_size_per_type=15)
         self.difficulty_manager = DifficultyManager()
         self.difficulty_level_new = multiprocessing.Value('i', selected_difficulty_level)
-        self.obstacle_generator = ObstacleGenerator(selected_difficulty_level)
+        self.obstacle_generator = ObstacleProcesManager(selected_difficulty_level)
         self.difficulty_logic = DifficultyLogic(self.context.data_manager, self.difficulty_level_new)
         self.logic_process = multiprocessing.Process(target=self.difficulty_logic.update,
                                                      args=(self.obstacle_generator.player_z, self.context.emotion_queue))
