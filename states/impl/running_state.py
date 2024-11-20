@@ -1,4 +1,5 @@
 import math
+import time
 
 from ursina import destroy, held_keys, WindowPanel, Button, color, application, invoke
 
@@ -54,10 +55,12 @@ class RunningState(GameState):
         self.difficulty_level_new = selected_difficulty_level
         self.difficulty_logic = DifficultyLogic(self.context.data_manager, self.difficulty_level_new)
         self.create_paused_panel()
+        self.context.data_manager.save_difficulty(self.difficulty_level_new)
+        self.context.data_manager.add_playing_time(time.time())
         self.__initialize_obstacles()
         self.context.player.set_values()
         self.context.player.enabled = True
-        invoke(self.start)
+        invoke(self.start)  # we start running after rendering
 
     def on_exit(self):
         super().on_exit()
@@ -68,6 +71,7 @@ class RunningState(GameState):
         logger.info(f'Cleaned obstacles')
         self.obstacle_generator.on_exit()
         self.scenery.delete()
+        self.context.data_manager.add_playing_time(time.time())
         self.context.player.enabled = False
 
     def input(self, key):
@@ -102,9 +106,7 @@ class RunningState(GameState):
             # self.context.data_manager.save_pressed_key(('space', self.player_z.value))
 
     def start(self):
-        print("Run")
         self.run = True
-        self.context.data_manager.save_difficulty(self.difficulty_level_new)
 
     def update(self):
         if not self.run:

@@ -19,7 +19,6 @@ class GameManager:
                   camera_reader: CameraReader):
         self.player = player
         self.camera = camera
-        self.time_playing = 0
         self.selected_level = 1
 
         self.data_manager = data_manager
@@ -33,14 +32,9 @@ class GameManager:
         logger.info(f'Transitioning to {state}')
         self._state.on_exit()
         if state == "running_state":
-            self.time_playing = time.time()
             self._state = RunningState(self, self.selected_level)
             self.camera_reader.toggle_run()
         elif state == "game_over_state":
-            self.time_playing = time.time() - self.time_playing
-            self.data_manager.playing_time = self.time_playing
-            logger.info(f'game over, score: {self.player.Z}')
-            self.data_manager.score = self.player.Z
             self._state = GameOver(self)
             self.camera_reader.toggle_run()
         elif state == "main_menu":

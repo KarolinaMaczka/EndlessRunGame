@@ -10,6 +10,9 @@ class GameOver(GameState):
         super().__init__()
         self.rating = -1
         self.context = context
+        self.score = self.context.player.Z
+        logger.info(f'game over, score: {self.score}')
+        self.context.data_manager.add_score(self.score)
         self.create_window()
 
     def input(self, key):
@@ -36,6 +39,7 @@ class GameOver(GameState):
         self.context.window_panel = WindowPanel(
             title='Game Over :(',
             content=(
+                Text(f'Your score: {self.score}', color=color.gray),
                 Text('Rate your gameplay satisfaction: ', color=color.gray),
                 self.create_star_buttons(),
                 Button('Try Again', color=color.gray, on_click=self.start),
