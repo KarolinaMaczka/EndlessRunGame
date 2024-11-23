@@ -15,4 +15,3 @@ class ProcessManager(ABC):
             self.process.terminate()
             self.process.join()
             del self.process
-            logger.info(f'Deleted obstacle process')

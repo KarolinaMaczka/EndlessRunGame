@@ -54,3 +54,4 @@ class ObstacleProcesManager(ProcessManager):
     def on_exit(self):
         self.go.value = False
         super().on_exit()
+        logger.info(f'Deleted obstacle process')

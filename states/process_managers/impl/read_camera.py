@@ -103,6 +103,7 @@ class CameraReader(ProcessManager):
 
     def on_exit(self):
         super().on_exit()
+        logger.info(f'Deleted camera process')
 
 if __name__ == '__main__':
     camera_reading = CameraReader(DataManager(), Manager())
