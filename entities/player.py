@@ -1,4 +1,4 @@
-from ursina import FrameAnimation3d, time, Entity
+from ursina import time, Entity
 
 from config.constants import CollisionSide, CollisionType
 
@@ -11,10 +11,11 @@ class Player(Entity):
             # texture="assets/player/textures/Wolf_Body",
             # model='cube',
             name='player',
-            # color=color.white,
-            # always_on_top=0,
+            # render_queue=0,
              double_sided=True, position=(0, 2, 0), collider='box',
-             scale=5, rotation=(0,0,0), fps=5),
+             scale=5, rotation=(0,0,0), fps=5,
+            visible=False
+        ),
 
         self.set_values()
 
