@@ -236,3 +236,11 @@ class DifficultyTest3(Difficulty):
             SeventhObstacleMap(small_obstacle_const=0.7, gate_generation_const=0.05, lane_change_const=0.75,
                                obstacle_generation_distance=250)
         ]
+
+class DifficultyTestOneMap(Difficulty):
+    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, **kwargs):
+        super().__init__(first_obstacle, last_obstacle_z, **kwargs)
+        self.maps = [
+            SixthObstacleMap(lane_change_const=0.5, small_obstacle_const=0.75, gate_generation_const=0.05,
+                             color_theme=ColorTheme.COLOR_THEME_COLORFULL, obstacle_generation_distance=150),
+        ]

@@ -30,7 +30,7 @@ class LevelSelect(GameState):
     def create_window(self):
         menu = Entity()
         self.menu = DropdownMenu(
-            text="Choose presets",
+            text="Choose level",
             buttons=[DropdownMenuButton(f"Level {i}", on_click=Func(self.pass_level, i)) for i in
                      range(1, 4)],
             position=(-4, 0.25),

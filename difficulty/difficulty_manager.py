@@ -1,7 +1,8 @@
 from config.logger import get_game_logger
 from difficulty.difficulty.difficulty_level import Difficulty
 from difficulty.difficulty.difficulty_levels import Difficulty1, Difficulty2, Difficulty3, Difficulty4, Difficulty5, \
-    Difficulty6, Difficulty7, Difficulty8, Difficulty9, Difficulty10, DifficultyTest1, DifficultyTest2, DifficultyTest3
+    Difficulty6, Difficulty7, Difficulty8, Difficulty9, Difficulty10, DifficultyTest1, DifficultyTest2, DifficultyTest3, \
+    DifficultyTestOneMap
 
 logger = get_game_logger()
 
@@ -33,6 +34,7 @@ class DifficultyManager:
         self.difficulties = {
             1: DifficultyTest1(),
             2: DifficultyTest2(),
+            # 2: DifficultyTestOneMap(),
             3: DifficultyTest3(),
             4: Difficulty4(),
             5: Difficulty5(),

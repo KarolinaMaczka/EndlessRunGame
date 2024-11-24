@@ -65,18 +65,20 @@ class CameraReader(ProcessManager):
                     result = analyze(frame, actions=['emotion'], enforce_detection=False, detector_backend='mtcnn')[0]
                     dominant_emotion = max(result['emotion'], key=result['emotion'].get)
                     second_dominant_emotion = sorted(result['emotion'], key=result['emotion'].get)[-2]
-                    emotions = (dominant_emotion, second_dominant_emotion)
+                    dominant_emotion_value = result['emotion'][dominant_emotion]
+                    second_dominant_emotion_value = result['emotion'][second_dominant_emotion]
+                    emotions_and_values = ( (dominant_emotion, dominant_emotion_value),
+                                            (second_dominant_emotion, second_dominant_emotion_value)
+                                        )
                     # Put emotions to queue so that they can be read by the difficulty logic
-                    emotion_queue.put(emotions)
+                    emotion_queue.put(emotions_and_values)
                     if self.debug:
                         logger.info(f'Result of analyzing emotions {result}')
                         logger.info(f'Prevailing emotions: {dominant_emotion} i {second_dominant_emotion}')
                 except Exception as e:
                     logger.error(f'Błąd podczas analizy: {e}')
                 self.last_analysis_time = time.time()
-                
-            if cv.waitKey(1) & 0xFF == ord('q'):
-                break
+            cv.waitKey(1)
         cap.release()
         cv.destroyAllWindows()
 
@@ -102,6 +104,7 @@ class CameraReader(ProcessManager):
         self.game_is_running.value = not self.game_is_running.value
 
     def on_exit(self):
+        cv.destroyAllWindows()
         super().on_exit()
         logger.info(f'Deleted camera process')
 

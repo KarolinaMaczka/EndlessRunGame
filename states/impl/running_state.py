@@ -83,17 +83,14 @@ class RunningState(GameState):
         self.context.player.reset()
         if held_keys['d']:
             self.context.player.go_right()
-            # self.context.data_manager.save_pressed_key(('d', self.player_z.value))
         if held_keys['a']:
             self.context.player.go_left()
-            # self.context.data_manager.save_pressed_key(('a', self.player_z.value))
         # if held_keys['w']:
         #     self.context.player.run_faster()
         if held_keys['s']:
             self.context.player.crouch()
             # self.context.player.scale = 3.5
             self.context.camera.camera.y = self.context.camera.camera.y - 0.3
-            # self.context.data_manager.save_pressed_key(('s', self.player_z.value))
         if held_keys['escape']:
             self.__toggle_paused()
         if held_keys['control']:
@@ -101,7 +98,6 @@ class RunningState(GameState):
                 if held_keys[str(i)]:
                     # self.set_difficulty(max(1, min(10, i+1)))
                     self.difficulty_logic.difficulty_value = max(1, min(10, i))
-                    # logger.info(f'Clicked ctrl+{i}')
         if held_keys['space'] and not self.context.player.is_jumping:
             self.context.player.set_jump()
             # self.context.data_manager.save_pressed_key(('space', self.player_z.value))
@@ -143,7 +139,6 @@ class RunningState(GameState):
     def set_difficulty(self, level, **kwargs):
         logger.info(f'RunningState setting difficulty to {level}')
         self.obstacle_generator.difficulty_level.value = level
-        # self.difficulty_logic.difficulty_value = level
         self.difficulty_manager.set_player_settings(level, self.context.player)
         self.context.data_manager.save_difficulty(level)
 
