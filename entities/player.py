@@ -1,9 +1,9 @@
-from ursina import FrameAnimation3d, time
+from ursina import FrameAnimation3d, time, Entity
 
 from config.constants import CollisionSide, CollisionType
 
 
-class Player(FrameAnimation3d):
+class Player(Entity):
 
     def __init__(self):
         super().__init__(

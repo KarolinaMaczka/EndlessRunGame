@@ -93,9 +93,8 @@ class PhysicsEngine:
                     return False
                 elif side == CollisionSide.DOWN:
                     logger.info(f"DOWN collision with obstacle {type(obstacle.parentt).__name__}:  {obstacle.position}, {self.player.position}")
-                    self.data_manager.add_collision(side, CollisionType.LIGHT, obstacle, self.player)
-
-                    return False
+                    self.data_manager.add_collision(side, CollisionType.FULL, obstacle, self.player)
+                    return True
                 elif obstacle.sign or collision_type == CollisionType.LIGHT:
                     logger.info(f"LIGHT {side} collision with obstacle {type(obstacle.parentt).__name__}: {obstacle.position}, {self.player.position}")
                     self.__handle_light_collision(side, collision_type)

@@ -3,7 +3,7 @@ import os
 from ursina import Entity, color, invoke
 
 from config.config import config
-from config.constants import LANE_WIDTH, CollisionType, ROAD_WIDTH
+from config.constants import LANE_WIDTH, CollisionType, ROAD_WIDTH, ROAD_HEIGHT, CollisionSide
 from entities.obstacles.lane_obstacle import LaneObstacle
 from entities.obstacles.obstacle import Obstacle
 from entities.obstacles.utils import left_outer_border_lane, left_inner_border_lane, right_inner_border_lane, right_outer_border_lane
@@ -22,7 +22,8 @@ class ObstaclePoleGate(LaneObstacle):
             jump=True,
             climb=False,
             sign=False,
-            parentt=self
+            parentt=self,
+            render_queue=3,
         )
 
         self.right_pole = Entity(
@@ -33,7 +34,8 @@ class ObstaclePoleGate(LaneObstacle):
             jump=True,
             climb=False,
             sign=False,
-            parentt=self
+            parentt=self,
+            always_on_top=True
         )
 
         self.top_pole = Entity(
@@ -53,6 +55,7 @@ class ObstaclePoleGate(LaneObstacle):
         self.set_depth(depth)
         self.set_lane(lane)
         self.set_width(width)
+        self.set_always_on_top()
 
     def set_height(self, height):
         self.height = height
@@ -100,3 +103,19 @@ class ObstaclePoleGate(LaneObstacle):
             collision_type = CollisionType.FULL
 
         return collision_type
+
+    def check_collision_side(self, player_x, player_y, child, *args, **kwargs) -> CollisionSide:
+        print(child.y, child.bounds.start[1], player_y)
+        if player_y >= self.height + ROAD_HEIGHT / 2 - 1:
+            collision_side = CollisionSide.UP
+        else:
+            if player_x < child.x:
+                collision_side = CollisionSide.LEFT
+            else:
+                collision_side = CollisionSide.RIGHT
+
+        return collision_side
+
+    def set_colorr(self, colorr):
+        self.right_pole.color = colorr
+        self.left_pole.color = colorr

@@ -68,9 +68,10 @@ class Obstacle(Entity):
         return collision_type
 
     def check_collision_side(self, player_x, player_y, child, *args, **kwargs) -> CollisionSide:
+        print(child.y, child.bounds.start[1], player_y + 0.5)
         if player_y >= self.height + ROAD_HEIGHT / 2 - 1:
             collision_side = CollisionSide.UP
-        elif child.bounds.start.y >= player_y:
+        elif child.y + child.bounds.start[1] > player_y + 0.5:
             collision_side = CollisionSide.DOWN
         else:
             if player_x < child.x:
