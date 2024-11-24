@@ -50,7 +50,7 @@ class ObstacleFence(LaneObstacle):
     def set_lane(self, lane):
         self.lane = lane
         invoke(LaneObstacle.set_fixed_lane, self.body, self.lane)
-        self.body.x += -15 + self.lane * 10 - self.body.x - self.body.bounds.start[2]
+        self.body.x += -ROAD_WIDTH // 2 + self.lane * LANE_WIDTH + (LANE_WIDTH - self.width) // 2 - self.body.x - self.body.bounds.start[2]
 
     def set_depth(self, depth):
         self.depth = depth
