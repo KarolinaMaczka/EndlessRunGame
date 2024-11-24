@@ -16,7 +16,7 @@ class DifficultyLogic:
         # while True:
         if not emotion_queue.empty():
             emotions = emotion_queue.get()
-            emotions_and_position = (emotions, player_z)
+            emotions_and_position = (*emotions, player_z)
             self.data_manager.add_emotion(emotions_and_position)
             self.update_difficulty(emotions)
         # time.sleep(0.1)

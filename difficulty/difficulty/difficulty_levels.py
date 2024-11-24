@@ -234,7 +234,7 @@ class DifficultyTest3(Difficulty):
             FifthObstacleMap(small_obstacle_const=0.9, gate_generation_const=0.1, lane_change_const=0.75, obstacle_generation_distance=150),
             SixthObstacleMap(small_obstacle_const=0.8, gate_generation_const=0.1, lane_change_const=0.75, obstacle_generation_distance=150),
             SeventhObstacleMap(small_obstacle_const=0.7, gate_generation_const=0.05, lane_change_const=0.75,
-                               obstacle_generation_distance=250)
+                               obstacle_generation_distance=300)
         ]
 
 class DifficultyTestOneMap(Difficulty):

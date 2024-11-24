@@ -37,10 +37,10 @@ class ObstacleLongCube(LaneObstacle):
         if random.random() < has_ladder:
             self.ladder = Entity(
                 model=os.path.join(self.base_folder, ladder_folder, config['long_cube']['long_cube.ladder.object']),
-                scale=(3, 1.3, 5),
+                scale=(3, 1.3, 8),
                 rotation=(0, 0, 0),
                 color=color.blue,
-                z=position_z - depth / 2 - 2.5,
+                z=position_z - depth / 2 - 4,
                 collider='box',
                 double_sided=True,
                 jump=True,
@@ -83,10 +83,10 @@ class ObstacleLongCube(LaneObstacle):
         if random.random() < has_ladder:
             self.ladder = Entity(
                 model=os.path.join(self.base_folder, ladder_folder, config['long_cube']['long_cube.ladder.object']),
-                scale=(3, 1.5, 5),
+                scale=(3, 1.5, 8),
                 rotation=(0, 0, 0),
                 color=color.blue,
-                z=self.position_z - self.depth / 2 - 2.5,
+                z=self.position_z - self.depth / 2 - 4,
                 collider='box',
                 double_sided=True,
                 jump=True,
