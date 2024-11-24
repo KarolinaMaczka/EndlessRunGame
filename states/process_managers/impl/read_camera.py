@@ -68,7 +68,8 @@ class CameraReader(ProcessManager):
                     dominant_emotion_value = result['emotion'][dominant_emotion]
                     second_dominant_emotion_value = result['emotion'][second_dominant_emotion]
                     emotions_and_values = ( (dominant_emotion, dominant_emotion_value),
-                                            (second_dominant_emotion, second_dominant_emotion_value)
+                                            (second_dominant_emotion, second_dominant_emotion_value),
+                                            result['face_confidence']
                                         )
                     # Put emotions to queue so that they can be read by the difficulty logic
                     emotion_queue.put(emotions_and_values)
