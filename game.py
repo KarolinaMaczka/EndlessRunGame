@@ -3,6 +3,7 @@ import multiprocessing
 from ursina import Ursina, window, Sky
 
 from config.logger import get_game_logger
+from config.utils import set_window_on_top
 from entities.camera import PlayerCamera
 from entities.obstacles.Models import Models
 from game_manager import GameManager
@@ -28,15 +29,14 @@ if __name__ == '__main__':
     atexit.register(camera_reading.on_exit)
 
     app = Ursina()
-
-    window.fps_counter.enabled = True
-    # window.exit_button.enabled = False
-    # TODO fill
     window.title = 'Game'
+    window.fps_counter.enabled = True
 
     player = Player()
-
     camera = PlayerCamera(player)
+
+    set_window_on_top("Game")
+
     def mount_filesystem():
         m = Multifile()
         m.setEncryptionFlag(True)
@@ -71,3 +71,4 @@ if __name__ == '__main__':
     sky = Sky()
 
     app.run()
+

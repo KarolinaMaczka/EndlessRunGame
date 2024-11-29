@@ -14,7 +14,7 @@ class SettingsMenu(GameState):
         self.context = context
         self.create_window(len(camera_reader.cameras))
         self.camera_reader = camera_reader
-        self.camera_reader.is_in_settings.set()
+        self.camera_reader.is_in_settings.value = True
 
     def input(self, key):
         pass
@@ -29,7 +29,7 @@ class SettingsMenu(GameState):
         super().on_exit()
         logger.info(f'Exiting settings')
         destroy(self.window_panel)
-        self.camera_reader.is_in_settings.clear()
+        self.camera_reader.is_in_settings.value = False
 
     def main_menu(self):
         self.context.transition_to('main_menu')
