@@ -22,13 +22,12 @@ class DataManager:
         self.obstacle_data = []
         self.hit_obstacles = []
         self.player_satisfaction = -1
-        self.player_emotions = []
         self.map_data = []
         self.player_emotions = list_manager.list()
         self.score = 0
         self.playing_time = 0
         self.difficulties = list_manager.list()
-        self.keys_pressed = list_manager.list()
+        self.keys_pressed = []
         self.send_data_enabled = True
         self.__folder = config['player_data']['player_data.folder']
         os.makedirs(self.__folder, exist_ok=True)
