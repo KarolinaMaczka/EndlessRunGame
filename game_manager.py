@@ -1,6 +1,7 @@
 from config.logger import get_game_logger
 from data_manager import DataManager
 from entities.camera import PlayerCamera
+from entities.obstacles.Models import Models
 from physics_engine import PhysicsEngine
 from entities.player import Player
 from states.impl.game_over_state import GameOver
@@ -16,15 +17,16 @@ logger = get_game_logger()
 class GameManager:
 
     def __init__(self, player: Player, camera: PlayerCamera, data_manager: DataManager,
-                 camera_reader: CameraReader):
+                 camera_reader: CameraReader, models):
         self.player = player
         self.camera = camera
         self.selected_level = 1
+        self.models = models
 
         self.data_manager = data_manager
         self.camera_reader = camera_reader
         self.physics_engine = PhysicsEngine(player, camera, self.data_manager)
-        RunningState(self).on_exit()
+        RunningState(self, self.models).on_exit()
         self.data_manager.clean_data()
         self._state = MainMenu(self)
 
@@ -32,7 +34,7 @@ class GameManager:
         logger.info(f'Transitioning to {state}')
         self._state.on_exit()
         if state == "running_state":
-            self._state = RunningState(self, self.selected_level)
+            self._state = RunningState(self, self.models, self.selected_level)
             self.camera_reader.toggle_run()
         elif state == "game_over_state":
             self._state = GameOver(self)

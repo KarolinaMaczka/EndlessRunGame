@@ -1,22 +1,22 @@
 import os
+from copy import deepcopy, copy
 
-from ursina import Entity, color, invoke, destroy
+from ursina import Entity, color, invoke, destroy, Texture
 
 from config.config import config
 from config.constants import LANE_WIDTH
 from entities.obstacles.lane_obstacle import LaneObstacle
 from entities.obstacles.obstacle import Obstacle
+from ursina import mesh_importer
 
 
 class ObstacleTrain(LaneObstacle):
-    def __init__(self, position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.orange, height: float = 10,
+    def __init__(self, models,position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.orange, height: float = 10,
                  width: float = LANE_WIDTH - 1, depth: float = 100):
-        super().__init__(position_z=position_z, difficulty=difficulty, lane=lane, height=height,width=width, depth=depth)
-        folder = config['train']['train.folder']
+        super().__init__(models, position_z=position_z, difficulty=difficulty, lane=lane, height=height,width=width, depth=depth)
 
         self.body = Entity(
-            model=os.path.join(self.base_folder, folder, config['train']['train.object']),
-            texture=os.path.join(self.base_folder, folder, config['train']['train.texture']),
+            model=copy(models.train),
             color=colorr,
             z=position_z,
             collider='box',
@@ -26,6 +26,8 @@ class ObstacleTrain(LaneObstacle):
             sign=False,
             parentt=self
         )
+        self.body.texture_setter(copy(models.train_tex))
+
         self.children = [self.body]
 
         self.set_depth(depth)

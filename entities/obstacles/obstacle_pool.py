@@ -13,7 +13,8 @@ from entities.obstacles.obstacle import Obstacle
 logger = get_game_logger()
 
 class ObstaclePool:
-    def __init__(self, obstacle_types: list, max_size_per_type=1):
+    def __init__(self, models, obstacle_types: list, max_size_per_type=1):
+        self.models = models
         self.max_size_per_type = max_size_per_type
         self.reusable_obstacles = defaultdict(deque)
         self.obstacle_types = obstacle_types
@@ -22,7 +23,7 @@ class ObstaclePool:
     def __create_reusable_obstacles(self):
         for obstacle_class in self.obstacle_types:
             for _ in range(1):
-                obstacle = obstacle_class(position_z=-1000, difficulty=1)
+                obstacle = obstacle_class(position_z=-1000, difficulty=1, models=self.models)
                 obstacle.visible = False
                 obstacle.enabled = False
                 for child in obstacle.children:
@@ -42,7 +43,7 @@ class ObstaclePool:
         #     for child in obstacle.children:
         #         child.enabled = True
         # else:
-        obstacle = obstacle_class(position_z=position_z, difficulty=difficulty, lane=lane, **metadata)
+        obstacle = obstacle_class(position_z=position_z, difficulty=difficulty, lane=lane, models=self.models, **metadata)
         logger.info(f"Acquired obstacle {type(obstacle).__name__} at position {position_z}, lane {lane} with metadata {metadata}")
         return obstacle
 

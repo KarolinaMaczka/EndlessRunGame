@@ -12,7 +12,7 @@ logger = get_game_logger()
 
 
 class Obstacle(Entity):
-    def __init__(self, position_z: float, difficulty: int, lane: int, height: float, width: float, depth: float):
+    def __init__(self, models, position_z: float, difficulty: int, lane: int, height: float, width: float, depth: float):
         super().__init__(z=position_z)
         self.children = []
         self.difficulty = difficulty
@@ -22,6 +22,7 @@ class Obstacle(Entity):
         self.height = height
         self.width = width
         self.depth = depth
+        self.models = models
         logger.info('Creating obstacle')
 
     @staticmethod

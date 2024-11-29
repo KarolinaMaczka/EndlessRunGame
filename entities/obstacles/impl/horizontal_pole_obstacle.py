@@ -1,6 +1,7 @@
 import os
+from copy import deepcopy, copy
 
-from ursina import Entity, color, invoke
+from ursina import Entity, color, invoke, Texture
 
 from config.config import config
 from config.constants import LANE_WIDTH, CollisionType, ROAD_WIDTH, ROAD_HEIGHT, CollisionSide
@@ -9,13 +10,12 @@ from entities.obstacles.obstacle import Obstacle
 from entities.obstacles.utils import left_outer_border_lane, left_inner_border_lane, right_inner_border_lane, right_outer_border_lane
 
 class ObstaclePoleGate(LaneObstacle):
-    def __init__(self, position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.dark_gray, height: float = 2.5,
+    def __init__(self, models,position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.dark_gray, height: float = 2.5,
                  width: float = LANE_WIDTH, depth: float = 1):
-        super().__init__(position_z=position_z, difficulty=difficulty, lane=lane, height=height,width=width, depth=depth)
-        folder = config['horizontal_pole']['pole.folder']
+        super().__init__(models,position_z=position_z, difficulty=difficulty, lane=lane, height=height,width=width, depth=depth)
 
         self.left_pole = Entity(
-            model='cube',
+            model=copy(models.cube_standard),
             color=colorr,
             z=position_z,
             collider='box',
@@ -27,7 +27,7 @@ class ObstaclePoleGate(LaneObstacle):
         )
 
         self.right_pole = Entity(
-            model='cube',
+            model=copy(models.cube_standard),
             color=colorr,
             z=position_z,
             collider='box',
@@ -39,9 +39,9 @@ class ObstaclePoleGate(LaneObstacle):
         )
 
         self.top_pole = Entity(
-            model='cube',
+            model=copy(models.cube_standard),
             color=color.gray,
-            texture=os.path.join(self.base_folder, folder, config['horizontal_pole']['pole.texture']),
+            texture=copy(models.pole_tex),
             z=position_z,
             collider='box',
             jump=True,
@@ -49,6 +49,7 @@ class ObstaclePoleGate(LaneObstacle):
             sign=False,
             parentt=self
         )
+
         self.children = [self.left_pole, self.right_pole, self.top_pole]
 
         self.set_height(height)

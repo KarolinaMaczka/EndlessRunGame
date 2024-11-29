@@ -8,9 +8,9 @@ from entities.obstacles.utils import left_inner_border_lane, left_outer_border_l
 
 
 class ObstacleBoard(ObstaclePoleGate):
-    def __init__(self, position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.dark_gray, height: float = 2.5,
+    def __init__(self, models,position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.dark_gray, height: float = 2.5,
                  width: float = LANE_WIDTH, depth: float = 1, board_height: float = STANDARD_OBSTACLE_HEIGHT):
-        super().__init__(position_z=position_z, difficulty=difficulty, lane=lane, height=height,width=width, depth=depth)
+        super().__init__(models,position_z=position_z, difficulty=difficulty, lane=lane, height=height,width=width, depth=depth)
         self.set_height(height, board_height)
         self.set_always_on_top()
 

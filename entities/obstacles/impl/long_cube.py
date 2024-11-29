@@ -1,27 +1,25 @@
 import os
 import random
+from copy import deepcopy, copy
 
-from ursina import Entity, color, invoke, destroy
+from ursina import Entity, color, invoke, destroy, Texture
 
 from config.config import config
 from config.constants import LANE_WIDTH, CollisionSide, ROAD_HEIGHT
 from entities.obstacles.lane_obstacle import LaneObstacle
 from entities.obstacles.obstacle import Obstacle
+from ursina import mesh_importer
 
 
 class ObstacleLongCube(LaneObstacle):
-    def __init__(self, position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.orange,
+    def __init__(self, models,position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.orange,
                  has_ladder: float = 0.9, height: float = 10,
                  width: float = LANE_WIDTH - 1, depth: float = 100):
-        super().__init__(position_z=position_z, difficulty=difficulty, lane=lane, height=height, width=width,
+        super().__init__(models,position_z=position_z, difficulty=difficulty, lane=lane, height=height, width=width,
                          depth=depth)
 
-        texture_folder = config['long_cube']['long_cube.folder']
-        ladder_folder = config['long_cube']['long_cube.ladder.folder']
-
         self.body = Entity(
-            model='cube',
-            texture=os.path.join(self.base_folder, texture_folder, config['long_cube']['long_cube.texture']),
+            model=copy(models.cube_standard),
             scale=(width, height, depth),
             color=colorr,
             z=position_z,
@@ -32,11 +30,13 @@ class ObstacleLongCube(LaneObstacle):
             sign=False,
             parentt=self
         )
+        self.body.texture_setter(copy(models.container_tex))
+
         self.children = [self.body]
         self.ladder = None
         if random.random() < has_ladder:
             self.ladder = Entity(
-                model=os.path.join(self.base_folder, ladder_folder, config['long_cube']['long_cube.ladder.object']),
+                model=copy(models.container),
                 scale=(3, 1.3, 8),
                 rotation=(0, 0, 0),
                 color=color.blue,
@@ -81,8 +81,9 @@ class ObstacleLongCube(LaneObstacle):
     def set_has_ladder(self, has_ladder):
         ladder_folder = config['long_cube']['long_cube.ladder.folder']
         if random.random() < has_ladder:
+            mod = copy(self.models.cube_standard)
             self.ladder = Entity(
-                model=os.path.join(self.base_folder, ladder_folder, config['long_cube']['long_cube.ladder.object']),
+                model=mod,
                 scale=(3, 1.5, 8),
                 rotation=(0, 0, 0),
                 color=color.blue,

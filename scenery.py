@@ -1,3 +1,5 @@
+from copy import copy
+
 from ursina import Entity, color, destroy
 
 from config.constants import ROAD_HEIGHT, ROAD_WIDTH, LANE_WIDTH, Color
@@ -5,17 +7,18 @@ from config.utils import catch_exceptions
 
 
 class Scenery:
-    def __init__(self):
+    def __init__(self, models):
         final_width = ROAD_WIDTH + LANE_WIDTH
         final_width_walls = ROAD_WIDTH
+        self.models = models
 
-        self.right_wall = Entity(model='cube', texture='brick', collider='box',
+        self.right_wall = Entity(model=copy(models.cube_standard), texture='brick', collider='box',
                                  position=(final_width_walls + 0.2 // 2, 0, 0),
                                  always_on_top=1,
                                  scale=(0.1, 1000, 100000),
                                  color=Color.BEIGE.get_color())
 
-        self.left_wall = Entity(model='cube', texture='brick', collider='box',
+        self.left_wall = Entity(model=copy(models.cube_standard), texture='brick', collider='box',
                                 position=(-final_width_walls - 0.2 // 2, 0, 0),
                                 scale=(0.1, 1000, 100000),
                                 always_on_top=1,

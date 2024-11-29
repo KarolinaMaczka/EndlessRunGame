@@ -30,17 +30,18 @@ logger = get_game_logger()
 
 
 class RunningState(GameState):
-    def __init__(self, context, selected_difficulty_level=1):
+    def __init__(self, context, models, selected_difficulty_level=1):
         super().__init__()
+        self.models = models
         self.run = False
         self.obstacle_generator = ObstacleProcesManager(selected_difficulty_level)
-        self.scenery = Scenery()
+        self.scenery = Scenery(models)
         self.active_obstacles = deque()
         self.obstacles_to_render = deque()
         self.obstacles_per_frame = 1
         self.context = context
         self.cleanup_threshold = 200
-        self.obstacle_pool = ObstaclePool([
+        self.obstacle_pool = ObstaclePool(obstacle_types=[
             ObstacleFence,
             ObstacleGate,
             ObstaclePoleGate,
@@ -50,7 +51,7 @@ class RunningState(GameState):
             ObstacleLongCube,
             ObstacleWoodenSign,
             ObstacleTrain
-        ], max_size_per_type=1)
+        ], max_size_per_type=1, models=self.models)
         self.difficulty_manager = DifficultyManager()
         self.difficulty_level_new = selected_difficulty_level
         self.difficulty_logic = DifficultyLogic(self.context.data_manager, self.difficulty_level_new)

@@ -7,9 +7,9 @@ from entities.obstacles.obstacle import Obstacle
 
 
 class ObstacleSign(Obstacle):
-    def __init__(self, position_z: float, difficulty: int, lane: int = 0, height: float = 0,
+    def __init__(self, models,position_z: float, difficulty: int, lane: int = 0, height: float = 0,
                  width: float = 0, depth: float = 0):
-        super().__init__(position_z=position_z, difficulty=difficulty, lane=lane, height=height, width=width,
+        super().__init__(models, position_z=position_z, difficulty=difficulty, lane=lane, height=height, width=width,
                          depth=depth)
         self.lane = lane
 

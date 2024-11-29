@@ -1,7 +1,8 @@
 import os
+from copy import deepcopy, copy
 
 from ursina import color, Entity, invoke, destroy
-
+from ursina import mesh_importer
 from config.config import config
 from config.constants import STANDARD_OBSTACLE_HEIGHT
 from entities.obstacles.obstacle import Obstacle
@@ -9,13 +10,12 @@ from entities.obstacles.sign_obstacle import ObstacleSign
 
 
 class ObstacleWoodenSign(ObstacleSign):
-    def __init__(self, position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.brown, height: float = STANDARD_OBSTACLE_HEIGHT-3,
+    def __init__(self, models, position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.brown, height: float = STANDARD_OBSTACLE_HEIGHT-3,
                  width: float = 2, depth: float = 1):
-        super().__init__(position_z=position_z, difficulty=difficulty, lane=lane, height=height,width=width, depth=depth)
-        folder = config['sign']['sign.folder']
+        super().__init__(models,position_z=position_z, difficulty=difficulty, lane=lane, height=height,width=width, depth=depth)
+
         self.body = Entity(
-            model=os.path.join(self.base_folder, folder, config['sign']['sign.object']),
-            texture=os.path.join(self.base_folder, folder, config['sign']['sign.texture']),
+            model=deepcopy(models.wood_sign),
             rotation=(0, 0, 0),
             color=colorr,
             z=position_z,
@@ -26,6 +26,7 @@ class ObstacleWoodenSign(ObstacleSign):
             sign=True,
             parentt=self
         )
+        self.body.texture_setter(copy(models.wood_sign_tex))
         self.children = [self.body]
         self.set_height(height)
         self.set_lane(lane)

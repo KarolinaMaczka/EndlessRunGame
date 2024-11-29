@@ -1,7 +1,8 @@
 import os
 import random
+from copy import deepcopy, copy
 
-from ursina import color, Entity, invoke, destroy
+from ursina import color, Entity, invoke, destroy, Texture, mesh_importer
 
 from config.config import config
 from config.constants import LANE_WIDTH
@@ -10,14 +11,12 @@ from entities.obstacles.obstacle import Obstacle
 
 
 class ObstacleCube(LaneObstacle):
-    def __init__(self, position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.brown, height: float = 4,
+    def __init__(self, models,position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.brown, height: float = 4,
                  width: float = LANE_WIDTH * 0.7, depth: float = LANE_WIDTH * 1.5):
-        super().__init__(position_z=position_z, difficulty=difficulty, lane=lane, height=height,width=width, depth=depth)
+        super().__init__(models,position_z=position_z, difficulty=difficulty, lane=lane, height=height,width=width, depth=depth)
 
-        folder = config['cube']['cube.folder']
         self.body = Entity(
-            model=os.path.join(self.base_folder, folder, config['cube']['cube.object']),
-            texture=os.path.join(self.base_folder, folder, config['cube']['cube.texture']),
+            model=copy(models.cube),
             rotation=(0, 90, 0),
             color=colorr,
             z=position_z,
@@ -28,6 +27,7 @@ class ObstacleCube(LaneObstacle):
             sign=False,
             parentt=self
         )
+        self.body.texture_setter(copy(models.cube_tex))
         self.children = [self.body]
 
         self.set_depth(depth)

@@ -1,7 +1,8 @@
 import os
 import random
+from copy import deepcopy, copy
 
-from ursina import color, Entity, destroy
+from ursina import color, Entity, destroy, mesh_importer
 
 from ursina import color, Entity, invoke
 
@@ -13,15 +14,14 @@ from entities.obstacles.sign_obstacle import ObstacleSign
 
 
 class ObstacleIndicator(ObstacleSign):
-    def __init__(self, position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.brown,
+    def __init__(self, models, position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.brown,
                  height: float = STANDARD_OBSTACLE_HEIGHT - 3,
                  width: float = 4, depth: float = 1):
-        super().__init__(position_z=position_z, difficulty=difficulty, lane=lane, height=height, width=width,
+        super().__init__(models,position_z=position_z, difficulty=difficulty, lane=lane, height=height, width=width,
                          depth=depth)
-        folder = config['indicator']['indicator.folder']
 
         self.body = Entity(
-            model=os.path.join(self.base_folder, folder, config['indicator']['indicator.object']),
+            model=copy(models.indicator),
             rotation=(0, random.choice([45, 135, 225, 315]), 0),
             color=colorr,
             z=position_z,

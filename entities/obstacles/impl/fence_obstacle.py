@@ -1,5 +1,7 @@
+import base64
 import os
 
+from panda3d.core import StringStream, Loader, Filename, PNMImage, Texture, VirtualFileSystem
 from ursina import color, Entity, invoke
 
 from config.config import config
@@ -7,19 +9,25 @@ from config.constants import LANE_WIDTH, CollisionType, CollisionSide, ROAD_WIDT
 from entities.obstacles.lane_obstacle import LaneObstacle
 from entities.obstacles.obstacle import Obstacle
 from entities.obstacles.utils import left_inner_border_lane, right_inner_border_lane
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives import padding
+from cryptography.hazmat.backends import default_backend
+from ursina import *
+from PIL import Image
+import io
+from panda3d.core import Multifile
 
+from direct.showbase.ShowBase import ShowBase
 
 class ObstacleFence(LaneObstacle):
-    def __init__(self, position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.brown, height: float = 4.5,
+    def __init__(self, models, position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.brown, height: float = 4.5,
                  width: float = LANE_WIDTH - 2, depth: float = 4):
-        super().__init__(position_z=position_z, difficulty=difficulty, lane=lane, height=height, width=width,
+        super().__init__(models,position_z=position_z, difficulty=difficulty, lane=lane, height=height, width=width,
                          depth=depth)
 
-        folder = config['fence']['fence.folder']
         self.body = Entity(
-            model=os.path.join(self.base_folder, folder, config['fence']['fence.object']),
+            model=copy(models.fence),
             scale=(0.4, 0.05, 0.05),
-            texture=os.path.join(self.base_folder, folder, config['fence']['fence.texture']),
             rotation=(0, 90, 0),
             color=colorr,
             z=position_z,
@@ -30,6 +38,7 @@ class ObstacleFence(LaneObstacle):
             sign=False,
             parentt=self
         )
+        self.body.texture_setter(copy(models.fence_tex))
         self.children = [self.body]
 
         self.set_depth(depth)
