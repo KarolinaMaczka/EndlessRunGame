@@ -1,9 +1,6 @@
-import os
-from copy import deepcopy, copy
+from copy import copy
 
-from ursina import color, Entity, invoke, destroy
-from ursina import mesh_importer
-from config.config import config
+from ursina import color, Entity, invoke
 from config.constants import STANDARD_OBSTACLE_HEIGHT
 from entities.obstacles.obstacle import Obstacle
 from entities.obstacles.sign_obstacle import ObstacleSign
@@ -15,7 +12,7 @@ class ObstacleWoodenSign(ObstacleSign):
         super().__init__(models,position_z=position_z, difficulty=difficulty, lane=lane, height=height,width=width, depth=depth)
 
         self.body = Entity(
-            model=deepcopy(models.wood_sign),
+            model=copy(models.wood_sign),
             rotation=(0, 0, 0),
             color=colorr,
             z=position_z,

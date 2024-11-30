@@ -18,18 +18,18 @@ class ObstaclePool:
         self.max_size_per_type = max_size_per_type
         self.reusable_obstacles = defaultdict(deque)
         self.obstacle_types = obstacle_types
-        self.__create_reusable_obstacles()
+        # self.__create_reusable_obstacles()
 
-    def __create_reusable_obstacles(self):
-        for obstacle_class in self.obstacle_types:
-            for _ in range(1):
-                obstacle = obstacle_class(position_z=-1000, difficulty=1, models=self.models)
-                obstacle.visible = False
-                obstacle.enabled = False
-                for child in obstacle.children:
-                    child.visible = False
-                    child.enabled = False
-                self.reusable_obstacles[obstacle_class].append(obstacle)
+    # def __create_reusable_obstacles(self):
+    #     for obstacle_class in self.obstacle_types:
+    #         for _ in range(1):
+    #             obstacle = obstacle_class(position_z=-1000, difficulty=1, models=self.models)
+    #             obstacle.visible = False
+    #             obstacle.enabled = False
+    #             for child in obstacle.children:
+    #                 child.visible = False
+    #                 child.enabled = False
+    #             self.reusable_obstacles[obstacle_class].append(obstacle)
 
     def acquire(self, obstacle_class, position_z, difficulty, lane, metadata, *args, **kwargs) -> Obstacle:
         # if not (

@@ -17,16 +17,16 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class DataManager:
-    def __init__(self, list_manager: Manager):
+    def __init__(self):
 
         self.obstacle_data = []
         self.hit_obstacles = []
         self.player_satisfaction = -1
         self.map_data = []
-        self.player_emotions = list_manager.list()
+        self.player_emotions = []
         self.score = 0
         self.playing_time = 0
-        self.difficulties = list_manager.list()
+        self.difficulties = []
         self.keys_pressed = []
         self.send_data_enabled = True
         self.__folder = config['player_data']['player_data.folder']
@@ -117,7 +117,7 @@ class DataManager:
             return
 
     def send_data(self, data_to_save):
-        api_key = os.getenv("API_KEY")
+        api_key = ""
         url = "https://karolinamaczka.pythonanywhere.com/player-data"
 
         try:

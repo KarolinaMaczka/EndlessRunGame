@@ -1,10 +1,8 @@
-from ursina import Entity, color, invoke
+from ursina import color, invoke
 
-from config.constants import LANE_WIDTH, STANDARD_OBSTACLE_HEIGHT, CollisionType, ROAD_WIDTH
+from config.constants import LANE_WIDTH, STANDARD_OBSTACLE_HEIGHT
 from entities.obstacles.impl.horizontal_pole_obstacle import ObstaclePoleGate
 from entities.obstacles.obstacle import Obstacle
-from entities.obstacles.utils import left_inner_border_lane, left_outer_border_lane, right_outer_border_lane, \
-    right_inner_border_lane
 
 
 class ObstacleBoard(ObstaclePoleGate):

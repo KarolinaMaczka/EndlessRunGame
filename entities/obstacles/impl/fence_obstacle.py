@@ -1,23 +1,11 @@
-import base64
-import os
 
-from panda3d.core import StringStream, Loader, Filename, PNMImage, Texture, VirtualFileSystem
-from ursina import color, Entity, invoke
-
-from config.config import config
 from config.constants import LANE_WIDTH, CollisionType, CollisionSide, ROAD_WIDTH, ROAD_HEIGHT
 from entities.obstacles.lane_obstacle import LaneObstacle
 from entities.obstacles.obstacle import Obstacle
 from entities.obstacles.utils import left_inner_border_lane, right_inner_border_lane
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.primitives import padding
-from cryptography.hazmat.backends import default_backend
-from ursina import *
-from PIL import Image
-import io
-from panda3d.core import Multifile
 
-from direct.showbase.ShowBase import ShowBase
+from ursina import *
+
 
 class ObstacleFence(LaneObstacle):
     def __init__(self, models, position_z: float, difficulty: int = 1, lane: int = 0, colorr=color.brown, height: float = 4.5,

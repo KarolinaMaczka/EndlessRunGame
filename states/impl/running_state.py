@@ -30,9 +30,10 @@ logger = get_game_logger()
 
 
 class RunningState(GameState):
-    def __init__(self, context, models, selected_difficulty_level=1):
+    def __init__(self, context, models, camera_reader, selected_difficulty_level=1):
         super().__init__()
         self.models = models
+        self.camera_reader = camera_reader
         self.run = False
         self.obstacle_generator = ObstacleProcesManager(selected_difficulty_level)
         self.scenery = Scenery(models)
@@ -150,6 +151,7 @@ class RunningState(GameState):
             logger.info('Resuming game')
         application.paused = not application.paused
         self.pause_panel.enabled = application.paused
+        self.camera_reader.game_is_running.value = not self.camera_reader.game_is_running.value
 
     def __update_score(self):
         self.score_tracker.text = f'Score:{str(int(math.ceil(self.context.player.z / 100.0)) * 100)}'

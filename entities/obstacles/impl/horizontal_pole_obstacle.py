@@ -1,10 +1,8 @@
-import os
-from copy import deepcopy, copy
+from copy import copy
 
 from ursina import Entity, color, invoke, Texture
 
-from config.config import config
-from config.constants import LANE_WIDTH, CollisionType, ROAD_WIDTH, ROAD_HEIGHT, CollisionSide
+from config.constants import LANE_WIDTH, CollisionType, ROAD_HEIGHT, CollisionSide
 from entities.obstacles.lane_obstacle import LaneObstacle
 from entities.obstacles.obstacle import Obstacle
 from entities.obstacles.utils import left_outer_border_lane, left_inner_border_lane, right_inner_border_lane, right_outer_border_lane

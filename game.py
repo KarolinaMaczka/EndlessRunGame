@@ -22,7 +22,7 @@ if __name__ == '__main__':
     logger.info('Starting game')
 
     list_manager = Manager()
-    data_manager = DataManager(list_manager)
+    data_manager = DataManager()
 
     camera_reading = CameraReader(list_manager)
 
@@ -35,29 +35,13 @@ if __name__ == '__main__':
     player = Player()
     camera = PlayerCamera(player)
 
-    set_window_on_top("Game")
-
-    def mount_filesystem():
-        m = Multifile()
-        m.setEncryptionFlag(True)
-        m.setEncryptionPassword()
-        m.openReadWrite("models.mf")
-        num_files = m.getNumSubfiles()
-        print(f"Number of files in the Multifile: {num_files}")
-
-        for i in range(num_files):
-            subfile_name = m.getSubfileName(i)
-            print(f"Found file: {subfile_name}")
-        vfs = VirtualFileSystem.getGlobalPtr()
-        vfs.mount(m, ".", VirtualFileSystem.MFReadOnly)
-
-    mount_filesystem()
     models = Models(app)
 
     game_manager = GameManager(player, camera, data_manager, camera_reading, models)
     atexit.register(game_manager.on_exit)
 
     camera_reading.camera_ready_event.wait()
+    set_window_on_top("Game")
     logger.info('Camera process started')
 
     def update():
@@ -69,6 +53,5 @@ if __name__ == '__main__':
 
 
     sky = Sky()
-
     app.run()
 

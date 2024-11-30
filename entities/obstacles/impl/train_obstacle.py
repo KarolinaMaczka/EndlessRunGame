@@ -1,13 +1,10 @@
-import os
-from copy import deepcopy, copy
+from copy import copy
 
-from ursina import Entity, color, invoke, destroy, Texture
+from ursina import Entity, color, invoke
 
-from config.config import config
 from config.constants import LANE_WIDTH
 from entities.obstacles.lane_obstacle import LaneObstacle
 from entities.obstacles.obstacle import Obstacle
-from ursina import mesh_importer
 
 
 class ObstacleTrain(LaneObstacle):

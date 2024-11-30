@@ -11,6 +11,8 @@ ursina_dist_info_path = os.path.join(base_path, 'venv\\Lib\\site-packages\\ursin
 panda3d_path = os.path.join(base_path, 'venv\\Lib\\site-packages\\panda3d')
 panda3d_tools_path = os.path.join(base_path, 'venv\\Lib\\site-packages\\panda3d_tools')
 panda3d_dist_info_path = os.path.join(base_path, 'venv\\Lib\\site-packages\\panda3d-1.10.14.dist-info')
+pygetwindow = os.path.join(base_path, 'venv\\Lib\\site-packages\\pygetwindow')
+pyrect = os.path.join(base_path, 'venv\\Lib\\site-packages\\pyrect')
 
 datas, binaries, hiddenimports = collect_all('ursina')
 
@@ -26,7 +28,9 @@ datas += mtcnn_datas + [
     (ursina_dist_info_path, 'ursina-7.0.0.dist-info'),
     (panda3d_path, 'panda3d'),
     (panda3d_tools_path, 'panda3d_tools'),
-    (panda3d_dist_info_path, 'panda3d-1.10.14.dist-info')
+    (panda3d_dist_info_path, 'panda3d-1.10.14.dist-info'),
+    (pygetwindow, 'pygetwindow'),
+    (pyrect, 'pyrect')
 ]
 
 a = Analysis(

@@ -1,14 +1,10 @@
-import os
 import random
-from copy import deepcopy, copy
+from copy import copy
 
-from ursina import color, Entity, destroy, mesh_importer
 
 from ursina import color, Entity, invoke
 
-from config.config import config
 from config.constants import STANDARD_OBSTACLE_HEIGHT
-from entities.obstacles.lane_obstacle import LaneObstacle
 from entities.obstacles.obstacle import Obstacle
 from entities.obstacles.sign_obstacle import ObstacleSign
 

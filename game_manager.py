@@ -36,7 +36,7 @@ class GameManager:
             self.camera_reader.toggle_run()
         self._state.on_exit()
         if state == "running_state":
-            self._state = RunningState(self, self.models, self.selected_level)
+            self._state = RunningState(self, self.models, self.camera_reader, self.selected_level)
             self.camera_reader.toggle_run()
         elif state == "game_over_state":
             self._state = GameOver(self)

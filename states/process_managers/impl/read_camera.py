@@ -65,10 +65,11 @@ class CameraReader(ProcessManager):
                     cv.imshow('Camera', frame)
                 else:
                     cv.destroyAllWindows()
-            elif time.time() - self.last_analysis_time > self.analysis_interval :
+            else:
                 try:
                     logger.info(f'Analyzing emotions...')
                     result = analyze(frame, actions=['emotion'], enforce_detection=False, detector_backend='mtcnn')[0]
+                    time.sleep(0.5)
                     dominant_emotion = max(result['emotion'], key=result['emotion'].get)
                     second_dominant_emotion = sorted(result['emotion'], key=result['emotion'].get)[-2]
                     dominant_emotion_value = result['emotion'][dominant_emotion]
@@ -85,57 +86,9 @@ class CameraReader(ProcessManager):
                 except Exception as e:
                     logger.error(f'Błąd podczas analizy: {e}')
                 self.last_analysis_time = time.time()
-                # time.sleep(1)
+                time.sleep(0.5)
             cv.waitKey(1)
 
-            # while True:
-            #     # Check if camera has been changed
-            #     if self.current_camera_index != self.passed_camera_index.value:
-            #         logger.info(
-            #             f'Changing camera from {self.current_camera_index.value} to {self.passed_camera_index.value}')
-            #         cap.release()
-            #         self.current_camera_index = self.passed_camera_index.value
-            #         cap = cv.VideoCapture(self.current_camera_index)
-            #         logger.info(f'Camera changed to {self.passed_camera_index}')
-            #     try:
-            #         ret, frame = cap.read()
-            #     except Exception as e:
-            #         logger.error(f'Failed to connect to the camera: {e}')
-            #         break
-            #     if self.is_in_settings.is_set():
-            #         cv.imshow('Camera', frame)
-            #     else:
-            #         cv.destroyAllWindows()
-            #
-            #     # if cap.isOpened():
-            #     #     camera_ready_event.set()
-            #     # else:
-            #     #     camera_ready_event.set()
-            #     #     logger.error('Failed to connect to the camera')
-            #     #     return
-            #
-            #     if time.time() - self.last_analysis_time > self.analysis_interval and game_is_running.value:
-            #         try:
-            #             logger.info(f'Analyzing emotions...')
-            #             result = analyze(frame, actions=['emotion'], enforce_detection=False, detector_backend='mtcnn')[
-            #                 0]
-            #             dominant_emotion = max(result['emotion'], key=result['emotion'].get)
-            #             second_dominant_emotion = sorted(result['emotion'], key=result['emotion'].get)[-2]
-            #             dominant_emotion_value = result['emotion'][dominant_emotion]
-            #             second_dominant_emotion_value = result['emotion'][second_dominant_emotion]
-            #             emotions_and_values = ((dominant_emotion, float(dominant_emotion_value)),
-            #                                    (second_dominant_emotion, float(second_dominant_emotion_value)),
-            #                                    float(result['face_confidence'])
-            #                                    )
-            #             # Put emotions to queue so that they can be read by the difficulty logic
-            #             emotion_queue.put(emotions_and_values)
-            #             if self.debug:
-            #                 logger.info(f'Result of analyzing emotions {result}')
-            #                 logger.info(f'Prevailing emotions: {dominant_emotion} i {second_dominant_emotion}')
-            #         except Exception as e:
-            #             logger.error(f'Błąd podczas analizy: {e}')
-            #         self.last_analysis_time = time.time()
-            #     cv.waitKey(1)
         cap.release()
         cv.destroyAllWindows()
 
