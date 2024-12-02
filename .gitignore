@@ -13,3 +13,6 @@ origin/game
 .venv/*
 *.log
 .env
+models.mf
+pyarmor_runtime_000000/
+entities/obstacles/Models.py
