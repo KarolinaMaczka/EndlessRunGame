@@ -36,9 +36,16 @@ class CameraReader(ProcessManager):
         if not cap.isOpened():
             logger.error('Failed to connect to the camera')
             return
-
+        
+        try:
+            ret, frame = cap.read()
+            analyze(frame, actions=['emotion'], enforce_detection=False, detector_backend='mtcnn')[0]
+        except Exception as e:
+            logger.error(f'Failed to connect to the camera: {e}')     
+        
         logger.info(f'Camera connected')
         camera_ready_event.set()
+
 
         while True:
             try:
@@ -80,9 +87,8 @@ class CameraReader(ProcessManager):
                                         )
                     # Put emotions to queue so that they can be read by the difficulty logic
                     emotion_queue.put(emotions_and_values)
-                    if self.debug:
-                        logger.info(f'Result of analyzing emotions {result}')
-                        logger.info(f'Prevailing emotions: {dominant_emotion} i {second_dominant_emotion}')
+                    logger.info(f'Result of analyzing emotions {result}')
+                    logger.info(f'Prevailing emotions: {dominant_emotion} i {second_dominant_emotion}')
                 except Exception as e:
                     logger.error(f'Błąd podczas analizy: {e}')
                 self.last_analysis_time = time.time()

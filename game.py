@@ -1,4 +1,5 @@
 import multiprocessing
+import os
 
 from ursina import Ursina, window, Sky
 
@@ -17,6 +18,8 @@ from panda3d.core import Multifile
 from panda3d.core import StringStream, Loader, Filename, PNMImage, Texture, VirtualFileSystem
 
 if __name__ == '__main__':
+
+    os.environ['DEEPFACE_HOME'] = os.path.join(os.getcwd(), 'deepface')
     multiprocessing.freeze_support()
     logger = get_game_logger()
     logger.info('Starting game')
