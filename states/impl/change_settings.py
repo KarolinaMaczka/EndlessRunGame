@@ -1,5 +1,5 @@
 from ursina import destroy, color, WindowPanel, Button, Func, Entity
-from ursina.prefabs.dropdown_menu import DropdownMenu, DropdownMenuButton
+from ursina.prefabs.dropdown_menu import DropdownMenu, DropdownMenuButton, Text
 from states.process_managers.impl.read_camera import CameraReader
 
 from config.logger import get_game_logger
@@ -35,7 +35,14 @@ class SettingsMenu(GameState):
         self.context.transition_to('main_menu')
 
     def pass_camera(self, camera_number):
-        print(f'Camera {camera_number} clicked')
+        logger.info(f'Settings: Camera {camera_number} selected')
+        temp_text = Text(
+        text="Selected Camera " + str(camera_number),
+        position=(0, 0.4),
+        origin=(0, 0),
+        color=color.black
+        )
+        destroy(temp_text, delay=1.5)
         self.context.camera_reader.change_camera(camera_number - 1)
 
     def create_window(self, camera_count):

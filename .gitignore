@@ -17,3 +17,5 @@ models.mf
 pyarmor_runtime_000000/
 entities/obstacles/Models.py
 /deepface/
+build/
+dist/

@@ -1,5 +1,6 @@
 import cv2 as cv
 import time
+import traceback
 
 from multiprocessing import Queue, Value, Manager, Event, Process
 
@@ -57,7 +58,7 @@ class CameraReader(ProcessManager):
             if not game_is_running.value:
                 if self.current_camera_index != self.passed_camera_index.value:
                     logger.info(
-                        f'Changing camera from {self.current_camera_index.value} to {self.passed_camera_index.value}')
+                        f'Changing camera from {self.current_camera_index} to {self.passed_camera_index.value}')
                     cap.release()
                     self.current_camera_index = self.passed_camera_index.value
                     cap = cv.VideoCapture(self.current_camera_index)
@@ -90,7 +91,8 @@ class CameraReader(ProcessManager):
                     logger.info(f'Result of analyzing emotions {result}')
                     logger.info(f'Prevailing emotions: {dominant_emotion} i {second_dominant_emotion}')
                 except Exception as e:
-                    logger.error(f'Błąd podczas analizy: {e}')
+                    logger.error(f'Analysis erros: {e}')
+                    logger.error(traceback.format_exc())
                 self.last_analysis_time = time.time()
                 time.sleep(0.5)
             cv.waitKey(1)
@@ -113,7 +115,7 @@ class CameraReader(ProcessManager):
         return
 
     def change_camera(self, camera_number):
-        logger.info(f'Camera {camera_number} clicked')
+        logger.info(f'CameraReader: camera number received - {camera_number} (lowered already by 1)')
         self.passed_camera_index.value = camera_number
 
     def toggle_run(self):

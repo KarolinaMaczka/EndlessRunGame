@@ -49,7 +49,14 @@ class LevelSelect(GameState):
         )
 
     def pass_level(self, level_number):
-        print(f'Level {level_number} clicked')
+        logger.info(f'Level {level_number} selected')
+        temp_text = Text(
+            text="Selected level " + str(level_number),
+            position=(0, 0.4),
+            origin=(0, 0),
+            color=color.black
+        )
+        destroy(temp_text, delay=1.5)
         self.context.selected_level = level_number
 
     def main_menu(self):
