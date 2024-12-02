@@ -46,7 +46,6 @@ class CameraReader(ProcessManager):
             except Exception as e:
                 logger.error(f'Failed to connect to the camera: {e}')
                 break
-
             # Check if camera has been changed
             if not game_is_running.value:
                 if self.current_camera_index != self.passed_camera_index.value:
@@ -63,6 +62,7 @@ class CameraReader(ProcessManager):
                     break
                 if self.is_in_settings.value:
                     cv.imshow('Camera', frame)
+                    cv.setWindowProperty('Camera', cv.WND_PROP_TOPMOST, 1)
                 else:
                     cv.destroyAllWindows()
             else:

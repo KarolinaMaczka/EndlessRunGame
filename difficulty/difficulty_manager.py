@@ -12,9 +12,15 @@ class DifficultyManager:
         self.player_settings = {
             1: {"speed": 200, "jump_height": 0.50, "gravity": -1, "velocity_x": 30, "prev_speed": 200,
                 "bouncing_dist": 2},
-            2: {"speed": 275, "jump_height": 0.7, "gravity": -2.1, "velocity_x": 35, "prev_speed": 275,
+            # Zakomentowna wersja jest lepsza, ale żeby mieć jednorodne wyniki zostawiamy następną
+            # 2: {"speed": 275, "jump_height": 0.7, "gravity": -2.1, "velocity_x": 35, "prev_speed": 275,
+            # 2: {"speed": 275, "jump_height": 0.60, "gravity": -1.5, "velocity_x": 35, "prev_speed": 275,
+            #     "bouncing_dist": 3},
+            2: {"speed": 275, "jump_height": 0.55, "gravity": -1.7, "velocity_x": 35, "prev_speed": 275,
                 "bouncing_dist": 3},
-            3: {"speed": 350, "jump_height": 0.8, "gravity": -2.3, "velocity_x": 40, "prev_speed": 350,
+            # 3: {"speed": 350, "jump_height": 0.8, "gravity": -2.3, "velocity_x": 40, "prev_speed": 350,
+            #     "bouncing_dist": 4},
+            3: {"speed": 350, "jump_height": 0.7, "gravity": -2.3, "velocity_x": 40, "prev_speed": 350,
                 "bouncing_dist": 4},
             4: {"speed": 200, "jump_height": 0.55, "gravity": -1, "velocity_x": 30, "prev_speed": 200,
                 "bouncing_dist": 3},
