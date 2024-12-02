@@ -9,7 +9,7 @@ class PlayerCamera:
         self.camera = camera
         self.player = player
         self.camera.z = -15
-        self.camera.add_script(SmoothFollow(target=player, offset=(0, 5, -30)))
+        self.camera.add_script(SmoothFollow(target=player, offset=(0, 5, -10)))
 
     def shake_camera(self, duration=0.2, magnitude=0.05):
         original_position = self.camera.position

@@ -49,6 +49,7 @@ class CameraReader(ProcessManager):
                 break
             if self.is_in_settings.is_set():
                 cv.imshow('Camera', frame)
+                cv.setWindowProperty('Camera', cv.WND_PROP_TOPMOST, 1)
             else:
                 cv.destroyAllWindows()
 
