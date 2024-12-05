@@ -1,7 +1,7 @@
 import math
 import time
 
-from ursina import destroy, held_keys, WindowPanel, Button, color, application, invoke
+from ursina import destroy, held_keys, WindowPanel, Button, color, application, invoke, Text
 
 from config.logger import get_game_logger
 from difficulty.difficulty.difficulty_levels import DifficultyTest1
@@ -32,6 +32,8 @@ logger = get_game_logger()
 class RunningState(GameState):
     def __init__(self, context, models, camera_reader, selected_difficulty_level=1):
         super().__init__()
+        self.score_tracker = Text(text=f'0', position=(-0.8, 0.5), scale=1.5)
+        self.score_tracker.text = 'Score: 0'
         self.models = models
         self.camera_reader = camera_reader
         self.run = False
@@ -67,6 +69,7 @@ class RunningState(GameState):
 
     def on_exit(self):
         super().on_exit()
+        destroy(self.score_tracker)
         for obstacle in self.active_obstacles:
             obstacle.delete()
             destroy(obstacle)

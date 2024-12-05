@@ -43,7 +43,7 @@ class GameManager:
         elif state == "main_menu":
             self._state = MainMenu(self)
         elif state == "change_settings":
-            self._state = SettingsMenu(self, self.camera_reader)
+            self._state = SettingsMenu(self)
         elif state == "level_select":
             self._state = LevelSelect(self)
 
