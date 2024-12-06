@@ -32,7 +32,7 @@ class LevelSelect(GameState):
         self.menu = DropdownMenu(
             text="Choose level",
             buttons=[DropdownMenuButton(f"Level {i}", on_click=Func(self.pass_level, i)) for i in
-                     range(1, 4)],
+                     range(1, len(self.context.possible_levels) + 1)],
             position=(-4, 0.25),
             scale=(8, 0.8),
             parent=menu,
@@ -49,6 +49,8 @@ class LevelSelect(GameState):
         )
 
     def pass_level(self, level_number):
+        if not isinstance(level_number, int):
+            raise TypeError('Level number must be an integer')
         logger.info(f'Level {level_number} selected')
         temp_text = Text(
             text="Selected level " + str(level_number),
