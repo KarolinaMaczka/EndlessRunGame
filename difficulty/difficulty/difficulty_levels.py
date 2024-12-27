@@ -9,184 +9,6 @@ from difficulty.maps.impl.map5 import FifthObstacleMap
 from difficulty.maps.impl.map6 import SixthObstacleMap
 from difficulty.maps.impl.map7 import SeventhObstacleMap
 
-
-class Difficulty1(Difficulty):
-    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS,
-                 **kwargs):
-        super().__init__(first_obstacle, last_obstacle_z, **kwargs)
-        self.maps = [
-            FirstObstacleMap(lane_change_const=0.2, small_obstacle_const=0.2, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_COLORFULL),
-            FirstObstacleMap(lane_change_const=0.1, small_obstacle_const=0.3, gate_generation_const=0.3,
-                             color_theme=ColorTheme.COLOR_THEME_BASIC),
-            SecondObstacleMap(lane_change_const=0.2, small_obstacle_const=0.3, gate_generation_const=0.1,
-                              color_theme=ColorTheme.COLOR_THEME_COLORFULL),
-            SecondObstacleMap(lane_change_const=0.2, small_obstacle_const=0.3, gate_generation_const=0.1),
-            ThirdObstacleMap(lane_change_const=0.2, small_obstacle_const=0.4, gate_generation_const=0.3)
-        ]
-
-
-class Difficulty2(Difficulty):
-    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS,
-                 **kwargs):
-        super().__init__(first_obstacle, last_obstacle_z, **kwargs)
-        self.maps = [
-            FirstObstacleMap(lane_change_const=0.4, small_obstacle_const=0.5, gate_generation_const=0.2),
-            FirstObstacleMap(lane_change_const=0.4, small_obstacle_const=0.5, gate_generation_const=0.2,
-                             color_theme=ColorTheme.COLOR_THEME_BASIC),
-            SecondObstacleMap(lane_change_const=0.4, small_obstacle_const=0.4, gate_generation_const=0.2),
-            ThirdObstacleMap(lane_change_const=0.5, small_obstacle_const=0.7, gate_generation_const=0.1),
-            FourthObstacleMap(lane_change_const=0.4, small_obstacle_const=0.5, gate_generation_const=0.2),
-            FifthObstacleMap(small_obstacle_const=0.5, gate_generation_const=0.1),
-            SixthObstacleMap(small_obstacle_const=0.5, gate_generation_const=0.2)
-        ]
-
-
-class Difficulty3(Difficulty):
-    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS,
-                 **kwargs):
-        super().__init__(first_obstacle, last_obstacle_z, **kwargs)
-        self.maps = [
-            FirstObstacleMap(lane_change_const=0.6, small_obstacle_const=0.7, gate_generation_const=0.1,
-                             color_theme=ColorTheme.COLOR_THEME_BASIC),
-            FirstObstacleMap(lane_change_const=0.6, small_obstacle_const=0.7, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_COLORFULL),
-            SecondObstacleMap(lane_change_const=0.6, small_obstacle_const=0.7, gate_generation_const=0.1,
-                              color_theme=ColorTheme.COLOR_THEME_BASIC),
-            SecondObstacleMap(lane_change_const=0.6, small_obstacle_const=0.7, gate_generation_const=0.1,
-                              color_theme=ColorTheme.COLOR_THEME_BASIC),
-            ThirdObstacleMap(lane_change_const=0.6, small_obstacle_const=0.7, gate_generation_const=0.1,
-                             color_theme=ColorTheme.COLOR_THEME_BASIC),
-            FourthObstacleMap(lane_change_const=0.6, small_obstacle_const=0.7, gate_generation_const=0.1,
-                              color_theme=ColorTheme.COLOR_THEME_BASIC),
-            FifthObstacleMap(small_obstacle_const=0.7, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_COLORFULL, lane_change_const=0.6),
-        ]
-
-
-class Difficulty4(Difficulty):
-    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS,
-                 **kwargs):
-        super().__init__(first_obstacle, last_obstacle_z, **kwargs)
-        self.maps = [
-            FirstObstacleMap(lane_change_const=0.6, small_obstacle_const=0.7, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_BASIC),
-            FirstObstacleMap(lane_change_const=0.6, small_obstacle_const=0.7, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_GREEN),
-            SecondObstacleMap(lane_change_const=0.6, small_obstacle_const=0.7, gate_generation_const=0.1,
-                              color_theme=ColorTheme.COLOR_THEME_DARK),
-            SecondObstacleMap(lane_change_const=0.6, small_obstacle_const=0.7, gate_generation_const=0.05,
-                              color_theme=ColorTheme.COLOR_THEME_BASIC),
-            ThirdObstacleMap(lane_change_const=0.6, small_obstacle_const=0.7, gate_generation_const=0.1,
-                             color_theme=ColorTheme.COLOR_THEME_DARK),
-            FourthObstacleMap(lane_change_const=0.6, small_obstacle_const=0.7, gate_generation_const=0.1,
-                              color_theme=ColorTheme.COLOR_THEME_BASIC),
-            FifthObstacleMap(small_obstacle_const=0.7, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_GREEN, lane_change_const=0.6),
-            SixthObstacleMap(small_obstacle_const=0.5, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_DARK)
-        ]
-
-
-class Difficulty5(Difficulty):
-    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS,
-                 **kwargs):
-        super().__init__(first_obstacle, last_obstacle_z, **kwargs)
-        self.maps = [
-            FirstObstacleMap(lane_change_const=0.7, small_obstacle_const=0.7, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_DARK),
-            FirstObstacleMap(lane_change_const=0.7, small_obstacle_const=0.7, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_GREEN),
-            SecondObstacleMap(lane_change_const=0.7, small_obstacle_const=0.7, gate_generation_const=0.1,
-                              color_theme=ColorTheme.COLOR_THEME_DARK),
-            SecondObstacleMap(lane_change_const=0.7, small_obstacle_const=0.7, gate_generation_const=0.05,
-                              color_theme=ColorTheme.COLOR_THEME_GREEN),
-            ThirdObstacleMap(lane_change_const=0.7, small_obstacle_const=0.7, gate_generation_const=0.1,
-                             color_theme=ColorTheme.COLOR_THEME_DARK, change_obstacle_type_cons=0.7),
-            FourthObstacleMap(lane_change_const=0.7, small_obstacle_const=0.7, gate_generation_const=0.1,
-                              color_theme=ColorTheme.COLOR_THEME_GREEN, change_obstacle_type_cons=0.7),
-            FifthObstacleMap(small_obstacle_const=0.7, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_GREEN, lane_change_const=0.7),
-            SixthObstacleMap(small_obstacle_const=0.6, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_DARK)
-
-        ]
-
-
-class Difficulty6(Difficulty):
-    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS,
-                 **kwargs):
-        super().__init__(first_obstacle, last_obstacle_z, **kwargs)
-        self.maps = [
-            FirstObstacleMap(lane_change_const=0.7, small_obstacle_const=0.7, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_DARK),
-            FirstObstacleMap(lane_change_const=0.7, small_obstacle_const=0.7, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_GREEN),
-            SecondObstacleMap(lane_change_const=0.7, small_obstacle_const=0.7, gate_generation_const=0.1,
-                              color_theme=ColorTheme.COLOR_THEME_DARK),
-            SecondObstacleMap(lane_change_const=0.7, small_obstacle_const=0.7, gate_generation_const=0.05,
-                              color_theme=ColorTheme.COLOR_THEME_GREEN),
-            ThirdObstacleMap(lane_change_const=0.7, small_obstacle_const=0.7, gate_generation_const=0.1,
-                             color_theme=ColorTheme.COLOR_THEME_DARK, change_obstacle_type_cons=0.7),
-            FourthObstacleMap(lane_change_const=0.7, small_obstacle_const=0.7, gate_generation_const=0.1,
-                              color_theme=ColorTheme.COLOR_THEME_GREEN, change_obstacle_type_cons=0.7),
-        ]
-
-
-class Difficulty7(Difficulty):
-    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS,
-                 **kwargs):
-        super().__init__(first_obstacle, last_obstacle_z, **kwargs)
-        self.maps = [
-            FirstObstacleMap(lane_change_const=0.7, small_obstacle_const=0.8, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_DARK),
-            FirstObstacleMap(lane_change_const=0.7, small_obstacle_const=0.8, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_GREEN),
-            SecondObstacleMap(lane_change_const=0.7, small_obstacle_const=0.8, gate_generation_const=0.1,
-                              color_theme=ColorTheme.COLOR_THEME_DARK),
-            ThirdObstacleMap(lane_change_const=0.7, small_obstacle_const=0.8, gate_generation_const=0.1,
-                             color_theme=ColorTheme.COLOR_THEME_DARK, change_obstacle_type_cons=1),
-            FourthObstacleMap(lane_change_const=0.7, small_obstacle_const=0.8, gate_generation_const=0.1,
-                              color_theme=ColorTheme.COLOR_THEME_GREEN, change_obstacle_type_cons=1),
-            FifthObstacleMap(small_obstacle_const=0.8, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_GREEN, lane_change_const=0.7)
-        ]
-
-
-class Difficulty8(Difficulty):
-    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS,
-                 **kwargs):
-        super().__init__(first_obstacle, last_obstacle_z, **kwargs)
-        self.maps = [FifthObstacleMap(small_obstacle_const=1, gate_generation_const=0.1,
-                                      color_theme=ColorTheme.COLOR_THEME_GREEN, lane_change_const=0.9),
-                     SixthObstacleMap(small_obstacle_const=1, gate_generation_const=0.1,
-                                      color_theme=ColorTheme.COLOR_THEME_DARK)]
-
-
-class Difficulty9(Difficulty):
-    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS,
-                 **kwargs):
-        super().__init__(first_obstacle, last_obstacle_z, **kwargs)
-        self.maps = [
-            FirstObstacleMap(lane_change_const=0.9, small_obstacle_const=0.8, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_DARK),
-            FirstObstacleMap(lane_change_const=0.9, small_obstacle_const=0.9, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_GREEN),
-            ThirdObstacleMap(lane_change_const=0.9, small_obstacle_const=0.9, gate_generation_const=0.1, color_theme=ColorTheme.COLOR_THEME_DARK, change_obstacle_type_cons=1),
-            FourthObstacleMap(lane_change_const=0.9, small_obstacle_const=0.9, gate_generation_const=0.1,color_theme=ColorTheme.COLOR_THEME_GREEN, change_obstacle_type_cons=1),
-            FifthObstacleMap(small_obstacle_const=0.9, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_GREEN, lane_change_const=0.9)
-        ]
-
-
-class Difficulty10(Difficulty):
-    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS,
-                 **kwargs):
-        super().__init__(first_obstacle, last_obstacle_z, **kwargs)
-        self.maps = [FifthObstacleMap(small_obstacle_const=1, gate_generation_const=0.02, color_theme=ColorTheme.COLOR_THEME_GREEN, lane_change_const=0.9),
-            SixthObstacleMap(small_obstacle_const=1, gate_generation_const=0.02, color_theme=ColorTheme.COLOR_THEME_DARK)
-        ]
-
 class DifficultyTest1(Difficulty):
     def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, **kwargs):
         super().__init__(first_obstacle, last_obstacle_z, **kwargs)
@@ -237,10 +59,73 @@ class DifficultyTest3(Difficulty):
                                obstacle_generation_distance=300)
         ]
 
-class DifficultyTestOneMap(Difficulty):
+
+# Stworzyć poziomy wg schematu: łatwy_ukryty(-2), łatwy_ukryty(-1), łatwy, łatwo-średni(1), łatwo-średni(2), średni, średnio-trudny(1), średnio-trudny(2), trudny, trudny_ukryty(+1), trudny_ukryty(+2)
+
+class DifficultyEasyHiddenMinus2(Difficulty):
     def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, **kwargs):
         super().__init__(first_obstacle, last_obstacle_z, **kwargs)
         self.maps = [
-            SixthObstacleMap(lane_change_const=0.5, small_obstacle_const=0.75, gate_generation_const=0.05,
-                             color_theme=ColorTheme.COLOR_THEME_COLORFULL, obstacle_generation_distance=150),
+            FirstObstacleMap(lane_change_const=0.3, small_obstacle_const=0.3, gate_generation_const=0.05, obstacle_generation_distance=250, color_theme=ColorTheme.COLOR_THEME_COLORFULL),
+        ]
+
+class DifficultyEasyHiddenMinus1(Difficulty):
+    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, **kwargs):
+        super().__init__(first_obstacle, last_obstacle_z, **kwargs)
+        self.maps = [
+            SecondObstacleMap(lane_change_const=0.3, small_obstacle_const=0.3, gate_generation_const=0.1, obstacle_generation_distance=250, color_theme=ColorTheme.COLOR_THEME_COLORFULL),
+        ]
+
+class DifficultyEasy(Difficulty):
+    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, **kwargs):
+        self.maps = [
+            ThirdObstacleMap(lane_change_const=0.3, small_obstacle_const=0.3, gate_generation_const=0.1, obstacle_generation_distance=250),
+        ]
+
+class DifficultyEasyMedium1(Difficulty):
+    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, **kwargs):
+        self.maps = [
+            FourthObstacleMap(lane_change_const=0.3, small_obstacle_const=0.3, gate_generation_const=0.2, obstacle_generation_distance=250),
+        ]
+
+class DifficultyEasyMedium2(Difficulty):
+    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, **kwargs):
+        self.maps = [
+            FifthObstacleMap(small_obstacle_const=0.6, gate_generation_const=0.1, lane_change_const=0.3, obstacle_generation_distance=250),
+        ]
+
+class DifficultyMedium(Difficulty):
+    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, **kwargs):
+        self.maps = [
+            SixthObstacleMap(small_obstacle_const=0.5, gate_generation_const=0.2, lane_change_const=0.3, obstacle_generation_distance=250),
+        ]
+
+class DifficultyMediumHard1(Difficulty):
+    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, **kwargs):
+        self.maps = [
+            SeventhObstacleMap(small_obstacle_const=0.5, gate_generation_const=0.1, lane_change_const=0.3, obstacle_generation_distance=250),
+        ]
+
+class DifficultyMediumHard2(Difficulty):
+    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, **kwargs):
+        self.maps = [
+            FirstObstacleMap(lane_change_const=0.3, small_obstacle_const=0.3, gate_generation_const=0.05, obstacle_generation_distance=250, color_theme=ColorTheme.COLOR_THEME_COLORFULL),
+        ]
+
+class DifficultyHard(Difficulty):
+    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, **kwargs):
+        self.maps = [
+            SecondObstacleMap(lane_change_const=0.3, small_obstacle_const=0.3, gate_generation_const=0.1, obstacle_generation_distance=250, color_theme=ColorTheme.COLOR_THEME_COLORFULL),
+        ]
+
+class DifficultyHardHiddenPlus1(Difficulty):
+    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, **kwargs):
+        self.maps = [
+            ThirdObstacleMap(lane_change_const=0.3, small_obstacle_const=0.3, gate_generation_const=0.1, obstacle_generation_distance=250),
+        ]
+
+class DifficultyHardHiddenPlus2(Difficulty):
+    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, **kwargs):
+        self.maps = [
+            FourthObstacleMap(lane_change_const=0.3, small_obstacle_const=0.3, gate_generation_const=0.2, obstacle_generation_distance=250),
         ]
