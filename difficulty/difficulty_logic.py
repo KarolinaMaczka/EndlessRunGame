@@ -26,9 +26,9 @@ class DifficultyLogic:
         # logger.info('Updating difficulty based on emotions')
         # while True:
         if not emotion_queue.empty():
-            emotions = emotion_queue.get()
+            emotions = emotion_queue.get() # emotions = (('happy', 0.9), ('neutral', 0.1))
             # for emotion in emotions:
-            self.emotions_count[emotions[0]] += 1
+            self.emotions_count[emotions[0][0]] += 1
             emotions_and_position = (*emotions, player_z)
             self.data_manager.add_emotion(emotions_and_position)
 
