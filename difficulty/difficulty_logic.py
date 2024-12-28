@@ -19,7 +19,7 @@ class DifficultyLogic:
             self.emotion_distribution_1 = self.emotion_distribution[self.emotion_distribution['player_satisfaction_combined'] == 1].set_index('first_emotion')['percentage'].to_dict()
             self.emotion_distribution_3 = self.emotion_distribution[self.emotion_distribution['player_satisfaction_combined'] == 3].set_index('first_emotion')['percentage'].to_dict()
             self.emotion_distribution_5 = self.emotion_distribution[self.emotion_distribution['player_satisfaction_combined'] == 5].set_index('first_emotion')['percentage'].to_dict()
-        self.emotions_count = dict.fromkeys(['happy', 'neutral', 'sad', 'angry', 'fear'], 0)
+        self.emotions_count = dict.fromkeys(['happy', 'neutral', 'sad', 'angry', 'fear','surprise', 'disgust'], 0)
         self.emotions_count_percentage = dict()
         
     def update(self, player_z: float, emotion_queue: Queue):

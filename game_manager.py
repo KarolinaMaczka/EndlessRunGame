@@ -20,7 +20,7 @@ class GameManager:
                  camera_reader: CameraReader, models):
         self.player = player
         self.camera = camera
-        self.possible_levels = [1, 2, 3]
+        self.possible_levels = [3,6,9]
         self.selected_level = 1
         self.models = models
 

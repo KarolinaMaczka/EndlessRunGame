@@ -103,6 +103,8 @@ class RunningState(GameState):
                 if held_keys[str(i)]:
                     # self.set_difficulty(max(1, min(10, i+1)))
                     self.difficulty_logic.difficulty_value = max(1, min(10, i))
+                if held_keys['-']:
+                    self.difficulty_logic.difficulty_value = 11
         if held_keys['space'] and not self.context.player.is_jumping:
             self.context.player.set_jump()
             # self.context.data_manager.save_pressed_key(('space', self.player_z.value))

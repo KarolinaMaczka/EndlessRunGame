@@ -32,7 +32,7 @@ class LevelSelect(GameState):
         self.menu = DropdownMenu(
             text="Choose level",
             buttons=[DropdownMenuButton(f"Level {i}", on_click=Func(self.pass_level, i)) for i in
-                     range(1, len(self.context.possible_levels) + 1)],
+                     self.context.possible_levels],
             position=(-4, 0.25),
             scale=(8, 0.8),
             parent=menu,

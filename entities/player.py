@@ -71,6 +71,8 @@ class Player(Entity):
     def fall_down(self):
         gravity = self.gravity
         if self.is_crouching:
+            if self.velocity_y > 0:
+                self.velocity_y = 0
             gravity *= 5
 
         self.velocity_y += gravity * time.dt
