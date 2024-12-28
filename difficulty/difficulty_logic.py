@@ -10,10 +10,10 @@ logger = get_game_logger()
 
 
 class DifficultyLogic:
-    def __init__(self, data_manager: DataManager, difficulty_value):
+    def __init__(self, data_manager: DataManager, context):
         self.counter = 0
         self.data_manager = data_manager
-        self.difficulty_value = difficulty_value
+        self.context = context
         if os.path.exists('difficulty\\first_emotion_percentage-satisfaction.csv'):
             self.emotion_distribution:pd.DataFrame = pd.read_csv('difficulty\\first_emotion_percentage-satisfaction.csv')
             self.emotion_distribution_1 = self.emotion_distribution[self.emotion_distribution['player_satisfaction_combined'] == 1].set_index('first_emotion')['percentage'].to_dict()
@@ -34,31 +34,26 @@ class DifficultyLogic:
 
             self.counter += 1
             if self.counter == 10:
-                self.update_difficulty()
+                self.update_difficulty(emotions)
                 self.counter = 0
         # time.sleep(0.1)
 
-    def update_difficulty(self):
+    def update_difficulty(self, emotions):
         pass
         # Create distribution of emotions
         self.emotions_count_percentage = {k: v / sum(self.emotions_count.values()) for k, v in self.emotions_count.items()}
         logger.info(f'Emotions count: {self.emotions_count}')
         logger.info(f'Emotions count percentage: {self.emotions_count_percentage}')
 
-        # TODO - uncomment this code for changing difficulty based on emotions
-        # dominant_emotion = emotions[0]
-        # second_dominant_emotion = emotions[1]
-        # logger.info(f'Logic change: Dominant emotion: {dominant_emotion}, second dominant emotion: {second_dominant_emotion}')
-        # if dominant_emotion == 'happy':
-        #     self.difficulty_value = 1
-        #     logger.info('Difficulty set to 1 - difficulty logic')
-        # elif dominant_emotion == 'neutral' or dominant_emotion == 'sad':
-        #     if random() < 0.5:
-        #         self.difficulty_value = 5
-        #         logger.info('Difficulty set to 2 - difficulty logic')
-        #     else:  
-        #         self.difficulty_value = 9
-        #         logger.info('Difficulty set to 9 - difficulty logic')
-        # elif dominant_emotion == 'angry':
-        #     self.difficulty_value = 10
-        #     logger.info('Difficulty set to 10 - difficulty logic')
+        # TODO - change exact logic
+        dominant_emotion = emotions[0]
+        second_dominant_emotion = emotions[1]
+        logger.info(f'Logic change: Dominant emotion: {dominant_emotion}, second dominant emotion: {second_dominant_emotion}')
+        if str(dominant_emotion[0]) == 'happy' or str(second_dominant_emotion[0]) == 'happy':
+            print(f'higher level {dominant_emotion}, {second_dominant_emotion}')
+            self.context.change_difficulty(1)
+        elif str(dominant_emotion[0]) == 'neutral':
+            print(f'skip changing levels')
+        elif str(dominant_emotion[0]) == 'sad':
+            print(f'lower level {dominant_emotion}, {second_dominant_emotion}')
+            self.context.change_difficulty(-1)

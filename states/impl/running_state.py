@@ -57,7 +57,7 @@ class RunningState(GameState):
         ], max_size_per_type=1, models=self.models)
         self.difficulty_manager = DifficultyManager()
         self.difficulty_level_new = selected_difficulty_level
-        self.difficulty_logic = DifficultyLogic(self.context.data_manager, self.difficulty_level_new)
+        self.difficulty_logic = DifficultyLogic(self.context.data_manager, self)
         self.create_paused_panel()
         self.context.data_manager.save_difficulty(self.difficulty_level_new)
         self.context.data_manager.add_playing_time(time.time())
@@ -115,8 +115,6 @@ class RunningState(GameState):
     def update(self):
         if not self.run:
             return
-        if self.obstacle_generator.difficulty_level.value != self.difficulty_logic.difficulty_value:
-            self.set_difficulty(self.difficulty_logic.difficulty_value)
         self.context.player.run()
         self.handle_input()
         self.context.physics_engine.apply_gravity(self.active_obstacles)
@@ -148,6 +146,11 @@ class RunningState(GameState):
         self.obstacle_generator.difficulty_level.value = level
         self.difficulty_manager.set_player_settings(level, self.context.player)
         self.context.data_manager.save_difficulty(level)
+
+    def change_difficulty(self, change):
+        level = self.obstacle_generator.difficulty_level.value
+        level = max(1, min(level + change, 11))
+        self.set_difficulty(level)
 
     def __toggle_paused(self):
         if not application.paused:
