@@ -8,6 +8,14 @@ from difficulty.maps.impl.map4 import FourthObstacleMap
 from difficulty.maps.impl.map5 import FifthObstacleMap
 from difficulty.maps.impl.map6 import SixthObstacleMap
 from difficulty.maps.impl.map7 import SeventhObstacleMap
+from entities.obstacles.impl.board_obstacle import ObstacleBoard
+from entities.obstacles.impl.cube_obstacle import ObstacleCube
+from entities.obstacles.impl.fence_obstacle import ObstacleFence
+from entities.obstacles.impl.horizontal_pole_obstacle import ObstaclePoleGate
+from entities.obstacles.impl.long_cube import ObstacleLongCube
+from entities.obstacles.impl.train_obstacle import ObstacleTrain
+from entities.obstacles.obstacle_metadata_factory import ObstacleMetadataFactory
+
 
 class DifficultyTest1(Difficulty):
     def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, **kwargs):
@@ -67,7 +75,7 @@ class DifficultyEasyHiddenMinus2(Difficulty):
         super().__init__(first_obstacle, last_obstacle_z, **kwargs)
         self.maps = [
             FirstObstacleMap(lane_change_const=0.3, small_obstacle_const=0.3, gate_generation_const=0.05, obstacle_generation_distance=250, color_theme=ColorTheme.COLOR_THEME_COLORFULL),
-            
+
         ]
 
 class DifficultyEasyHiddenMinus1(Difficulty):
@@ -136,6 +144,40 @@ class DifficultyHardHiddenPlus1(Difficulty):
 class DifficultyHardHiddenPlus2(Difficulty):
     def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, **kwargs):
         super().__init__(first_obstacle, last_obstacle_z, **kwargs)
+        big_obstacles = ObstacleMetadataFactory([
+            {"obstacle": ObstacleLongCube, 'difficulty': 1, 'probability': 0.2, "has_ladder": 0.1},
+            {"obstacle": ObstacleTrain, 'difficulty': 1, 'probability': 0.8}],
+            4)
+        small_obstacles = ObstacleMetadataFactory([
+            {"obstacle": ObstacleFence, 'difficulty': 1, 'probability': 0.4},
+            {"obstacle": ObstacleBoard, 'difficulty': 1, 'probability': 0.2},
+            {"obstacle": ObstacleCube, 'difficulty': 1, 'probability': 0.3},
+            {"obstacle": ObstaclePoleGate, 'difficulty': 1, 'probability': 0.1}],
+            4)
+        small_obstacles_difficult = ObstacleMetadataFactory([
+            {"obstacle": ObstacleFence, 'difficulty': 1, 'probability': 0.4},
+            {"obstacle": ObstacleBoard, 'difficulty': 1, 'probability': 0.5},
+            {"obstacle": ObstacleCube, 'difficulty': 1, 'probability': 0.05},
+            {"obstacle": ObstaclePoleGate, 'difficulty': 1, 'probability': 0.05}],
+            4)
+
+        map7 = SeventhObstacleMap(lane_change_const=0.75, small_obstacle_const=1, gate_generation_const=0.05,
+                                  obstacle_generation_distance=400, color_theme=ColorTheme.COLOR_THEME_DARK)
+        map7.set_big_obstacles(big_obstacles)
+        map7.set_small_obstacles(small_obstacles)
+
+        map1 = FirstObstacleMap(lane_change_const=0.75, small_obstacle_const=1, gate_generation_const=0.05,
+                                obstacle_generation_distance=400, color_theme=ColorTheme.COLOR_THEME_GREEN)
+        map1.set_big_obstacles(big_obstacles)
+        map1.set_small_obstacles(small_obstacles)
+
+        map6 = SixthObstacleMap(lane_change_const=1, small_obstacle_const=1, gate_generation_const=0,
+                                obstacle_generation_distance=300, color_theme=ColorTheme.COLOR_THEME_GREEN)
+        map6.set_big_obstacles(big_obstacles)
+        map6.set_small_obstacles(small_obstacles_difficult)
+
         self.maps = [
-            FourthObstacleMap(lane_change_const=0.3, small_obstacle_const=0.3, gate_generation_const=0.2, obstacle_generation_distance=250),
+            map1,
+            map6,
+            map7
         ]
