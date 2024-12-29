@@ -3,7 +3,7 @@ from enum import Enum
 from ursina import color
 
 INITIAL_FIRST_OBSTACLE_Z_POS = 500
-INITIAL_LAST_OBSTACLE_Z_POS = 2500
+INITIAL_LAST_OBSTACLE_Z_POS = 3500
 
 # BOUNCE_DIST = 2  # Distance difference after collision
 # SLIGHT_BOUNCE_DIST = 3  # Small distance difference after slight collision

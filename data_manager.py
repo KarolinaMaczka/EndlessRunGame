@@ -19,6 +19,8 @@ load_dotenv()
 class DataManager:
     def __init__(self):
 
+        self.player_boredom = -1
+        self.player_challenge = -1
         self.obstacle_data = []
         self.hit_obstacles = []
         self.player_satisfaction = -1
@@ -43,6 +45,8 @@ class DataManager:
             'playing_time': self.playing_time,
             'difficulties': list(self.difficulties),
             'keys_pressed': list(self.keys_pressed),
+            'boredom': self.player_boredom,
+            'challenge': self.player_challenge
         }
 
         if self.send_data_enabled:
@@ -67,6 +71,8 @@ class DataManager:
         self.playing_time = 0
         self.difficulties[:] = []
         self.keys_pressed[:] = []
+        self.player_boredom = -1
+        self.player_challenge = -1
 
     def add_collision(self, side: CollisionSide, collision_type: CollisionType, obstacle: Obstacle, player: Player):
         self.hit_obstacles.append(
@@ -89,6 +95,12 @@ class DataManager:
 
     def add_player_satisfaction(self, satisfaction):
         self.player_satisfaction = satisfaction
+
+    def add_player_boredom(self, boredom):
+        self.player_boredom = boredom
+
+    def add_player_challenge(self, challenge):
+        self.player_challenge = challenge
 
     def add_playing_time(self, time):
         if self.playing_time:

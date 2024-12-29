@@ -60,6 +60,18 @@ class ObstacleMap(ABC):
 
     def __post_init__(self):
         self._create_factories()
+        self.apply_color_palette()
+
+    def set_big_obstacles(self, obstacles) -> None:
+        self._big_obstacles = obstacles
+        self._big_obstacles.apply_color_palette(self.color_theme.value)
+
+    def set_small_obstacles(self, obstacles) -> None:
+        self._small_obstacles = obstacles
+        print(self.color_theme.value)
+        self._small_obstacles.apply_color_palette(self.color_theme.value)
+
+    def apply_color_palette(self):
         for factory in self._factories:
             factory.apply_color_palette(self.color_theme.value)
 

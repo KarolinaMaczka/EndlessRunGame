@@ -36,7 +36,7 @@ class DifficultyManager:
                 "bouncing_dist": 4},
             10: {"speed": 375, "jump_height": 0.6, "gravity": -1.5, "velocity_x": 30, "prev_speed": 375,
                  "bouncing_dist": 5},
-            11: {"speed": 400, "jump_height": 0.6, "gravity": -1.5, "velocity_x": 30, "prev_speed": 400,
+            11: {"speed": 400, "jump_height": 0.65, "gravity": -1.5, "velocity_x": 30, "prev_speed": 400,
                     "bouncing_dist": 5},
         }
 
