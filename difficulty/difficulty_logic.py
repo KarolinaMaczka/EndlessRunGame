@@ -49,17 +49,17 @@ class DifficultyLogic:
         logger.info(f'Emotions count percentage: {self.emotions_count_percentage}')
 
         # TODO - change exact logic
-        dominant_emotion = emotions[0]
-        second_dominant_emotion = emotions[1]
-        logger.info(f'Logic change: Dominant emotion: {dominant_emotion}, second dominant emotion: {second_dominant_emotion}')
-        if str(dominant_emotion[0]) == 'happy' or str(second_dominant_emotion[0]) == 'happy':
-            print(f'higher level {dominant_emotion}, {second_dominant_emotion}')
-            self.context.change_difficulty(1)
-        elif str(dominant_emotion[0]) == 'neutral':
-            print(f'skip changing levels')
-        elif str(dominant_emotion[0]) == 'sad':
-            print(f'lower level {dominant_emotion}, {second_dominant_emotion}')
-            self.context.change_difficulty(-1)
+        # dominant_emotion = emotions[0]
+        # second_dominant_emotion = emotions[1]
+        # logger.info(f'Logic change: Dominant emotion: {dominant_emotion}, second dominant emotion: {second_dominant_emotion}')
+        # if str(dominant_emotion[0]) == 'happy' or str(second_dominant_emotion[0]) == 'happy':
+        #     print(f'higher level {dominant_emotion}, {second_dominant_emotion}')
+        #     self.context.change_difficulty(1)
+        # elif str(dominant_emotion[0]) == 'neutral':
+        #     print(f'skip changing levels')
+        # elif str(dominant_emotion[0]) == 'sad':
+        #     print(f'lower level {dominant_emotion}, {second_dominant_emotion}')
+        #     self.context.change_difficulty(-1)
 
     def level_up_difficulty(self):
         final_difficulty = self.difficulty_value + 1

@@ -78,9 +78,9 @@ class ObstacleMap(ABC):
     def _create_factories(self):
         self._factories = [self._gates, self._signs, self._big_obstacles, self._small_obstacles]
 
-    def _create_trains(self, start_x: int, z_position: float, train_probability=1):
+    def _create_trains(self, start_x: int, z_position: float):
         for lane in range(start_x, LANE_COUNT, 2):
-            if random.random() < train_probability:
+            if random.random() < self.big_obstacle_const:
                 self.obstacles.append(self._big_obstacles.create_obstacle(z_position, lane))
 
     def _create_signs(self, z_position: float):

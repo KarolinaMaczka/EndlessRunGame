@@ -31,7 +31,7 @@ class FirstObstacleMap(ObstacleMap):
             if random.random() < self.gate_generation_const:
                 last_obstacle_z = self._generate_gate(last_obstacle_z)
             else:
-                self._create_trains(start_x, last_obstacle_z, self.big_obstacle_const)
+                self._create_trains(start_x, last_obstacle_z)
                 self._create_small_obstacles(int(not start_x), last_obstacle_z, self.small_obstacle_const)
             last_obstacle_z += self.obstacle_generation_distance
         last_obstacle_z = self._adjust_last_position(last_obstacle_z)
