@@ -16,11 +16,11 @@ class DifficultyManager:
         # }
         
         self.player_settings = {
-            1: {"speed": 195, "jump_height": 0.6, "gravity": -1.5, "velocity_x": 30, "prev_speed": 195,
+            1: {"speed": 195, "jump_height": 0.65, "gravity": -1.5, "velocity_x": 30, "prev_speed": 195,
                 "bouncing_dist": 2},
-            2: {"speed": 210, "jump_height": 0.6, "gravity": -1.5, "velocity_x": 30, "prev_speed": 210,
+            2: {"speed": 210, "jump_height": 0.65, "gravity": -1.5, "velocity_x": 30, "prev_speed": 210,
                 "bouncing_dist": 3},
-            3: {"speed": 225, "jump_height": 0.6, "gravity": -1.5, "velocity_x": 30, "prev_speed": 225,
+            3: {"speed": 225, "jump_height": 0.65, "gravity": -1.5, "velocity_x": 30, "prev_speed": 225,
                 "bouncing_dist": 4},
             4: {"speed": 240, "jump_height": 0.6, "gravity": -1.5, "velocity_x": 30, "prev_speed": 240,
                 "bouncing_dist": 3},
@@ -41,8 +41,8 @@ class DifficultyManager:
         }
 
         self.difficulties = {
-            1: dl.DifficultyEasyHiddenMinus1(),
-            2: dl.DifficultyEasyHiddenMinus2(),
+            1: dl.DifficultyEasyHiddenMinus2(),
+            2: dl.DifficultyEasyHiddenMinus1(),
             3: dl.DifficultyEasy(),
             4: dl.DifficultyEasyMedium1(),
             5: dl.DifficultyEasyMedium2(),

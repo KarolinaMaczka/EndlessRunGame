@@ -22,7 +22,7 @@ from entities.obstacles.obstacle_metadata_factory import ObstacleMetadataFactory
 @dataclass
 class ObstacleMap(ABC):
     _big_obstacles: ObstacleMetadataFactory = field(default_factory=lambda: ObstacleMetadataFactory([
-        {"obstacle": ObstacleLongCube, 'difficulty': 1, 'probability': 0.5, "has_ladder": 0.7},
+        {"obstacle": ObstacleLongCube, 'difficulty': 1, 'probability': 0.5, "has_ladder": 0.5},
         {"obstacle": ObstacleTrain, 'difficulty': 1, 'probability': 0.5}],
         4))
 
@@ -45,9 +45,11 @@ class ObstacleMap(ABC):
     obstacles: List = field(default_factory=list)
     lane_change_const: float = 0.2
     small_obstacle_const: float = 0.7
+    big_obstacle_const: float = 1.0
     gate_generation_const: float = 0.3
     obstacle_generation_distance: int = 200
     color_theme: ColorTheme = field(default_factory=lambda: ColorTheme.COLOR_THEME_BASIC)
+    
 
     def get_metadata(self, first_obstacle, last_obstacle_z):
         return MapMetadata(self, first_obstacle, last_obstacle_z)
@@ -64,9 +66,10 @@ class ObstacleMap(ABC):
     def _create_factories(self):
         self._factories = [self._gates, self._signs, self._big_obstacles, self._small_obstacles]
 
-    def _create_trains(self, start_x: int, z_position: float):
+    def _create_trains(self, start_x: int, z_position: float, train_probability=1):
         for lane in range(start_x, LANE_COUNT, 2):
-            self.obstacles.append(self._big_obstacles.create_obstacle(z_position, lane))
+            if random.random() < train_probability:
+                self.obstacles.append(self._big_obstacles.create_obstacle(z_position, lane))
 
     def _create_signs(self, z_position: float):
         self.obstacles.append(self._signs.create_obstacle(z_position, random.randint(0, LANE_COUNT)))
@@ -97,3 +100,4 @@ class MapMetadata:
         self.first_obstacle = first_obstacle
         self.last_obstacle = last_obstacle_z
         self.obstacle_generation_distance = mapp.obstacle_generation_distance
+

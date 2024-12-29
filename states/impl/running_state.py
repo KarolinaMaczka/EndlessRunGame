@@ -8,6 +8,7 @@ from difficulty.difficulty.difficulty_levels import DifficultyTest1
 from difficulty.difficulty_manager import DifficultyManager
 from difficulty.difficulty_logic import DifficultyLogic
 
+from difficulty.maps.map import MapMetadata
 from entities.obstacles.obstacle_pool import ObstaclePool
 from scenery import Scenery
 from states.process_managers.impl.obstacle_process_manager import ObstacleProcesManager
@@ -30,10 +31,12 @@ logger = get_game_logger()
 
 
 class RunningState(GameState):
-    def __init__(self, context, models, camera_reader, selected_difficulty_level=1):
+    def __init__(self, context, models, camera_reader, selected_difficulty_level=3):
         super().__init__()
         self.score_tracker = Text(text=f'0', position=(-0.8, 0.5), scale=1.5)
         self.score_tracker.text = 'Score: 0'
+        self.map_tracker = Text(text=f'0', position=(-0.8, 0.45), scale=1.5)
+        self.map_tracker.text = 'Map:'
         self.models = models
         self.camera_reader = camera_reader
         self.run = False
@@ -70,6 +73,7 @@ class RunningState(GameState):
     def on_exit(self):
         super().on_exit()
         destroy(self.score_tracker)
+        destroy(self.map_tracker)
         for obstacle in self.active_obstacles:
             obstacle.delete()
             destroy(obstacle)
@@ -160,6 +164,11 @@ class RunningState(GameState):
 
     def __update_score(self):
         self.score_tracker.text = f'Score:{str(int(math.ceil(self.context.player.z / 100.0)) * 100)}'
+        map_data = self.context.data_manager.get_map_data()
+        # search in last 3 tuples in map_data
+        for tuple in map_data[-3:]:
+            if tuple[5] < self.context.player.z < tuple[6]: # tuple[5] is the first obstacle, tuple[6] is the last obstacle
+                self.map_tracker.text = f'Map: {tuple[0]}'  # tuple[0] is the name of the map
 
     def __save_mapp_data(self):
         while not self.obstacle_generator.map_data_queue.empty():
@@ -175,7 +184,8 @@ class RunningState(GameState):
 
     def __initialize_obstacles(self):
         logger.info('initializing objects')
-        obstacles, mapp_data = DifficultyTest1().initialize_obstacles()
+        difficulty_level_obj = self.difficulty_manager.difficulties.get(self.obstacle_generator.difficulty_level.value)
+        obstacles, mapp_data = difficulty_level_obj.initialize_obstacles()
         self.context.data_manager.add_map_data(mapp_data)
         for obstacle_type in obstacles:
             self.context.data_manager.add_obstacle_data(obstacle_type=obstacle_type)

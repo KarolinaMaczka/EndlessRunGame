@@ -2,18 +2,7 @@ import random
 from dataclasses import dataclass, field
 from typing import List
 
-from config.constants import LANE_COUNT, Color
 from difficulty.maps.map import ObstacleMap
-from entities.obstacles.impl.board_obstacle import ObstacleBoard
-from entities.obstacles.impl.cube_obstacle import ObstacleCube
-from entities.obstacles.impl.fence_obstacle import ObstacleFence
-from entities.obstacles.impl.gate_obstacle import ObstacleGate
-from entities.obstacles.impl.horizontal_pole_obstacle import ObstaclePoleGate
-from entities.obstacles.impl.long_cube import ObstacleLongCube
-from entities.obstacles.impl.train_obstacle import ObstacleTrain
-from entities.obstacles.impl.wooden_sign_obstacle import ObstacleWoodenSign
-from entities.obstacles.impl.indicator_obstacle import ObstacleIndicator
-from entities.obstacles.obstacle_metadata_factory import ObstacleMetadataFactory
 
 
 @dataclass
@@ -42,7 +31,7 @@ class FirstObstacleMap(ObstacleMap):
             if random.random() < self.gate_generation_const:
                 last_obstacle_z = self._generate_gate(last_obstacle_z)
             else:
-                self._create_trains(start_x, last_obstacle_z)
+                self._create_trains(start_x, last_obstacle_z, self.big_obstacle_const)
                 self._create_small_obstacles(int(not start_x), last_obstacle_z, self.small_obstacle_const)
             last_obstacle_z += self.obstacle_generation_distance
         last_obstacle_z = self._adjust_last_position(last_obstacle_z)

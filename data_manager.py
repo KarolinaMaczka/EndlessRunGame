@@ -102,6 +102,9 @@ class DataManager:
     def save_difficulty(self, difficulty):
         self.difficulties.append(difficulty)
 
+    def get_map_data(self):
+        return self.map_data
+
     @catch_exceptions
     def save_json(self, data_to_save):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

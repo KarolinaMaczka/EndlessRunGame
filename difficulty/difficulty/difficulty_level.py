@@ -25,7 +25,7 @@ class Difficulty(ABC):
 
             mapp = random.choice(self.maps)
             self.first_obstacle = self.last_obstacle_z
-            self.last_obstacle_z = mapp.generate_obstacles(self.last_obstacle_z, 2000)
+            self.last_obstacle_z = mapp.generate_obstacles(self.last_obstacle_z, 1000)
             return mapp.obstacles, mapp.get_metadata(self.first_obstacle, self.last_obstacle_z)
         return [], None
 

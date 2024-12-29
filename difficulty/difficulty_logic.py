@@ -14,6 +14,7 @@ class DifficultyLogic:
         self.counter = 0
         self.data_manager = data_manager
         self.difficulty_value = difficulty_value
+        self.starting_difficulty = difficulty_value
         if os.path.exists('difficulty\\first_emotion_percentage-satisfaction.csv'):
             self.emotion_distribution:pd.DataFrame = pd.read_csv('difficulty\\first_emotion_percentage-satisfaction.csv')
             self.emotion_distribution_1 = self.emotion_distribution[self.emotion_distribution['player_satisfaction_combined'] == 1].set_index('first_emotion')['percentage'].to_dict()
@@ -62,3 +63,16 @@ class DifficultyLogic:
         # elif dominant_emotion == 'angry':
         #     self.difficulty_value = 10
         #     logger.info('Difficulty set to 10 - difficulty logic')
+
+
+    def level_up_difficulty(self):
+        final_difficulty = self.difficulty_value + 1
+        if abs(final_difficulty - self.starting_difficulty) <= 2:
+            self.difficulty_value += 1
+            logger.info(f'Level up difficulty to {self.difficulty_value}')
+
+    def level_down_difficulty(self):
+        final_difficulty = self.difficulty_value - 1
+        if abs(final_difficulty - self.starting_difficulty) <= 2:
+            self.difficulty_value -= 1
+            logger.info(f'Level down difficulty to {self.difficulty_value}')
