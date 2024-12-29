@@ -65,7 +65,9 @@ class RunningState(GameState):
         self.context.player.set_values()
         self.difficulty_manager.set_player_settings(self.difficulty_level_new, self.context.player)
         self.context.player.enabled = True
-        invoke(self.start, delay = 0.25)  # we start running after rendering
+        #TODO - delete
+        self.set_difficulty(11)
+        invoke(self.start, delay=0.5)  # we start running after rendering
 
     def on_exit(self):
         super().on_exit()
