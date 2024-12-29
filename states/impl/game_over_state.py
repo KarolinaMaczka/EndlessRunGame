@@ -39,19 +39,24 @@ class GameOver(GameState):
             title='Game Over :(',
             content=(
                 Text(f'Your score: {self.score}', color=color.gray),
-                Text('Rate your gameplay satisfaction: ', color=color.gray),
-                self.create_star_buttons(),
+                Text('I am satisfied: ', color=color.gray),
+                self.create_star_buttons('satisfaction'),
+                Text('I was challenged: ', color=color.gray),
+                self.create_star_buttons('challenge'),
+                Text('I was bored: ', color=color.gray),
+                self.create_star_buttons('boredom'),
                 Button('Try Again', color=color.gray, on_click=self.start),
                 Button('Main Menu', color=color.gray, on_click=self.main_menu),
                 Button('Quit', color=color.red, on_click=application.quit)
             ),
-            position=(0, 0.25)
+            position=(0, 0.4)
         )
 
-    def create_star_buttons(self):
+    def create_star_buttons(self, typ='satisfaction'):
         star_container = Entity()
-        self.stars = []
-        self.rating = 0
+        stars = []
+        # self.stars = []
+        rating = 0
 
         for i in range(5):
             star = Button(
@@ -63,17 +68,20 @@ class GameOver(GameState):
                 scale=(1, 1),
                 position=(-2 + i, 0, 0),
                 parent=star_container,
-                on_click=Func(self.set_rating, i + 1)
+                on_click=Func(self.set_rating, typ, i + 1)
             )
-            star.text_entity.color = color.yellow if i < self.rating else color.gray
-            self.stars.append(star)
+            star.text_entity.color = color.yellow if i < getattr(self, f'rating_{typ}', 0) else color.gray
+            stars.append(star)
+        setattr(self, f'stars_{typ}', stars)
 
         return star_container
 
-    def set_rating(self, rating):
+    def set_rating(self, typ, rating):
         logger.info(f'Setting satisfaction rating to {rating}')
-        self.rating = rating
-        self.context.data_manager.add_player_satisfaction(rating)
-        for i, star in enumerate(self.stars):
+        setattr(self, f'rating_{typ}', rating)
+        method = getattr(self.context.data_manager, f"add_player_{typ}", None)
+        if callable(method):
+            method(rating)
+        for i, star in enumerate(getattr(self, f'stars_{typ}', [])):
             star.text_entity.color = color.yellow if i < rating else color.gray
 
