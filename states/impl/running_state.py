@@ -59,14 +59,14 @@ class RunningState(GameState):
             ObstacleTrain
         ], max_size_per_type=1, models=self.models)
         self.difficulty_manager = DifficultyManager()
-        self.difficulty_level_new = selected_difficulty_level
+        self.starting_level = selected_difficulty_level
         self.difficulty_logic = DifficultyLogic(self.context.data_manager, self)
         self.create_paused_panel()
-        self.context.data_manager.save_difficulty(self.difficulty_level_new)
+        self.context.data_manager.save_difficulty(selected_difficulty_level)
         self.context.data_manager.add_playing_time(time.time())
         self.__initialize_obstacles()
         self.context.player.set_values()
-        self.difficulty_manager.set_player_settings(self.difficulty_level_new, self.context.player)
+        self.difficulty_manager.set_player_settings(selected_difficulty_level, self.context.player)
         self.context.player.enabled = True
         invoke(self.start, delay=0.5)  # we start running after rendering
 
@@ -103,12 +103,14 @@ class RunningState(GameState):
         if held_keys['escape']:
             self.__toggle_paused()
         if held_keys['control']:
-            for i in range(10):
+            if held_keys[str(0)]:
+                self.set_difficulty(1)
+            if held_keys['-']:
+                self.set_difficulty(11)
+            for i in range(1, 10):
                 if held_keys[str(i)]:
-                    # self.set_difficulty(max(1, min(10, i+1)))
-                    self.difficulty_logic.difficulty_value = max(1, min(10, i))
-                if held_keys['-']:
-                    self.difficulty_logic.difficulty_value = 11
+                    self.set_difficulty(max(1, min(10, i+1)))
+
         if held_keys['space'] and not self.context.player.is_jumping:
             self.context.player.set_jump()
             # self.context.data_manager.save_pressed_key(('space', self.player_z.value))
@@ -151,10 +153,14 @@ class RunningState(GameState):
         self.difficulty_manager.set_player_settings(level, self.context.player)
         self.context.data_manager.save_difficulty(level)
 
-    def change_difficulty(self, change):
-        level = self.obstacle_generator.difficulty_level.value
-        level = max(1, min(level + change, 11))
-        self.set_difficulty(level)
+    def change_difficulty(self, change: int):
+        final_difficulty = self.obstacle_generator.difficulty_level.value + change
+        if abs(final_difficulty - self.context.starting_level) <= 2:
+            level = max(1, min(final_difficulty + change, 11))
+            self.set_difficulty(level)
+            logger.info(f'Changed difficulty to {level}')
+        else:
+            logger.info(f'Cannot change difficulty to {final_difficulty}')
 
     def __toggle_paused(self):
         if not application.paused:

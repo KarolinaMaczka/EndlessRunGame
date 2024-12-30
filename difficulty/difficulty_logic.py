@@ -14,8 +14,6 @@ class DifficultyLogic:
         self.counter = 0
         self.context = context
         self.data_manager = data_manager
-        self.difficulty_value = self.context.obstacle_generator.difficulty_level.value
-        self.starting_difficulty = self.context.difficulty_level_new
 
         if os.path.exists('difficulty\\first_emotion_percentage-satisfaction.csv'):
             self.emotion_distribution:pd.DataFrame = pd.read_csv('difficulty\\first_emotion_percentage-satisfaction.csv')
@@ -61,14 +59,3 @@ class DifficultyLogic:
         #     print(f'lower level {dominant_emotion}, {second_dominant_emotion}')
         #     self.context.change_difficulty(-1)
 
-    def level_up_difficulty(self):
-        final_difficulty = self.difficulty_value + 1
-        if abs(final_difficulty - self.starting_difficulty) <= 2:
-            self.difficulty_value += 1
-            logger.info(f'Level up difficulty to {self.difficulty_value}')
-
-    def level_down_difficulty(self):
-        final_difficulty = self.difficulty_value - 1
-        if abs(final_difficulty - self.starting_difficulty) <= 2:
-            self.difficulty_value -= 1
-            logger.info(f'Level down difficulty to {self.difficulty_value}')

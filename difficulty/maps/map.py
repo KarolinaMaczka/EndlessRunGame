@@ -27,10 +27,10 @@ class ObstacleMap(ABC):
         4))
 
     _small_obstacles: ObstacleMetadataFactory = field(default_factory=lambda: ObstacleMetadataFactory([
-        {"obstacle": ObstacleFence, 'difficulty': 1, 'probability': 0.3},
+        {"obstacle": ObstacleFence, 'difficulty': 1, 'probability': 0.2},
         {"obstacle": ObstacleBoard, 'difficulty': 1, 'probability': 0.2},
         {"obstacle": ObstacleCube, 'difficulty': 1, 'probability': 0.3},
-        {"obstacle": ObstaclePoleGate, 'difficulty': 1, 'probability': 0.2}],
+        {"obstacle": ObstaclePoleGate, 'difficulty': 1, 'probability': 0.3}],
         4))
 
     _signs: ObstacleMetadataFactory = field(default_factory=lambda: ObstacleMetadataFactory([
