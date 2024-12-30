@@ -104,12 +104,12 @@ class RunningState(GameState):
             self.__toggle_paused()
         if held_keys['control']:
             if held_keys[str(0)]:
-                self.set_difficulty(1)
+                self.set_difficulty(10)
             if held_keys['-']:
                 self.set_difficulty(11)
             for i in range(1, 10):
                 if held_keys[str(i)]:
-                    self.set_difficulty(max(1, min(10, i+1)))
+                    self.set_difficulty(max(1, min(10, i)))
 
         if held_keys['space'] and not self.context.player.is_jumping:
             self.context.player.set_jump()
