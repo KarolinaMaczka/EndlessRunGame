@@ -49,7 +49,7 @@ class ObstacleProcesManager(ProcessManager):
 
                 for obstacle in obstacles:
                     obstacle_queue.put(obstacle)
-                    time.sleep(0.1)
+                    time.sleep(0.2)
 
     def on_exit(self):
         self.go.value = False
