@@ -13,7 +13,7 @@ class Player(Entity):
             name='player',
             # render_queue=0,
              double_sided=True, position=(0, 2, 0), collider='box',
-             scale=5, rotation=(0,0,0), fps=5,
+             scale=(3, 5, 5), rotation=(0,0,0), fps=5,
             visible=False
         ),
 
