@@ -1,3 +1,4 @@
+import hashlib
 import threading
 from datetime import datetime
 import json
@@ -14,11 +15,12 @@ logger = get_game_logger()
 import os
 import requests
 from dotenv import load_dotenv
+import socket
 load_dotenv()
 
 class DataManager:
     def __init__(self):
-
+        self.change_difficulty = None
         self.player_boredom = -1
         self.player_challenge = -1
         self.obstacle_data = []
@@ -31,6 +33,7 @@ class DataManager:
         self.difficulties = []
         self.keys_pressed = []
         self.send_data_enabled = True
+        self.player_id = hashlib.sha256(socket.gethostname().encode()).hexdigest()
         self.__folder = config['player_data']['player_data.folder']
         os.makedirs(self.__folder, exist_ok=True)
 
@@ -46,7 +49,9 @@ class DataManager:
             'difficulties': list(self.difficulties),
             'keys_pressed': list(self.keys_pressed),
             'boredom': self.player_boredom,
-            'challenge': self.player_challenge
+            'challenge': self.player_challenge,
+            'change_difficulty': self.change_difficulty,
+            'id': self.player_id
         }
 
         if self.send_data_enabled:
@@ -73,6 +78,7 @@ class DataManager:
         self.keys_pressed[:] = []
         self.player_boredom = -1
         self.player_challenge = -1
+        self.change_difficulty = None
 
     def add_collision(self, side: CollisionSide, collision_type: CollisionType, obstacle: Obstacle, player: Player):
         self.hit_obstacles.append(
@@ -98,6 +104,9 @@ class DataManager:
 
     def add_player_boredom(self, boredom):
         self.player_boredom = boredom
+
+    def add_change_difficulty(self, change):
+        self.change_difficulty = change
 
     def add_player_challenge(self, challenge):
         self.player_challenge = challenge
