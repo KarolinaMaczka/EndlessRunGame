@@ -44,7 +44,7 @@ class ObstaclePool:
         #         child.enabled = True
         # else:
         obstacle = obstacle_class(position_z=position_z, difficulty=difficulty, lane=lane, models=self.models, **metadata)
-        logger.info(f"Acquired obstacle {type(obstacle).__name__} at position {position_z}, lane {lane} with metadata {metadata}")
+        # logger.info(f"Acquired obstacle {type(obstacle).__name__} at position {position_z}, lane {lane} with metadata {metadata}")
         return obstacle
 
     def release(self, obstacle: Obstacle):

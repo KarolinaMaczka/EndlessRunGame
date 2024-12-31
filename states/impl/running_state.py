@@ -210,7 +210,7 @@ class RunningState(GameState):
         obstacles_to_remove = []
         for obstacle in list(self.active_obstacles):
             if obstacle.z < player_z - self.cleanup_threshold:
-                logger.info(f'Adding obstacles to remove to the stack: obstacle.z {obstacle.z}, player.z {player_z}')
+                # logger.info(f'Adding obstacles to remove to the stack: obstacle.z {obstacle.z}, player.z {player_z}')
                 obstacles_to_remove.append(obstacle)
 
         for obstacle in obstacles_to_remove:
@@ -219,13 +219,13 @@ class RunningState(GameState):
             destroy(obstacle)
             # self.obstacle_pool.release(obstacle)
         obstacles_to_remove.clear()
-        logger.info(f'Number of obstacles after removing {len(self.active_obstacles)}')
+        # logger.info(f'Number of obstacles after removing {len(self.active_obstacles)}')
 
     def __render_obstacles_from_queue(self):
         for _ in range(self.obstacles_per_frame):
             if self.obstacle_generator.obstacle_queue.empty():
                 break
-            logger.info(f'Rendering obstacles from queue')
+            # logger.info(f'Rendering obstacles from queue')
             obstacle_type = self.obstacle_generator.obstacle_queue.get()
             # obstacle = obstacle_type.obstacle(obstacle_type.position_z, obstacle_type.difficulty, obstacle_type.lane)
             obstacle = self.obstacle_pool.acquire(

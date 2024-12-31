@@ -23,7 +23,7 @@ class Obstacle(Entity):
         self.width = width
         self.depth = depth
         self.models = models
-        logger.info('Creating obstacle')
+        # logger.info('Creating obstacle')
 
     @staticmethod
     def set_fixed_width(obj, fixed_width):
