@@ -1,4 +1,6 @@
 from multiprocessing import Queue
+import random
+
 from data_manager import DataManager
 import time
 import random
@@ -15,6 +17,8 @@ class DifficultyLogic:
         self.counter = 0
         self.context = context
         self.data_manager = data_manager
+        self.change_difficulty = bool(random.randint(0, 1))
+        self.data_manager.add_change_difficulty(self.change_difficulty)
 
         if os.path.exists('difficulty\\first_emotion_percentage-satisfaction.csv'):
             self.emotion_distribution:pd.DataFrame = pd.read_csv('difficulty\\first_emotion_percentage-satisfaction.csv')
@@ -41,12 +45,18 @@ class DifficultyLogic:
             emotions_and_position = (*emotions, player_z)
             self.data_manager.add_emotion(emotions_and_position)
 
-            self.counter += 1
-            if self.counter == 10:
-                self.update_difficulty(emotions)
-                self.counter = 0
-        # time.sleep(0.1) for testing purposes (because otherwise tests wont work)
-        
+            if self.change_difficulty:
+                self.counter += 1
+                if self.counter == 10:
+                    self.update_difficulty(emotions)
+                    self.counter = 0
+            else: # change difficulty level at random every 10 rounds
+                self.counter += 1
+                if self.counter == 10:
+                    self.context.change_difficulty(random.choice([-1, 0, 1]))
+                    self.counter = 0
+        # time.sleep(0.1)
+
     def update_difficulty(self, emotions):
         # Create distribution of emotions based on emotion_count
         logger.info(f'Emotions count one round: {self.emotions_count_one_round}')

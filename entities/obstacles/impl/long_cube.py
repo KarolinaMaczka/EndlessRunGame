@@ -35,10 +35,10 @@ class ObstacleLongCube(LaneObstacle):
         if random.random() < has_ladder:
             self.ladder = Entity(
                 model=copy(models.container),
-                scale=(8, 1.3, 8),
+                scale=(8, 1.3, 10),
                 rotation=(0, 0, 0),
                 color=color.blue,
-                z=position_z - depth / 2 - 4,
+                z=position_z - depth / 2 - 1,
                 collider='box',
                 double_sided=True,
                 jump=True,

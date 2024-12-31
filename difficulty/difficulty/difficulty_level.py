@@ -10,8 +10,10 @@ class Difficulty(ABC):
     first_obstacle: float
     last_obstacle_z: float
     maps: list[ObstacleMap]
+    map_length: float
 
-    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, **kwargs):
+    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, map_length=1500, **kwargs):
+        self.map_length = map_length
         self.switch(first_obstacle, last_obstacle_z)
 
     def switch(self, first_obstacle: float, last_obstacle_z: float):
@@ -25,7 +27,7 @@ class Difficulty(ABC):
 
             mapp = random.choice(self.maps)
             self.first_obstacle = self.last_obstacle_z
-            self.last_obstacle_z = mapp.generate_obstacles(self.last_obstacle_z, 2000)
+            self.last_obstacle_z = mapp.generate_obstacles(self.last_obstacle_z, self.map_length)
             return mapp.obstacles, mapp.get_metadata(self.first_obstacle, self.last_obstacle_z)
         return [], None
 
