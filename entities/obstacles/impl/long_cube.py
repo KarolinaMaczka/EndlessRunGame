@@ -4,7 +4,7 @@ from copy import copy
 from ursina import Entity, color, invoke
 
 from config.config import config
-from config.constants import LANE_WIDTH
+from config.constants import LANE_WIDTH, CollisionType
 from entities.obstacles.lane_obstacle import LaneObstacle
 from entities.obstacles.obstacle import Obstacle
 
@@ -77,7 +77,6 @@ class ObstacleLongCube(LaneObstacle):
         self.body.color = colorr
 
     def set_has_ladder(self, has_ladder):
-        ladder_folder = config['long_cube']['long_cube.ladder.folder']
         if random.random() < has_ladder:
             mod = copy(self.models.cube_standard)
             self.ladder = Entity(
@@ -105,3 +104,9 @@ class ObstacleLongCube(LaneObstacle):
         if self.ladder is not None:
             self.ladder.position_z = self.position_z - self.depth / 2 - 2.5
 
+    def check_collision_type(self, player_x, player_y, player_z, child, *args, **kwargs) -> CollisionType | None:
+        if len(self.children) > 1 and player_z < self.position_z - 4:
+            return None
+
+        collision_type = CollisionType.FULL if abs(player_x - child.x) < LANE_WIDTH / 2 - 1 else CollisionType.LIGHT
+        return collision_type
