@@ -30,7 +30,9 @@ class DifficultyLogic:
         self.counter = 0
         self.context = context
         self.data_manager = data_manager
-        self.change_difficulty = bool(random.randint(0, 1))
+        # self.change_difficulty = bool(random.randint(0, 1))
+        self.change_difficulty = True
+        logger.info('Modification type: ' + str(self.change_difficulty))
         self.data_manager.add_change_difficulty(self.change_difficulty)
 
         if os.path.exists('difficulty\\first_emotion_percentage-satisfaction.csv'):
@@ -51,11 +53,11 @@ class DifficultyLogic:
     def update(self, player_z: float, emotion_queue: Queue):
         # logger.info('Updating difficulty based on emotions')
         if not emotion_queue.empty():
-            emotions = emotion_queue.get() # emotions = (('happy', 0.9), ('neutral', 0.1), 1.0)
+            emotions = emotion_queue.get() # emotions = (('happy', 90), ('neutral', 10.002), 1.0)
             # for emotion in emotions:
-            if emotions[1][0] == 'sad' and emotions[1][1] < 0.1:
+            if emotions[1][0] == 'sad' and emotions[1][1] < 10:
                 second_emotion = 'sad_low'
-            elif emotions[1][0] == 'sad' and emotions[1][1] >= 0.1:
+            elif emotions[1][0] == 'sad' and emotions[1][1] >= 10:
                 second_emotion = 'sad_high'
             else:
                 second_emotion = emotions[1][0]
@@ -80,14 +82,12 @@ class DifficultyLogic:
         # Create distribution of emotions based on emotion_count
         logger.info(f'Emotions count one round: {self.emotions_count_one_round}')
         self.emotions_count = {k: v + self.emotions_count_one_round[k] for k, v in self.emotions_count.items()}
-        self.emotions_count_one_round = self.create_emotion_count_dict() 
         self.emotions_count_percentage = {k: v / sum(self.emotions_count.values()) for k, v in self.emotions_count.items()}
         logger.info(f'Emotions count: {self.emotions_count}')
         logger.info(f'Emotions count percentage: {self.emotions_count_percentage}')
 
         logger.info(f'Second emotions count one round: {self.second_emotions_count_one_round}')
         self.second_emotions_count = {k: v + self.second_emotions_count_one_round[k] for k, v in self.second_emotions_count.items()}
-        self.second_emotions_count_one_round = self.create_emotion_count_dict()
         self.second_emotions_count_percentage = {k: v / sum(self.second_emotions_count.values()) for k, v in self.second_emotions_count.items()}
         logger.info(f'Second emotions count: {self.second_emotions_count}')
         logger.info(f'Second emotions count percentage: {self.second_emotions_count_percentage}')
@@ -109,7 +109,19 @@ class DifficultyLogic:
         else:
             self.check_dominant_emotion(self.emotions_count_one_round)
 
+        self.emotions_count_one_round = self.create_emotion_count_dict() 
+        self.second_emotions_count_one_round = self.create_emotion_count_dict()
+
     def check_dominant_emotion(self, emotions_count_dict):
         dominant_emotion = max(emotions_count_dict, key=emotions_count_dict.get)
+        if dominant_emotion == 'neutral' or dominant_emotion == 'sad_low':
+            # dominant emotion should be second highest emotion
+            dict_items = emotions_count_dict.items()
+            dict_items = sorted(dict_items, key=lambda x: x[1], reverse=True)
+            # if count for that emotion is 0, then dominant function stays the same
+            if dict_items[1][1] == 0:
+                dominant_emotion = dict_items[0][0]
+            dominant_emotion = dict_items[1][0]
+
         logger.info('Changing difficulty based on: ' + dominant_emotion + ' | change: ' + str(self.DIFFICULTY_CHANGE[dominant_emotion]))
         self.context.change_difficulty(self.DIFFICULTY_CHANGE[dominant_emotion])
