@@ -155,7 +155,7 @@ class RunningState(GameState):
 
     def change_difficulty(self, change: int):
         final_difficulty = self.obstacle_generator.difficulty_level.value + change
-        if abs(final_difficulty - self.context.starting_level) <= 2:
+        if abs(final_difficulty - self.starting_level) <= 2:
             level = max(1, min(final_difficulty + change, 11))
             self.set_difficulty(level)
             logger.info(f'Changed difficulty to {level}')

@@ -16,6 +16,7 @@ class DifficultyLogic:
 
     DIFFICULTY_CHANGE = {
         'happy': 1,
+        'sad': -1,
         'sad_low': 1,
         'sad_high': -1,
         'angry': -2,
@@ -45,19 +46,21 @@ class DifficultyLogic:
         self.second_emotions_count_percentage = dict()
 
     def create_emotion_count_dict(self):
-        return dict.fromkeys(['happy', 'neutral', 'sad_low', 'sad_high', 'angry', 'fear','surprise', 'disgust'], 0)
+        return dict.fromkeys(['happy', 'neutral', 'sad', 'sad_low', 'sad_high', 'angry', 'fear','surprise', 'disgust'], 0)
 
     def update(self, player_z: float, emotion_queue: Queue):
         # logger.info('Updating difficulty based on emotions')
         if not emotion_queue.empty():
             emotions = emotion_queue.get() # emotions = (('happy', 0.9), ('neutral', 0.1), 1.0)
             # for emotion in emotions:
-            if emotions[0][0] == 'sad' and emotions[0][1] < 0.1:
-                emotions[0] = ('sad_low', emotions[0][1])
-            if emotions[0][0] == 'sad' and emotions[0][1] >= 0.1:
-                emotions[0] = ('sad_high', emotions[0][1])
+            if emotions[1][0] == 'sad' and emotions[1][1] < 0.1:
+                second_emotion = 'sad_low'
+            elif emotions[1][0] == 'sad' and emotions[1][1] >= 0.1:
+                second_emotion = 'sad_high'
+            else:
+                second_emotion = emotions[1][0]
             self.emotions_count_one_round[emotions[0][0]] += 1
-            self.second_emotions_count_one_round[emotions[1][0]] += 1
+            self.second_emotions_count_one_round[second_emotion] += 1
             emotions_and_position = (*emotions, player_z)
             self.data_manager.add_emotion(emotions_and_position)
 
@@ -99,44 +102,14 @@ class DifficultyLogic:
                 # For sadness which has confidence less than 0.1 assume that it's focus (level up)
                 # For sadness which has confidence more than 0.1 assume that it is sadness (level down)
                 # apply the change for the one with the most appearances
-                # Determine the dominant emotion
 
         if self.emotions_count['neutral'] == 10:
+            logger.info('Neutral emotion is prevailing, checking further')
             self.check_dominant_emotion(self.second_emotions_count_one_round)
         else:
             self.check_dominant_emotion(self.emotions_count_one_round)
 
     def check_dominant_emotion(self, emotions_count_dict):
         dominant_emotion = max(emotions_count_dict, key=emotions_count_dict.get)
+        logger.info('Changing difficulty based on: ' + dominant_emotion + ' | change: ' + str(self.DIFFICULTY_CHANGE[dominant_emotion]))
         self.context.change_difficulty(self.DIFFICULTY_CHANGE[dominant_emotion])
-
-
-                
-        # dominant_emotion = emotions[0]
-        # second_dominant_emotion = emotions[1]
-        # logger.info(f'Logic change: Dominant emotion: {dominant_emotion}, second dominant emotion: {second_dominant_emotion}')
-        # if str(dominant_emotion[0]) == 'happy' or str(second_dominant_emotion[0]) == 'happy':
-        #     print(f'Detected dominant happy emotion. Leveling Up. Emotions: {dominant_emotion}, {second_dominant_emotion}')
-        #     self.context.change_difficulty(1)
-        # elif str(dominant_emotion[0]) == 'sad':
-        #     logger.info(f'Detected dominant sad emotion. Leveling Down. Emotions: {dominant_emotion}, {second_dominant_emotion}')
-        #     self.context.change_difficulty(-1)
-        # elif str(dominant_emotion[0]) == 'angry':
-        #     logger.info(f'Detected dominant angry emotion. Leveling Down. Emotions: {dominant_emotion}, {second_dominant_emotion}')
-        #     self.context.change_difficulty(-2)
-        # elif str(dominant_emotion[0]) == 'neutral':
-        #     logger.info(f'Detected dominant neutral emotion. Looking for 2nd emotion. Emotions: {dominant_emotion}, {second_dominant_emotion}')
-        #     if str(second_dominant_emotion[0])== 'happy':
-        #         logger.info(f'Detected second dominant happy emotion. Leveling Up. Emotions: {dominant_emotion}, {second_dominant_emotion}')
-        #         self.context.change_difficulty(1)
-        #     if str(second_dominant_emotion[0])== 'angry':
-        #         logger.info(f'Detected second dominant angry emotion. Leveling Down. Emotions: {dominant_emotion}, {second_dominant_emotion}')
-        #         self.context.change_difficulty(-2)
-        #     if str(second_dominant_emotion[0])== 'sad':
-        #         logger.info(f'Detected second dominant sad emotion. Leveling up with random probability. Emotions: {dominant_emotion}, {second_dominant_emotion}')
-        #         if random.random() < 0.5:
-        #             self.context.change_difficulty(1)
-        # else:
-        #     logger.info(f'No importatnt emotion detected. Skip changing. Emotions: {dominant_emotion}, {second_dominant_emotion}')
-        #     pass
-
