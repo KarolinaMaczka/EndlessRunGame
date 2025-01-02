@@ -121,57 +121,58 @@ class DifficultyMedium(Difficulty):
         super().__init__(first_obstacle, last_obstacle_z, **kwargs)
         self.maps = [
             FirstObstacleMap(lane_change_const=0.8, small_obstacle_const=0.8, big_obstacle_const=0.5, gate_generation_const=0.05, obstacle_generation_distance=200, color_theme=ColorTheme.COLOR_THEME_COLORFULL),
+            FirstObstacleMap(lane_change_const=0.8, small_obstacle_const=0.8, big_obstacle_const=0.8, gate_generation_const=0.05, obstacle_generation_distance=200, color_theme=ColorTheme.COLOR_THEME_COLORFULL),
             FourthObstacleMap(lane_change_const=0.95, small_obstacle_const=0.9, gate_generation_const=0.05, obstacle_generation_distance=200),
             SixthObstacleMap(lane_change_const=0.5, small_obstacle_const=0.9, gate_generation_const=0.05, obstacle_generation_distance=200, color_theme=ColorTheme.COLOR_THEME_COLORFULL),
             ]
 
 class DifficultyMediumHard1(Difficulty):
-    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, map_length=2000, **kwargs):
+    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, map_length=1500, **kwargs):
         super().__init__(first_obstacle, last_obstacle_z, map_length, **kwargs)
         big_obstacles = ObstacleMetadataFactory([
             {"obstacle": ObstacleLongCube, 'difficulty': 1, 'probability': 0.4, "has_ladder": 0.3},
             {"obstacle": ObstacleTrain, 'difficulty': 1, 'probability': 0.6}],
             4)
-        map1 = FirstObstacleMap(lane_change_const=0.8, small_obstacle_const=0.9, big_obstacle_const=0.6,
-                             gate_generation_const=0.05, obstacle_generation_distance=250)
+        map1 = FirstObstacleMap(lane_change_const=0.8, small_obstacle_const=0.9, big_obstacle_const=0.8,
+                             gate_generation_const=0.05, obstacle_generation_distance=200)
         map1.set_big_obstacles(big_obstacles)
         map2 = SecondObstacleMap(lane_change_const=0.8, small_obstacle_const=0.9, big_obstacle_const=0.6,
-                             gate_generation_const=0.05, obstacle_generation_distance=250)
+                             gate_generation_const=0.05, obstacle_generation_distance=200)
         map2.set_big_obstacles(big_obstacles)
         map4 = FourthObstacleMap(lane_change_const=0.8, small_obstacle_const=0.9, gate_generation_const=0.05,
-                              obstacle_generation_distance=250, big_obstacle_const=0.6)
+                              obstacle_generation_distance=200, big_obstacle_const=0.6)
         map4.set_big_obstacles(big_obstacles)
         map6 = SixthObstacleMap(lane_change_const=0.5, small_obstacle_const=0.9, gate_generation_const=0.05,
                              obstacle_generation_distance=250, big_obstacle_const=0.6)
         map6.set_big_obstacles(big_obstacles)
         map7 = SeventhObstacleMap(lane_change_const=0.7, small_obstacle_const=0.9, gate_generation_const=0.05,
-                             obstacle_generation_distance=300, big_obstacle_const=0.6)
+                             obstacle_generation_distance=250, big_obstacle_const=0.6)
         map7.set_big_obstacles(big_obstacles)
         self.maps = [
             map1, map2, map4, map6, map7
         ]
 
 class DifficultyMediumHard2(Difficulty):
-    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, map_length=2000, **kwargs):
+    def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, map_length=1500, **kwargs):
         super().__init__(first_obstacle, last_obstacle_z, map_length, **kwargs)
         big_obstacles = ObstacleMetadataFactory([
             {"obstacle": ObstacleLongCube, 'difficulty': 1, 'probability': 0.4, "has_ladder": 0.2},
             {"obstacle": ObstacleTrain, 'difficulty': 1, 'probability': 0.6}],
             4)
         map1 = FirstObstacleMap(lane_change_const=0.8, small_obstacle_const=0.9, big_obstacle_const=0.6,
-                                gate_generation_const=0.05, obstacle_generation_distance=300)
+                                gate_generation_const=0.05, obstacle_generation_distance=250)
         map1.set_big_obstacles(big_obstacles)
         map2 = SecondObstacleMap(lane_change_const=0.8, small_obstacle_const=0.9, big_obstacle_const=0.6,
-                                 gate_generation_const=0.05, obstacle_generation_distance=300)
+                                 gate_generation_const=0.05, obstacle_generation_distance=250)
         map2.set_big_obstacles(big_obstacles)
         map4 = FourthObstacleMap(lane_change_const=0.8, small_obstacle_const=0.9, gate_generation_const=0.05,
-                                 obstacle_generation_distance=300, big_obstacle_const=0.6)
+                                 obstacle_generation_distance=250, big_obstacle_const=0.6)
         map4.set_big_obstacles(big_obstacles)
         map6 = SixthObstacleMap(lane_change_const=0.5, small_obstacle_const=0.9, gate_generation_const=0.05,
                                 obstacle_generation_distance=300, big_obstacle_const=0.6)
         map6.set_big_obstacles(big_obstacles)
         map7 = SeventhObstacleMap(lane_change_const=0.7, small_obstacle_const=0.9, gate_generation_const=0.05,
-                                  obstacle_generation_distance=350, big_obstacle_const=0.6)
+                                  obstacle_generation_distance=300, big_obstacle_const=0.6)
         map7.set_big_obstacles(big_obstacles)
         self.maps = [
             map1, map2, map4, map6, map7
@@ -198,17 +199,17 @@ class DifficultyHard(Difficulty):
             4)
 
         map7 = SeventhObstacleMap(lane_change_const=0.75, small_obstacle_const=1, gate_generation_const=0.05,
-                                  obstacle_generation_distance=400, big_obstacle_const=0.7, color_theme=ColorTheme.COLOR_THEME_DARK)
+                                  obstacle_generation_distance=350, big_obstacle_const=0.7, color_theme=ColorTheme.COLOR_THEME_DARK)
         map7.set_big_obstacles(big_obstacles)
         map7.set_small_obstacles(small_obstacles)
 
         map1 = FirstObstacleMap(lane_change_const=0.75, small_obstacle_const=1, gate_generation_const=0.05,
-                                obstacle_generation_distance=400, big_obstacle_const=0.7, color_theme=ColorTheme.COLOR_THEME_GREEN)
+                                obstacle_generation_distance=300, big_obstacle_const=0.7, color_theme=ColorTheme.COLOR_THEME_GREEN)
         map1.set_big_obstacles(big_obstacles)
         map1.set_small_obstacles(small_obstacles)
 
         map2 = SecondObstacleMap(lane_change_const=0.75, small_obstacle_const=1, big_obstacle_const=0.7, gate_generation_const=0.05,
-                                obstacle_generation_distance=400, color_theme=ColorTheme.COLOR_THEME_GREEN)
+                                obstacle_generation_distance=300, color_theme=ColorTheme.COLOR_THEME_GREEN)
         map2.set_big_obstacles(big_obstacles)
         map2.set_small_obstacles(small_obstacles)
 
@@ -250,12 +251,12 @@ class DifficultyHardHiddenPlus1(Difficulty):
         map7.set_small_obstacles(small_obstacles)
 
         map1 = FirstObstacleMap(lane_change_const=0.75, small_obstacle_const=1, gate_generation_const=0.05,
-                                obstacle_generation_distance=400, big_obstacle_const=0.7, color_theme=ColorTheme.COLOR_THEME_GREEN)
+                                obstacle_generation_distance=350, big_obstacle_const=0.7, color_theme=ColorTheme.COLOR_THEME_GREEN)
         map1.set_big_obstacles(big_obstacles)
         map1.set_small_obstacles(small_obstacles)
 
         map6 = SixthObstacleMap(lane_change_const=1, small_obstacle_const=1, gate_generation_const=0,
-                                obstacle_generation_distance=300, big_obstacle_const=0.7, color_theme=ColorTheme.COLOR_THEME_GREEN)
+                                obstacle_generation_distance=325, big_obstacle_const=0.7, color_theme=ColorTheme.COLOR_THEME_GREEN)
         map6.set_big_obstacles(big_obstacles)
         map6.set_small_obstacles(small_obstacles_difficult)
 
@@ -291,12 +292,12 @@ class DifficultyHardHiddenPlus2(Difficulty):
         map7.set_small_obstacles(small_obstacles)
 
         map1 = FirstObstacleMap(lane_change_const=0.75, small_obstacle_const=1, gate_generation_const=0.05,
-                                obstacle_generation_distance=400, big_obstacle_const=0.7, color_theme=ColorTheme.COLOR_THEME_GREEN)
+                                obstacle_generation_distance=350, big_obstacle_const=0.7, color_theme=ColorTheme.COLOR_THEME_GREEN)
         map1.set_big_obstacles(big_obstacles)
         map1.set_small_obstacles(small_obstacles)
 
         map6 = SixthObstacleMap(lane_change_const=1, small_obstacle_const=1, gate_generation_const=0,
-                                obstacle_generation_distance=300, big_obstacle_const=0.7, color_theme=ColorTheme.COLOR_THEME_GREEN)
+                                obstacle_generation_distance=325, big_obstacle_const=0.7, color_theme=ColorTheme.COLOR_THEME_GREEN)
         map6.set_big_obstacles(big_obstacles)
         map6.set_small_obstacles(small_obstacles_difficult)
 

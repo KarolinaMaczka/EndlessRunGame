@@ -26,7 +26,10 @@ class SeventhObstacleMap(FirstObstacleMap):
         4))
     def _create_trains(self, start_x: int, z_position: float):
         for lane in range(start_x, LANE_COUNT - (1 - start_x)):
-            self.obstacles.append(self._big_obstacles.create_obstacle(z_position, lane))
+            if random.random() < self.big_obstacle_const:
+                self.obstacles.append(self._big_obstacles.create_obstacle(z_position, lane))
+            elif random.random() < self.small_obstacle_const:
+                self.obstacles.append(self._small_obstacles.create_obstacle(z_position, lane))
 
     def _create_small_obstacles(self, start_x: int, z_position: float, small_obstacle_const):
         lane = 2 if start_x else 0
