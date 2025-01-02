@@ -1,5 +1,6 @@
 import math
 import time
+import random
 
 from ursina import destroy, held_keys, WindowPanel, Button, color, application, invoke, Text
 
@@ -154,13 +155,39 @@ class RunningState(GameState):
         self.context.data_manager.save_difficulty(level)
 
     def change_difficulty(self, change: int):
+        """
+        Adjusts the difficulty level of the obstacle generator.
+        If the level tries to increase or decrease more than 2 values from the starting level,
+        the change is subject to a probability depending on how far the level is from the starting point.
+        For example, if trying to change from level 8 to 9 while starting from 6, the change should have a probability of 0.8.
+        Probabilities for changes are [0.8, 0.7, ..., 0.1].
+        If the change is trying to bring the level closer to the starting point, it shouldn't be affected by probability.
+        Args:
+            change (int): The amount to change the difficulty level by.
+        """
         final_difficulty = self.obstacle_generator.difficulty_level.value + change
-        if abs(final_difficulty - self.starting_level) <= 2:
+        distance_from_start = abs(final_difficulty - self.starting_level)
+
+        if distance_from_start <= 2:
             level = max(1, min(final_difficulty, 11))
             self.set_difficulty(level)
             logger.info(f'Changed difficulty to {level}')
         else:
-            logger.info(f'Cannot change difficulty to {final_difficulty}')
+            which_way = (final_difficulty - self.starting_level) * change
+            if which_way < 0: # we are going towards start
+                level = max(1, min(final_difficulty, 11))
+                self.set_difficulty(level)
+                logger.info(f'Changed difficulty to {level}')
+            else:
+                probabilities = [0.7, 0.6, 0.5, 0.4, 0.3, 0.2]
+                probability_index = min(distance_from_start - 3, len(probabilities) - 1)
+                probability = probabilities[probability_index]
+                if random.random() < probability:
+                    level = max(1, min(final_difficulty, 11))
+                    self.set_difficulty(level)
+                    logger.info(f'Changed difficulty to {level} with probability {probability}')
+                else:
+                    logger.info(f'Change to difficulty {final_difficulty} rejected with probability {probability}')
 
     def __toggle_paused(self):
         if not application.paused:
