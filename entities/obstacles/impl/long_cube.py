@@ -35,10 +35,10 @@ class ObstacleLongCube(LaneObstacle):
         if random.random() < has_ladder:
             self.ladder = Entity(
                 model=copy(models.container),
-                scale=(8, 1.3, 10),
+                scale=(8, 1.3, 40),
                 rotation=(0, 0, 0),
                 color=color.blue,
-                z=position_z - depth / 2 - 1,
+                z=position_z - depth / 2 + 1,
                 collider='box',
                 double_sided=True,
                 jump=True,
@@ -81,10 +81,10 @@ class ObstacleLongCube(LaneObstacle):
             mod = copy(self.models.cube_standard)
             self.ladder = Entity(
                 model=mod,
-                scale=(3, 1.5, 8),
+                scale=(8, 1.3, 10),
                 rotation=(0, 0, 0),
                 color=color.blue,
-                z=self.position_z - self.depth / 2 - 4,
+                z=self.position_z - self.depth / 2 - 1,
                 collider='box',
                 double_sided=True,
                 jump=True,
@@ -105,7 +105,7 @@ class ObstacleLongCube(LaneObstacle):
             self.ladder.position_z = self.position_z - self.depth / 2 - 2.5
 
     def check_collision_type(self, player_x, player_y, player_z, child, *args, **kwargs) -> CollisionType | None:
-        if len(self.children) > 1 and player_z < self.position_z - 4:
+        if len(self.children) > 1 and player_z < self.position_z - 4 and abs(player_x - child.x) < LANE_WIDTH / 2 - 1:
             return None
 
         collision_type = CollisionType.FULL if abs(player_x - child.x) < LANE_WIDTH / 2 - 1 else CollisionType.LIGHT
