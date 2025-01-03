@@ -51,23 +51,29 @@ class DifficultyLogic:
         # logger.info('Updating difficulty based on emotions')
         if not emotion_queue.empty():
             emotions = emotion_queue.get() # emotions = (('happy', 88.21), ('neutral', 10.002), 1.0)
-            # if we detect sad as main but there is fear or angry as second, we should consider fear or angry as main
-            # (assummed after testing emotion detection)
-            if emotions[0][0] == 'sad' and emotions[1][0] == 'fear':
-                first_emotion = 'fear'
-            elif emotions[0][0] == 'sad' and emotions[1][0] == 'angry':
-                first_emotion = 'angry'
-            else:
-                first_emotion = emotions[1][0]
-            self.emotions_count_one_round[first_emotion] += 1
-            self.second_emotions_count_one_round[emotions[1][0]] += 1
+            
+            # Add raw emotions to data manager
             emotions_and_position = (*emotions, player_z)
             self.data_manager.add_emotion(emotions_and_position)
+            # if we detect sad as main but there is fear or angry as second, we should consider fear or angry as main
+            # (assummed after testing emotion detection)
+            if emotions[0][0] == 'sad' and emotions[1][0] == 'fear' and emotions[1][1] > 10.0:
+                logger.info('Changing main emotion from sad to fear')
+                first_emotion = ('fear', emotions[1][1])
+            elif emotions[0][0] == 'sad' and emotions[1][0] == 'angry' and emotions[1][1] > 10.0:
+                logger.info('Changing main emotion from sad to angry')
+                first_emotion = ('angry', emotions[1][1])
+            else:
+                first_emotion = emotions[0]
+            
+            emotions = (first_emotion, emotions[1], emotions[2])
+            self.emotions_count_one_round[emotions[0][0]] += 1
+            self.second_emotions_count_one_round[emotions[1][0]] += 1
 
             if self.change_difficulty:
                 self.counter += 1
                 if self.counter == 5:
-                    self.update_difficulty(emotions)
+                    self.update_difficulty()
                     self.counter = 0
             else: # change difficulty level at random every 10 rounds
                 self.counter += 1
@@ -76,7 +82,7 @@ class DifficultyLogic:
                     self.counter = 0
         # time.sleep(0.1)
 
-    def update_difficulty(self, emotions):
+    def update_difficulty(self):
         # Create distribution of emotions based on emotion_count
         logger.info(f'Emotions count one round: {self.emotions_count_one_round}')
         self.emotions_count = {k: v + self.emotions_count_one_round[k] for k, v in self.emotions_count.items()}
