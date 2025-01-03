@@ -106,7 +106,7 @@ class DataManager:
         self.player_boredom = boredom
 
     def add_change_difficulty(self, change):
-        self.change_difficulty = change
+        self.change_difficulty = int(change)
 
     def add_player_challenge(self, challenge):
         self.player_challenge = challenge
@@ -120,8 +120,8 @@ class DataManager:
     def add_score(self, score):
         self.score = score
     
-    def save_difficulty(self, difficulty):
-        self.difficulties.append(difficulty)
+    def save_difficulty(self, difficulty, player_z):
+        self.difficulties.append((difficulty, player_z))
 
     def get_map_data(self):
         return self.map_data

@@ -63,7 +63,7 @@ class RunningState(GameState):
         self.starting_level = selected_difficulty_level
         self.difficulty_logic = DifficultyLogic(self.context.data_manager, self)
         self.create_paused_panel()
-        self.context.data_manager.save_difficulty(selected_difficulty_level)
+        self.context.data_manager.save_difficulty(selected_difficulty_level, 0)
         self.context.data_manager.add_playing_time(time.time())
         self.__initialize_obstacles()
         self.context.player.set_values()
@@ -152,7 +152,7 @@ class RunningState(GameState):
         logger.info(f'RunningState setting difficulty to {level}')
         self.obstacle_generator.difficulty_level.value = level
         self.difficulty_manager.set_player_settings(level, self.context.player)
-        self.context.data_manager.save_difficulty(level)
+        self.context.data_manager.save_difficulty(level, self.context.player.z)
 
     def change_difficulty(self, change: int):
         """
