@@ -12,17 +12,6 @@ logger = get_game_logger()
 
 class DifficultyLogic:
 
-    DIFFICULTY_CHANGE = {
-        'happy': 1,
-        'sad': 0, # depends on context
-        'angry': -1,
-        'fear': -1,
-        'surprise': 0,
-        'disgust': 0,
-        'neutral': 0,
-        'none': 0
-    }
-
     def __init__(self, data_manager: DataManager, context):
         self.counter = 0
         self.context = context
@@ -57,11 +46,11 @@ class DifficultyLogic:
             self.data_manager.add_emotion(emotions_and_position)
             # if we detect sad as main but there is fear or angry as second, we should consider fear or angry as main
             # (assummed after testing emotion detection)
-            if emotions[0][0] == 'sad' and emotions[1][0] == 'fear' and emotions[1][1] > 10.0:
-                logger.info('Changing main emotion from sad to fear')
+            if emotions[0][0] == 'sad' and emotions[1][0] == 'fear' and emotions[1][1] > 20.0:
+                logger.info(f'Changing main emotion from sad to fear {emotions[1][1]}')
                 first_emotion = ('fear', emotions[1][1])
-            elif emotions[0][0] == 'sad' and emotions[1][0] == 'angry' and emotions[1][1] > 10.0:
-                logger.info('Changing main emotion from sad to angry')
+            elif emotions[0][0] == 'sad' and emotions[1][0] == 'angry' and emotions[1][1] > 20.0:
+                logger.info(f'Changing main emotion from sad to angry {emotions[1][1]}')
                 first_emotion = ('angry', emotions[1][1])
             else:
                 first_emotion = emotions[0]
@@ -78,7 +67,7 @@ class DifficultyLogic:
             else: # change difficulty level at random every 10 rounds
                 self.counter += 1
                 if self.counter == 5:
-                    self.context.change_difficulty(random.choice([-1, 0, 1]))
+                    self.context.change_difficulty(random.choice([-2, -1, 0, 1, 2]))
                     self.counter = 0
         # time.sleep(0.1)
 
@@ -111,7 +100,7 @@ class DifficultyLogic:
         # If saddness has most appearances assume it is deep focus, try to preserve difficulty but can change with probability 0.4
         elif dominant_emotion := max(self.emotions_count_one_round, key=self.emotions_count_one_round.get) == 'sad':
             change = int(np.random.choice([0, 1], p=[0.6, 0.4]))
-            logger.info('Changing difficulty based on: sad | change: {change}')
+            logger.info(f'Changing difficulty based on: sad | change: {change}')
             self.context.change_difficulty(change)
         # Prevailing emotion is neutral, check further
         else:
@@ -120,8 +109,8 @@ class DifficultyLogic:
             if self.second_emotions_count_one_round['happy'] > 0:
                 logger.info('Changing difficulty based on: happy (second emotion) | change: 1')
                 self.context.change_difficulty(1)
-            elif self.second_emotions_count_one_round['angry'] > 0 or self.second_emotions_count_one_round['fear'] > 0:
-                dominant_emotion = 'angry' if self.second_emotions_count_one_round['angry'] > 0 else 'fear'
+            elif self.second_emotions_count_one_round['angry'] + self.second_emotions_count_one_round['fear'] >= self.second_emotions_count_one_round['sad'] + self.second_emotions_count_one_round['happy']:
+                dominant_emotion = 'angry' if self.second_emotions_count_one_round['angry'] > self.second_emotions_count_one_round['fear'] else 'fear'
                 logger.info(f'Changing difficulty based on: {dominant_emotion} (second emotion) | change: -1')
                 self.context.change_difficulty(-1)
             # If sadness or neutral is dominant in second emotion count increase difficulty with probability 0.5
