@@ -29,8 +29,7 @@ class DifficultyLogic:
         self.counter = 0
         self.context = context
         self.data_manager = data_manager
-        # self.change_difficulty = bool(random.randint(0, 1))
-        self.change_difficulty = True
+        self.change_difficulty = bool(random.randint(0, 1))
         logger.info('Modification type: ' + str(self.change_difficulty))
         self.data_manager.add_change_difficulty(self.change_difficulty)
 
@@ -54,9 +53,9 @@ class DifficultyLogic:
         if not emotion_queue.empty():
             emotions = emotion_queue.get() # emotions = (('happy', 90), ('neutral', 10.002), 1.0)
             # for emotion in emotions:
-            if emotions[1][0] == 'sad' and emotions[1][1] < 10:
+            if emotions[1][0] == 'sad' and emotions[1][1] < 25:
                 second_emotion = 'sad_low'
-            elif emotions[1][0] == 'sad' and emotions[1][1] >= 10:
+            elif emotions[1][0] == 'sad' and emotions[1][1] >= 25:
                 second_emotion = 'sad_high'
             else:
                 second_emotion = emotions[1][0]

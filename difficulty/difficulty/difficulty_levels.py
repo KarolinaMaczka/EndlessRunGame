@@ -120,10 +120,10 @@ class DifficultyMedium(Difficulty):
     def __init__(self, first_obstacle=INITIAL_FIRST_OBSTACLE_Z_POS, last_obstacle_z=INITIAL_LAST_OBSTACLE_Z_POS, **kwargs):
         super().__init__(first_obstacle, last_obstacle_z, **kwargs)
         self.maps = [
-            FirstObstacleMap(lane_change_const=0.8, small_obstacle_const=0.8, big_obstacle_const=0.5, gate_generation_const=0.05, obstacle_generation_distance=200, color_theme=ColorTheme.COLOR_THEME_COLORFULL),
-            FirstObstacleMap(lane_change_const=0.8, small_obstacle_const=0.8, big_obstacle_const=0.8, gate_generation_const=0.05, obstacle_generation_distance=200, color_theme=ColorTheme.COLOR_THEME_COLORFULL),
+            FirstObstacleMap(lane_change_const=0.8, small_obstacle_const=0.8, big_obstacle_const=0.5, gate_generation_const=0.05, obstacle_generation_distance=225, color_theme=ColorTheme.COLOR_THEME_COLORFULL),
+            FirstObstacleMap(lane_change_const=0.8, small_obstacle_const=0.8, big_obstacle_const=0.8, gate_generation_const=0.05, obstacle_generation_distance=225, color_theme=ColorTheme.COLOR_THEME_COLORFULL),
             FourthObstacleMap(lane_change_const=0.95, small_obstacle_const=0.9, gate_generation_const=0.05, obstacle_generation_distance=200),
-            SixthObstacleMap(lane_change_const=0.5, small_obstacle_const=0.9, gate_generation_const=0.05, obstacle_generation_distance=200, color_theme=ColorTheme.COLOR_THEME_COLORFULL),
+            SixthObstacleMap(lane_change_const=0.5, small_obstacle_const=0.9, gate_generation_const=0.05, obstacle_generation_distance=225, color_theme=ColorTheme.COLOR_THEME_COLORFULL),
             ]
 
 class DifficultyMediumHard1(Difficulty):
@@ -134,10 +134,10 @@ class DifficultyMediumHard1(Difficulty):
             {"obstacle": ObstacleTrain, 'difficulty': 1, 'probability': 0.6}],
             4)
         map1 = FirstObstacleMap(lane_change_const=0.8, small_obstacle_const=0.9, big_obstacle_const=0.8,
-                             gate_generation_const=0.05, obstacle_generation_distance=200)
+                             gate_generation_const=0.05, obstacle_generation_distance=225)
         map1.set_big_obstacles(big_obstacles)
         map2 = SecondObstacleMap(lane_change_const=0.8, small_obstacle_const=0.9, big_obstacle_const=0.6,
-                             gate_generation_const=0.05, obstacle_generation_distance=200)
+                             gate_generation_const=0.05, obstacle_generation_distance=225)
         map2.set_big_obstacles(big_obstacles)
         map4 = FourthObstacleMap(lane_change_const=0.8, small_obstacle_const=0.9, gate_generation_const=0.05,
                               obstacle_generation_distance=200, big_obstacle_const=0.6)
