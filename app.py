@@ -10,8 +10,12 @@ def insert_data_from_json(json_data):
     score = json_data.get("score")
     player_satisfaction = json_data.get("player_satisfaction")
     playing_time = json_data.get("playing_time")
+    boredom = json_data.get("boredom")
+    challenge = json_data.get("challenge")
+    change_difficulty = json_data.get("change_difficulty")
+    player_id = json_data.get("id")
 
-    cursor.execute('''INSERT INTO Game (score,player_satisfaction, playing_time) VALUES (?, ?,?)''', (score, player_satisfaction, playing_time))
+    cursor.execute('''INSERT INTO Game (score, player_satisfaction, playing_time, boredom, challenge, change_difficulty, player_id) VALUES (?, ?, ?, ?, ?, ?, ?)''', (score, player_satisfaction, playing_time, boredom, challenge, change_difficulty, player_id))
     game_id = cursor.lastrowid
 
     for obstacle in json_data.get("obstacle_data", []):
@@ -27,11 +31,12 @@ def insert_data_from_json(json_data):
         cursor.execute('''INSERT INTO MapData (game_id, map_type, lane_change_prob, small_obs_prob, gate_prob, color_theme, start, end, generation_dist) values (?, ?, ?, ?, ?, ?, ?, ?, ?)''', (game_id, map_type, lane_change_prob, small_obs_prob, gate_prob, color_theme, start, end, generation_dist))
 
     for emotions in json_data.get("player_emotions", []):
-        first_emotion, first_emotion_value, second_emotion, second_emotion_value, player_z, face_confidence = emotions[0][0], emotions[0][1], emotions[1][0], emotions[1][1], emotions[2], emotions[3]
+        first_emotion, first_emotion_value, second_emotion, second_emotion_value, face_confidence, player_z = emotions[0][0], emotions[0][1], emotions[1][0], emotions[1][1], emotions[2], emotions[3]
         cursor.execute('''INSERT INTO PlayerEmotions (game_id, first_emotion, first_emotion_value, second_emotion, second_emotion_value, player_z, face_confidence) values (?, ?, ?, ?, ?, ?, ?)''', (game_id, first_emotion, first_emotion_value, second_emotion, second_emotion_value, player_z, face_confidence))
 
-    for difficulty in json_data.get("difficulties", []):
-        cursor.execute('''INSERT INTO Difficulties (game_id, difficulty_level) values(?, ?)''', (game_id, difficulty))
+    for difficulties in json_data.get("difficulties", []):
+        difficulty, player_z = difficulties
+        cursor.execute('''INSERT INTO Difficulties (game_id, difficulty_level, player_z) values(?, ?, ?)''', (game_id, difficulty, player_z))
 
     for keys in json_data.get("keys_pressed", []):
         key_type, player_z = keys
@@ -75,7 +80,7 @@ example = {
     ],
     "score": 3094,
     "playing_time": 13.588539123535156,
-    "difficulties": [1],
+    "difficulties": [[1, 2000]],
     "keys_pressed": [
         [
             "space",
@@ -85,7 +90,11 @@ example = {
             "space",
             870.7516479492188
         ]
-    ]
+    ],
+    "boredom": -1,
+    "challenge": -1,
+    "change_difficulty": 1,
+    "id": "0be167865a4b3476b716dd42a05255f7f30e9b89c17d4529356b023d827ac47b"
 }
 
 if __name__ == '__main__':
