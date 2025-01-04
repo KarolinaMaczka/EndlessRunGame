@@ -8,6 +8,12 @@ from config.logger import get_game_logger
 logger = get_game_logger()
 
 class LevelSelect(GameState):
+    names = {
+        3: "Training/Chill",
+        6: "Balanced",
+        9: "Challenging"
+    }
+
     def __init__(self, context):
         super().__init__()
         self.context = context
@@ -29,14 +35,9 @@ class LevelSelect(GameState):
 
     def create_window(self):
         menu = Entity()
-        names = {
-            0 : "Training/Chill",
-            1 : "Balanced",
-            2 : "Challenging"
-        }
         self.menu = DropdownMenu(
             text="Choose level",
-            buttons=[DropdownMenuButton(f"{names[i]}", on_click=Func(self.pass_level, level)) for i, level in enumerate(self.context.possible_levels)],
+            buttons=[DropdownMenuButton(f"{self.names[level]}", on_click=Func(self.pass_level, level)) for level in self.context.possible_levels],
             position=(-4, 0.25),
             scale=(8, 0.8),
             parent=menu,
@@ -57,7 +58,7 @@ class LevelSelect(GameState):
             raise TypeError('Level number must be an integer')
         logger.info(f'Level {level_number} selected')
         temp_text = Text(
-            text="Selected level " + str(level_number),
+            text="Selected level " + self.names[level_number],
             position=(0, 0.4),
             origin=(0, 0),
             color=color.black

@@ -136,41 +136,6 @@ class DifficultyLogic:
             else:
                 logger.info('No change in difficulty')
 
-
-
-        # If there are any other emotions than neutral, apply the change for the one with the most appearances
-        # If there is only neutral emotion, check second emotion
-            # If there is anger or happy/fear, apply the change for the one with the most appearances
-            # If there is only neutral and sad, check further
-                # For sadness which has confidence less than 10 assume that it's focus (level up)
-                # For sadness which has confidence more than 10 assume that it is sadness (level down)
-                # apply the change for the one with the most appearances
-
-        # if self.emotions_count['neutral'] != 10:
-        #     list_of_emotions = list(self.emotions_count_one_round.items())
-        #     list_of_emotions = [emotion for emotion in list_of_emotions if emotion[0] != 'neutral']
-        #     dominant_emotion = max(list_of_emotions, key=lambda x: x[1])[0]
-        #     logger.info('Changing difficulty based on: ' + dominant_emotion + ' | change: ' + str(self.DIFFICULTY_CHANGE[dominant_emotion]))
-        #     self.context.change_difficulty(self.DIFFICULTY_CHANGE[dominant_emotion])
-        # else:
-        #     logger.info('Neutral emotion is prevailing, checking further')
-        #     if self.second_emotions_count['angry'] + self.second_emotions_count['happy'] + self.second_emotions_count['fear'] + self.second_emotions_count['sad_high'] > 0:
-        #         list_of_emotions = list(self.second_emotions_count_one_round.items())
-        #         list_of_emotions = [emotion for emotion in list_of_emotions if emotion[0] in ['angry', 'happy', 'fear', 'sad_high']]
-        #         dominant_emotion = max(list_of_emotions, key=lambda x: x[1])[0]
-        #         logger.info('Changing difficulty based on: ' + dominant_emotion + ' | change: ' + str(self.DIFFICULTY_CHANGE[dominant_emotion]))
-        #         self.context.change_difficulty(self.DIFFICULTY_CHANGE[dominant_emotion])
-        #     else:
-        #         if self.second_emotions_count['sad_low'] > 0:
-        #             dominant_emotion = 'sad_low'
-        #             if random.random() < 0.5:
-        #                 logger.info('Changing difficulty based on: ' + dominant_emotion + ' | change: ' + str(self.DIFFICULTY_CHANGE[dominant_emotion]))
-        #                 self.context.change_difficulty(self.DIFFICULTY_CHANGE[dominant_emotion])
-        #             else:
-        #                 logger.info('No change in difficulty')
-        #         else:
-        #             logger.info('No change in difficulty')
-        #             dominant_emotion = 'none' 
         
         # Reset emotions count for the next round
         self.emotions_count_one_round = self.create_emotion_count_dict() 

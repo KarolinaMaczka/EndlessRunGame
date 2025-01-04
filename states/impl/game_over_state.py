@@ -39,7 +39,7 @@ class GameOver(GameState):
             title='Game Over :(',
             content=(
                 Text(f'Your score: {self.score}', color=color.gray),
-                Text('I feel satisfied: ', color=color.gray),
+                Text('I am satisfied: ', color=color.gray),
                 self.create_star_buttons('satisfaction'),
                 Text('I felt challenged: ', color=color.gray),
                 self.create_star_buttons('challenge'),
