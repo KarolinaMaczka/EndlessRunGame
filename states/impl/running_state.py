@@ -60,7 +60,11 @@ class RunningState(GameState):
             ObstacleTrain
         ], max_size_per_type=1, models=self.models)
         self.difficulty_manager = DifficultyManager()
+        self.block_rising_rounds = 0
         self.starting_level = selected_difficulty_level
+        self.overheating_state = False
+        self.overheating_counter = 0
+        self.overheat_probability = {0: 0.0, 1: 0.0, 2: 0.0, 3: 0.0, 4: 0.1, 5: 0.2, 6: 0.3, 7: 1.0}
         self.difficulty_logic = DifficultyLogic(self.context.data_manager, self)
         self.create_paused_panel()
         self.context.data_manager.save_difficulty(selected_difficulty_level, 0)
@@ -152,42 +156,66 @@ class RunningState(GameState):
         logger.info(f'RunningState setting difficulty to {level}')
         self.obstacle_generator.difficulty_level.value = level
         self.difficulty_manager.set_player_settings(level, self.context.player)
-        self.context.data_manager.save_difficulty(level, self.context.player.z)
 
     def change_difficulty(self, change: int):
         """
         Adjusts the difficulty level of the obstacle generator.
         If the level tries to increase or decrease more than 2 values from the starting level,
         the change is subject to a probability depending on how far the level is from the starting point.
-        For example, if trying to change from level 8 to 9 while starting from 6, the change should have a probability of 0.8.
-        Probabilities for changes are [0.8, 0.7, ..., 0.1].
+        For example, if trying to change from level 8 to 9 while starting from 6, the change should have a probability of 0.5.
+        Probabilities for changes are [0.7, 0.6, 0.5, 0.4, 0.3, 0.2].
         If the change is trying to bring the level closer to the starting point, it shouldn't be affected by probability.
         Args:
             change (int): The amount to change the difficulty level by.
         """
         final_difficulty = self.obstacle_generator.difficulty_level.value + change
         distance_from_start = abs(final_difficulty - self.starting_level)
-
-        if distance_from_start <= 2:
-            level = max(1, min(final_difficulty, 11))
+        level = max(1, min(final_difficulty, 11))
+        # If we are overheating, we should apply the change, reset the overheating state and counter after reaching desired level and set block for rising level for 1 or 2 rounds if needed
+        if self.overheating_state:
             self.set_difficulty(level)
-            logger.info(f'Changed difficulty to {level}')
+            logger.info(f'Changed difficulty to {level} due to overheating')
+            if distance_from_start <= 2:
+                self.block_rising_rounds = 5
+                self.overheating_state = False
+                self.overheating_counter = 0
+        # If there is positive change -> check blockage for rising difficulty
+        elif change > 0 and self.block_rising_rounds != 0 and final_difficulty - self.starting_level > 2:
+            logger.info(f"Rising difficulty to {final_difficulty} is blocked for {self.block_rising_rounds} rounds")
+        # Otherwise, do the normal change
         else:
-            which_way = (final_difficulty - self.starting_level) * change
-            if which_way < 0: # we are going towards start
-                level = max(1, min(final_difficulty, 11))
+            if distance_from_start <= 2:
                 self.set_difficulty(level)
                 logger.info(f'Changed difficulty to {level}')
-            else:
-                probabilities = [0.7, 0.6, 0.5, 0.4, 0.3, 0.2]
-                probability_index = min(distance_from_start - 3, len(probabilities) - 1)
-                probability = probabilities[probability_index]
-                if random.random() < probability:
-                    level = max(1, min(final_difficulty, 11))
+                self.overheating_counter = 0
+            else:              
+                if change >=0 and final_difficulty - self.starting_level > 2:
+                    if self.overheating_counter <= 4:
+                        self.overheating_counter += 1
+                    if random.random() < self.overheat_probability[self.overheating_counter]:
+                        self.overheating_state = True
+                # Check which way we are going
+                which_way = (final_difficulty - self.starting_level) * change
+                if which_way < 0: # we are going towards start
                     self.set_difficulty(level)
-                    logger.info(f'Changed difficulty to {level} with probability {probability}')
+                    logger.info(f'Changed difficulty to {level}')
+
+                # We are going away from start
                 else:
-                    logger.info(f'Change to difficulty {final_difficulty} rejected with probability {probability}')
+                    probabilities = [0.7, 0.6, 0.5, 0.4, 0.3, 0.2]
+                    probability_index = min(distance_from_start - 3, len(probabilities) - 1)
+                    probability = probabilities[probability_index]
+                    if random.random() < probability:
+                        self.set_difficulty(level)
+                        logger.info(f'Changed difficulty to {level} with probability {probability}')
+                        # Check if we are trying to overheat
+                    else:
+                        logger.info(f'Change to difficulty {final_difficulty} rejected with probability {probability}')
+
+        if self.block_rising_rounds > 0:
+            self.block_rising_rounds -= 1
+        self.context.data_manager.save_difficulty(self.obstacle_generator.difficulty_level.value, self.context.player.z)
+        
 
     def __toggle_paused(self):
         if not application.paused:

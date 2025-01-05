@@ -86,46 +86,49 @@ class DifficultyLogic:
         logger.info(f'Second emotions count percentage: {self.second_emotions_count_percentage}')
 
 
-        # Instructions for changing difficulty based on emotions
-        # ------------------------------------------------------
-        # If at least one happy is prevailing, increase difficulty
-        if self.emotions_count_one_round['happy'] > 0:
-            logger.info('Changing difficulty based on: happy | change: 1')
+        if not self.context.overheating_state:
             self.context.change_difficulty(1)
-        # If at least one angry or fear is prevailing, decrease difficulty
-        elif self.emotions_count_one_round['angry'] > 0 or self.emotions_count_one_round['fear'] > 0:
-            dominant_emotion = 'angry' if self.emotions_count_one_round['angry'] > 0 else 'fear'
-            logger.info(f'Changing difficulty based on: {dominant_emotion} | change: -1')
-            self.context.change_difficulty(-1)
-        # If saddness has most appearances assume it is deep focus, try to preserve difficulty but can change with probability 0.4
-        elif dominant_emotion := max(self.emotions_count_one_round, key=self.emotions_count_one_round.get) == 'sad':
-            change = int(np.random.choice([0, 1], p=[0.6, 0.4]))
-            logger.info(f'Changing difficulty based on: sad | change: {change}')
-            self.context.change_difficulty(change)
-        # Prevailing emotion is neutral, check further
-        else:
-            logger.info('Neutral emotion is prevailing, checking further')
-            # 1-2 same as above but with second_emotion
-            if self.second_emotions_count_one_round['happy'] > 0:
-                logger.info('Changing difficulty based on: happy (second emotion) | change: 1')
+            return
+            # Instructions for changing difficulty based on emotions
+            # ------------------------------------------------------
+            # If at least one happy is prevailing, increase difficulty
+            if self.emotions_count_one_round['happy'] > 0:
+                logger.info('Changing difficulty based on: happy | change: 1')
                 self.context.change_difficulty(1)
-            elif self.second_emotions_count_one_round['angry'] + self.second_emotions_count_one_round['fear'] >= self.second_emotions_count_one_round['sad'] + self.second_emotions_count_one_round['happy']:
-                dominant_emotion = 'angry' if self.second_emotions_count_one_round['angry'] > self.second_emotions_count_one_round['fear'] else 'fear'
-                logger.info(f'Changing difficulty based on: {dominant_emotion} (second emotion) | change: -1')
+            # If at least one angry or fear is prevailing, decrease difficulty
+            elif self.emotions_count_one_round['angry'] > 0 or self.emotions_count_one_round['fear'] > 0:
+                dominant_emotion = 'angry' if self.emotions_count_one_round['angry'] > 0 else 'fear'
+                logger.info(f'Changing difficulty based on: {dominant_emotion} | change: -1')
                 self.context.change_difficulty(-1)
-            # If sadness or neutral is dominant in second emotion count increase difficulty with probability 0.5
-            elif self.second_emotions_count_one_round['sad'] > 0 or self.second_emotions_count_one_round['neutral'] > 0:
-                if random.random() < 0.5:
-                    dominant_emotion = 'sad' if self.second_emotions_count_one_round['sad'] > 0 else 'neutral'
-                    logger.info(f'Changing difficulty based on: {dominant_emotion} (second emotion) | change: 1')
+            # If saddness has most appearances assume it is deep focus, try to preserve difficulty but can change with probability 0.4
+            elif dominant_emotion := max(self.emotions_count_one_round, key=self.emotions_count_one_round.get) == 'sad':
+                change = int(np.random.choice([0, 1], p=[0.6, 0.4]))
+                logger.info(f'Changing difficulty based on: sad | change: {change}')
+                self.context.change_difficulty(change)
+            # Prevailing emotion is neutral, check further
+            else:
+                logger.info('Neutral emotion is prevailing, checking further')
+                # 1-2 same as above but with second_emotion
+                if self.second_emotions_count_one_round['angry'] + self.second_emotions_count_one_round['fear'] >= self.counter//2:
+                    dominant_emotion = 'angry' if self.second_emotions_count_one_round['angry'] > self.second_emotions_count_one_round['fear'] else 'fear'
+                    logger.info(f'Changing difficulty based on: {dominant_emotion} (second emotion) | change: -1')
+                    self.context.change_difficulty(-1)
+                elif self.second_emotions_count_one_round['happy'] > 0:
+                    logger.info('Changing difficulty based on: happy (second emotion) | change: 1')
                     self.context.change_difficulty(1)
+                # If sadness or neutral is dominant in second emotion count increase difficulty with probability 0.5
+                elif self.second_emotions_count_one_round['sad'] > 0 or self.second_emotions_count_one_round['neutral'] > 0:
+                    change = int(np.random.choice([0, 1], p=[0.5, 0.5]))
+                    dominant_emotion = 'sad' if self.second_emotions_count_one_round['sad'] > 0 else 'neutral'
+                    logger.info(f'Changing difficulty based on: {dominant_emotion} (second emotion) | change: {change}')
+                    self.context.change_difficulty(change)
+                # Otherwise no change in difficulty
                 else:
                     logger.info('No change in difficulty')
-            # Otherwise no change in difficulty
-            else:
-                logger.info('No change in difficulty')
+        else:
+            logger.info('Overheating state, lowering difficulty')
+            self.context.change_difficulty(-2)
 
-        
         # Reset emotions count for the next round
         self.emotions_count_one_round = self.create_emotion_count_dict() 
         self.second_emotions_count_one_round = self.create_emotion_count_dict()
