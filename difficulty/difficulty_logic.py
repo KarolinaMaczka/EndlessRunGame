@@ -16,8 +16,7 @@ class DifficultyLogic:
         self.counter = 0
         self.context = context
         self.data_manager = data_manager
-        # self.change_difficulty = bool(random.randint(0, 1))
-        self.change_difficulty = True
+        self.change_difficulty = bool(random.randint(0, 1))
         logger.info('Modification type: ' + str(self.change_difficulty))
         self.data_manager.add_change_difficulty(self.change_difficulty)
 
@@ -87,8 +86,6 @@ class DifficultyLogic:
 
 
         if not self.context.overheating_state:
-            self.context.change_difficulty(-1)
-            return
             # Instructions for changing difficulty based on emotions
             # ------------------------------------------------------
             # If at least one happy is prevailing, increase difficulty

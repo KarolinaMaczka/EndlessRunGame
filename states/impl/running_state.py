@@ -36,8 +36,8 @@ class RunningState(GameState):
         super().__init__()
         self.score_tracker = Text(text=f'0', position=(-0.8, 0.5), scale=1.5)
         self.score_tracker.text = 'Score: 0'
-        self.map_tracker = Text(text=f'0', position=(-0.8, 0.45), scale=1.5)
-        self.map_tracker.text = 'Map:'
+        # self.map_tracker = Text(text=f'0', position=(-0.8, 0.45), scale=1.5)
+        # self.map_tracker.text = 'Map:'
         self.models = models
         self.camera_reader = camera_reader
         self.run = False
@@ -78,7 +78,7 @@ class RunningState(GameState):
     def on_exit(self):
         super().on_exit()
         destroy(self.score_tracker)
-        destroy(self.map_tracker)
+        # destroy(self.map_tracker)
         for obstacle in self.active_obstacles:
             obstacle.delete()
             destroy(obstacle)
@@ -237,11 +237,11 @@ class RunningState(GameState):
 
     def __update_score(self):
         self.score_tracker.text = f'Score:{str(int(math.ceil(self.context.player.z / 100.0)) * 100)}'
-        map_data = self.context.data_manager.get_map_data()
+        # map_data = self.context.data_manager.get_map_data()
         # search in last 3 tuples in map_data
-        for tuple in map_data[-3:]:
-            if tuple[5] < self.context.player.z < tuple[6]: # tuple[5] is the first obstacle, tuple[6] is the last obstacle
-                self.map_tracker.text = f'Map: {tuple[0]}'  # tuple[0] is the name of the map
+        # for tuple in map_data[-3:]:
+        #     if tuple[5] < self.context.player.z < tuple[6]: # tuple[5] is the first obstacle, tuple[6] is the last obstacle
+        #         self.map_tracker.text = f'Map: {tuple[0]}'  # tuple[0] is the name of the map
 
     def __save_mapp_data(self):
         while not self.obstacle_generator.map_data_queue.empty():
