@@ -87,7 +87,7 @@ class DifficultyLogic:
 
 
         if not self.context.overheating_state:
-            self.context.change_difficulty(1)
+            self.context.change_difficulty(-1)
             return
             # Instructions for changing difficulty based on emotions
             # ------------------------------------------------------

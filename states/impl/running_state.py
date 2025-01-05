@@ -168,6 +168,12 @@ class RunningState(GameState):
         Args:
             change (int): The amount to change the difficulty level by.
         """
+
+        # If overheating below -> change the change from -2 to 2
+        if self.overheating_state:
+            if self.obstacle_generator.difficulty_level.value < self.starting_level:
+                change *= -1
+
         final_difficulty = self.obstacle_generator.difficulty_level.value + change
         distance_from_start = abs(final_difficulty - self.starting_level)
         level = max(1, min(final_difficulty, 11))
@@ -180,25 +186,28 @@ class RunningState(GameState):
                 self.overheating_state = False
                 self.overheating_counter = 0
         # If there is positive change -> check blockage for rising difficulty
-        elif change > 0 and self.block_rising_rounds != 0 and final_difficulty - self.starting_level > 2:
-            logger.info(f"Rising difficulty to {final_difficulty} is blocked for {self.block_rising_rounds} rounds")
+        elif change != 0 and self.block_rising_rounds != 0 and distance_from_start > 2:
+            logger.info(f"Chnging difficulty to {final_difficulty} is blocked for {self.block_rising_rounds} rounds")
         # Otherwise, do the normal change
         else:
             if distance_from_start <= 2:
                 self.set_difficulty(level)
-                logger.info(f'Changed difficulty to {level}')
+                logger.info(f'Changed difficulty to {level}. Distance from start {distance_from_start}')
                 self.overheating_counter = 0
             else:              
-                if change >=0 and final_difficulty - self.starting_level > 2:
+                # if (change >=0 and final_difficulty - self.starting_level > 2) or (change <= 0 and final_difficulty - self.starting_level < -2):
+                if distance_from_start > 2:
                     if self.overheating_counter <= 4:
                         self.overheating_counter += 1
+                        logger.info(f'Overheating counter increased to {self.overheating_counter}')
                     if random.random() < self.overheat_probability[self.overheating_counter]:
                         self.overheating_state = True
+                        logger.info(f'Overheating state reached.')
                 # Check which way we are going
                 which_way = (final_difficulty - self.starting_level) * change
                 if which_way < 0: # we are going towards start
                     self.set_difficulty(level)
-                    logger.info(f'Changed difficulty to {level}')
+                    logger.info(f'Changed difficulty to {level}. Going towards start')
 
                 # We are going away from start
                 else:
