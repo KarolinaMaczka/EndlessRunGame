@@ -45,10 +45,10 @@ class DifficultyLogic:
             self.data_manager.add_emotion(emotions_and_position)
             # if we detect sad as main but there is fear or angry as second, we should consider fear or angry as main
             # (assummed after testing emotion detection)
-            if emotions[0][0] == 'sad' and emotions[1][0] == 'fear' and emotions[1][1] > 20.0:
+            if emotions[0][0] == 'sad' and emotions[1][0] == 'fear' and emotions[1][1] > 25.0:
                 logger.info(f'Changing main emotion from sad to fear {emotions[1][1]}')
                 first_emotion = ('fear', emotions[1][1])
-            elif emotions[0][0] == 'sad' and emotions[1][0] == 'angry' and emotions[1][1] > 20.0:
+            elif emotions[0][0] == 'sad' and emotions[1][0] == 'angry' and emotions[1][1] > 25.0:
                 logger.info(f'Changing main emotion from sad to angry {emotions[1][1]}')
                 first_emotion = ('angry', emotions[1][1])
             else:
@@ -66,7 +66,7 @@ class DifficultyLogic:
             else: # change difficulty level at random every 10 rounds
                 self.counter += 1
                 if self.counter == 5:
-                    self.context.change_difficulty(random.choice([-2, -1, 0, 1, 2]))
+                    self.context.change_difficulty(random.choice([-1, 0, 0, 1]))
                     self.counter = 0
         # time.sleep(0.1)
 
