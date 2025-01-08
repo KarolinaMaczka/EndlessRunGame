@@ -16,7 +16,8 @@ class DifficultyLogic:
         self.counter = 0
         self.context = context
         self.data_manager = data_manager
-        self.change_difficulty = bool(random.randint(0, 1))
+        self.change_difficulty = random.choice(['emotions', 'random', 'no', 'faster'])
+        # self.change_difficulty = 'faster'
         logger.info('Modification type: ' + str(self.change_difficulty))
         self.data_manager.add_change_difficulty(self.change_difficulty)
 
@@ -57,16 +58,18 @@ class DifficultyLogic:
             emotions = (first_emotion, emotions[1], emotions[2])
             self.emotions_count_one_round[emotions[0][0]] += 1
             self.second_emotions_count_one_round[emotions[1][0]] += 1
-
-            if self.change_difficulty:
-                self.counter += 1
+            self.counter += 1
+            if self.change_difficulty == 'emotions':
                 if self.counter == 5:
                     self.update_difficulty()
                     self.counter = 0
-            else: # change difficulty level at random every 10 rounds
-                self.counter += 1
+            elif self.change_difficulty == 'random':  # change difficulty level at random every 5 rounds
                 if self.counter == 5:
-                    self.context.change_difficulty(random.choice([-1, 0, 0, 1]))
+                    self.context.change_difficulty(random.choice([-1, 0, 0, 1]), allow_overheating=False)
+                    self.counter = 0
+            elif self.change_difficulty == 'faster':
+                if self.counter == 5:
+                    self.context.change_difficulty(1, allow_overheating=False)
                     self.counter = 0
         # time.sleep(0.1)
 
@@ -84,14 +87,14 @@ class DifficultyLogic:
         logger.info(f'Second emotions count: {self.second_emotions_count}')
         logger.info(f'Second emotions count percentage: {self.second_emotions_count_percentage}')
 
-
         if not self.context.overheating_state:
             # Instructions for changing difficulty based on emotions
             # ------------------------------------------------------
             # If at least one happy is prevailing, increase difficulty
             if self.emotions_count_one_round['happy'] > 0:
-                logger.info('Changing difficulty based on: happy | change: 1')
-                self.context.change_difficulty(1)
+                change = int(np.random.choice([1, 2], p=[0.7, 0.3]))
+                logger.info('Changing difficulty based on: happy | change: ' + str(change))
+                self.context.change_difficulty(change)
             # If at least one angry or fear is prevailing, decrease difficulty
             elif self.emotions_count_one_round['angry'] > 0 or self.emotions_count_one_round['fear'] > 0:
                 dominant_emotion = 'angry' if self.emotions_count_one_round['angry'] > 0 else 'fear'
@@ -111,8 +114,9 @@ class DifficultyLogic:
                     logger.info(f'Changing difficulty based on: {dominant_emotion} (second emotion) | change: -1')
                     self.context.change_difficulty(-1)
                 elif self.second_emotions_count_one_round['happy'] > 0:
-                    logger.info('Changing difficulty based on: happy (second emotion) | change: 1')
-                    self.context.change_difficulty(1)
+                    change = int(np.random.choice([1, 2], p=[0.7, 0.3]))
+                    logger.info('Changing difficulty based on: happy (second emotion) | change: ' + str(change))
+                    self.context.change_difficulty(change)
                 # If sadness or neutral is dominant in second emotion count increase difficulty with probability 0.5
                 elif self.second_emotions_count_one_round['sad'] > 0 or self.second_emotions_count_one_round['neutral'] > 0:
                     change = int(np.random.choice([0, 1], p=[0.5, 0.5]))

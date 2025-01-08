@@ -157,7 +157,7 @@ class RunningState(GameState):
         self.obstacle_generator.difficulty_level.value = level
         self.difficulty_manager.set_player_settings(level, self.context.player)
 
-    def change_difficulty(self, change: int):
+    def change_difficulty(self, change: int, allow_overheating=True):
         """
         Adjusts the difficulty level of the obstacle generator.
         If the level tries to increase or decrease more than 2 values from the starting level,
@@ -168,6 +168,14 @@ class RunningState(GameState):
         Args:
             change (int): The amount to change the difficulty level by.
         """
+        if not allow_overheating:
+            final_difficulty = self.obstacle_generator.difficulty_level.value + change
+            level = max(1, min(final_difficulty, 11))
+            logger.info(f'RunningState setting difficulty to {level}')
+            self.difficulty_manager.set_player_settings(level, self.context.player)
+            self.context.data_manager.save_difficulty(level,
+                                                      self.context.player.z)
+            return
 
         # If overheating below -> change the change from -2 to 2
         if self.overheating_state:
