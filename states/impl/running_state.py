@@ -171,8 +171,8 @@ class RunningState(GameState):
         if not allow_overheating:
             final_difficulty = self.obstacle_generator.difficulty_level.value + change
             level = max(1, min(final_difficulty, 11))
+            self.set_difficulty(level)
             logger.info(f'RunningState setting difficulty to {level}')
-            self.difficulty_manager.set_player_settings(level, self.context.player)
             self.context.data_manager.save_difficulty(level,
                                                       self.context.player.z)
             return
@@ -195,7 +195,7 @@ class RunningState(GameState):
                 self.overheating_counter = 0
         # If there is positive change -> check blockage for rising difficulty
         elif change != 0 and self.block_rising_rounds != 0 and distance_from_start > 2:
-            logger.info(f"Chnging difficulty to {final_difficulty} is blocked for {self.block_rising_rounds} rounds")
+            logger.info(f"Changing difficulty to {final_difficulty} is blocked for {self.block_rising_rounds} rounds")
         # Otherwise, do the normal change
         else:
             if distance_from_start <= 2:

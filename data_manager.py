@@ -106,7 +106,7 @@ class DataManager:
         self.player_boredom = boredom
 
     def add_change_difficulty(self, change):
-        self.change_difficulty = int(change)
+        self.change_difficulty = change
 
     def add_player_challenge(self, challenge):
         self.player_challenge = challenge
