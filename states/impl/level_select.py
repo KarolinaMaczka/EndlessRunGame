@@ -8,15 +8,11 @@ from config.logger import get_game_logger
 logger = get_game_logger()
 
 class LevelSelect(GameState):
-    names = {
-        3: "Training/Chill",
-        6: "Balanced",
-        9: "Challenging"
-    }
 
     def __init__(self, context):
         super().__init__()
         self.context = context
+        self.level_text = Text(text=f'Selected Level: "{self.context.level_names[self.context.selected_level]}"')
         self.create_window()
 
     def input(self, key):
@@ -37,7 +33,7 @@ class LevelSelect(GameState):
         menu = Entity()
         self.menu = DropdownMenu(
             text="Choose level",
-            buttons=[DropdownMenuButton(f"{self.names[level]}", on_click=Func(self.pass_level, level)) for level in self.context.possible_levels],
+            buttons=[DropdownMenuButton(f"{self.context.level_names[level]}", on_click=Func(self.pass_level, level)) for level in self.context.possible_levels],
             position=(-4, 0.25),
             scale=(8, 0.8),
             parent=menu,
@@ -48,6 +44,7 @@ class LevelSelect(GameState):
             content=(
                 Button('Go back', color=color.red,
                        on_click=self.main_menu),
+                self.level_text, #, position=(-0.7, 0.5), scale=1.5
                 menu
             ),
             position=(0, 0.25),
@@ -56,9 +53,10 @@ class LevelSelect(GameState):
     def pass_level(self, level_number):
         if not isinstance(level_number, int):
             raise TypeError('Level number must be an integer')
+        self.level_text.text = f'Selected Level: "{self.context.level_names[level_number]}"'
         logger.info(f'Level {level_number} selected')
         temp_text = Text(
-            text="Selected level " + self.names[level_number],
+            text="Selected level " + self.context.level_names[level_number],
             position=(0, 0.4),
             origin=(0, 0),
             color=color.black

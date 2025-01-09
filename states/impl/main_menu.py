@@ -52,6 +52,7 @@ class MainMenu(GameState):
         self.window_panel = WindowPanel(
             title='Main Menu',
             content=(
+                Text(text=f'Selected Level: "{self.context.level_names[self.context.selected_level]}"'), #, position=(-0.7, 0.5), scale=1.5
                 Button('Play the Game', color=color.gray, on_click=self.start),
                 self.toggle_button,
                 Button('Change Settings', color=color.gray, on_click=self.change_settings),

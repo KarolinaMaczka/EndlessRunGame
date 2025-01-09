@@ -22,7 +22,14 @@ class GameManager:
         self.camera = camera
         self.possible_levels = [3,6,9]
         self.selected_level = self.possible_levels[0]
+        self.level_names = {
+        3: "Training/Chill",
+        6: "Balanced",
+        9: "Challenging"
+    }
+        
         self.models = models
+
 
         self.data_manager = data_manager
         self.camera_reader = camera_reader
