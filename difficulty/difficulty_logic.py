@@ -16,7 +16,7 @@ class DifficultyLogic:
         self.counter = 0
         self.context = context
         self.data_manager = data_manager
-        self.change_difficulty = random.choice(['emotions', 'random', 'no', 'faster'])
+        self.change_difficulty = str(np.random.choice(['emotions', 'random', 'no', 'faster']))
         # self.change_difficulty = 'faster'
         logger.info('Modification type: ' + str(self.change_difficulty))
         self.data_manager.add_change_difficulty(self.change_difficulty)

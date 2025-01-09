@@ -21,7 +21,7 @@ class GameManager:
         self.player = player
         self.camera = camera
         self.possible_levels = [3,6,9]
-        self.selected_level = self.possible_levels[1]
+        self.selected_level = self.possible_levels[0]
         self.models = models
 
         self.data_manager = data_manager
