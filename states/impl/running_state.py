@@ -95,6 +95,18 @@ class RunningState(GameState):
 
     def handle_input(self):
         self.context.player.reset()
+        if held_keys['right arrow']:
+            self.context.player.go_right()
+        if held_keys['left arrow']:
+            self.context.player.go_left()
+        if held_keys['down arrow']:
+            self.context.player.crouch()
+            # self.context.player.scale = 3.5
+            self.context.camera.camera.y = self.context.camera.camera.y - 0.3
+        if held_keys['up arrow'] and not self.context.player.is_jumping:
+            self.context.player.set_jump()
+            # self.context.data_manager.save_pressed_key(('space', self.player_z.value))
+
         if held_keys['d']:
             self.context.player.go_right()
         if held_keys['a']:
