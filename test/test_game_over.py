@@ -21,14 +21,12 @@ class TestGameOver(unittest.TestCase):
         self.game_over = GameOver(self.context)
 
     def test_init(self):
-        self.assertEqual(self.game_over.rating, 0)
         self.assertEqual(self.game_over.score, 123)
         self.context.data_manager.add_score.assert_called_with(123)
 
     def test_set_rating(self):
-        self.game_over.set_rating(3)
-        self.assertEqual(self.game_over.rating, 3)
-        for i, star in enumerate(self.game_over.stars):
+        self.game_over.set_rating( 'satisfaction', 3)
+        for i, star in enumerate(self.game_over.stars_satisfaction):
             if i < 3:
                 self.assertEqual(star.text_entity.color, color.yellow)
             else:

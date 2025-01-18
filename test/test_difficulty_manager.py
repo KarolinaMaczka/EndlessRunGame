@@ -2,7 +2,8 @@ import unittest
 from unittest.mock import MagicMock, patch
 from config.logger import get_game_logger
 from difficulty.difficulty.difficulty_level import Difficulty
-from difficulty.difficulty.difficulty_levels import DifficultyTest1, DifficultyTest2, DifficultyTest3
+from difficulty.difficulty.difficulty_levels import DifficultyTest1, DifficultyTest2, DifficultyTest3, \
+    DifficultyEasyHiddenMinus1
 from difficulty.difficulty_manager import DifficultyManager
 
 
@@ -27,8 +28,8 @@ class TestDifficultyManager(unittest.TestCase):
 
     def test_change_level_class(self):
         prev_difficulty = self.difficulty_test_1
-        new_difficulty =2
+        new_difficulty = 2
         difficulty_object = self.difficulty_manager.change_level_class(new_difficulty, prev_difficulty)
 
-        self.assertIsInstance(difficulty_object, DifficultyTest2)
+        self.assertIsInstance(difficulty_object, DifficultyEasyHiddenMinus1)
 

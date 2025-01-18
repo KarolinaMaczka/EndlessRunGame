@@ -14,7 +14,8 @@ class TestRunningState(unittest.TestCase):
     @patch('states.impl.running_state.ObstaclePool')
     @patch('states.impl.running_state.WindowPanel')
     @patch('states.impl.running_state.application')
-    def setUp(self, mock_application, mock_window_panel, mock_obstacle_pool, mock_difficulty_logic, mock_difficulty_manager, mock_scenery, mock_obstacle_process_manager):
+    def setUp(self, mock_application, mock_window_panel, mock_obstacle_pool, mock_difficulty_logic,
+              mock_difficulty_manager, mock_scenery, mock_obstacle_process_manager):
         ursina = Ursina()
 
         self.mock_context = MagicMock()
@@ -27,6 +28,18 @@ class TestRunningState(unittest.TestCase):
         self.mock_context.player.run = MagicMock()
         self.mock_context.player.reset = MagicMock()
         self.mock_context.player.enabled = True
+
+        mock_obstacle = MagicMock()
+        mock_obstacle.obstacle = MagicMock()
+        mock_obstacle.position_z = 10
+        mock_obstacle.difficulty = 1
+        mock_obstacle.lane = 0
+        mock_obstacle.entity_metadata = {}
+
+        mock_difficulty_level = MagicMock()
+        mock_difficulty_level.initialize_obstacles.return_value = ([mock_obstacle], 'mock_map_data')
+
+        mock_difficulty_manager.return_value.difficulties.get.return_value = mock_difficulty_level
 
         self.running_state = RunningState(self.mock_context, models=MagicMock(), camera_reader=MagicMock(), selected_difficulty_level=1)
 
