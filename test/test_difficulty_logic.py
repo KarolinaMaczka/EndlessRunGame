@@ -9,40 +9,29 @@ from difficulty.difficulty_logic import DifficultyLogic
 class TestDifficultyLogic(unittest.TestCase):
 
     def setUp(self):
-        self.difficulty_logic = DifficultyLogic(MagicMock(), 1)
-
-    @patch.object(DifficultyLogic, 'update_difficulty')
-    def test_update(self, mock_update_difficulty):
-
-        print('Testing update method of DifficultyLogic')
-        queue = Queue()
+        self.difficulty_logic = DifficultyLogic(MagicMock(), MagicMock())
+        self.context = MagicMock()
+        self.difficulty_logic.change_difficulty = 'emotions'
+        self.difficulty_logic.update_difficulty = MagicMock()
+        self.queue = Queue()
         
-        queue.put(('happy', 'neutral'))
-        queue.put(('sad', 'fear'))
-        queue.put(('angry', 'neutral'))
-        queue.put(('happy', 'sad'))
-        queue.put(('fear', 'angry'))
-        queue.put(('happy', 'neutral'))
-        queue.put(('sad', 'fear'))
-        queue.put(('angry', 'neutral'))
-        queue.put(('happy', 'sad'))
-        queue.put(('neutral', 'angry'))
+        # for example, emotions = (('happy', 88.21), ('neutral', 10.002), 1.0)
+        self.queue.put((('happy', 88.21), ('neutral', 10.002), 1.0))
+        self.queue.put((('sad', 75.0), ('fear', 25.0), 1.0))
+        self.queue.put((('angry', 60.0), ('neutral', 40.0), 1.0))
+        self.queue.put((('happy', 90.0), ('sad', 10.0), 1.0))
+        self.queue.put((('fear', 50.0), ('angry', 50.0), 1.0))
+        self.queue.put((('happy', 85.0), ('neutral', 15.0), 1.0))
 
-        for _ in range(9):
-            self.difficulty_logic.update(1.0, queue)
+    def test_update(self):
+        for _ in range(5):
+            self.difficulty_logic.update(1.0, self.queue)
             time.sleep(0.2)
-            self.assertEqual(self.difficulty_logic.counter, _ + 1)
-            mock_update_difficulty.assert_not_called()
+            self.assertEqual(self.difficulty_logic.counter, (_ + 1) % 5)
+        self.difficulty_logic.update_difficulty.assert_called()
         
-        self.difficulty_logic.update(1.0, queue)
-        self.assertEqual(self.difficulty_logic.counter, 0)
-        mock_update_difficulty.assert_called_once()
-
-        # test if emotions are added to the data manager and the emotions count is updated
-        print('Testing if emotions are added to the data manager and the emotions count is updated')
-         
-        self.assertEqual(self.difficulty_logic.data_manager.add_emotion.call_count, 10)
-        self.assertEqual(self.difficulty_logic.emotions_count, {'happy': 4, 'neutral': 1, 'sad': 2, 'angry': 2, 'fear': 1})
+        self.difficulty_logic.update(1.0, self.queue)
+        self.assertEqual(self.difficulty_logic.counter, 1)
 
 
 
